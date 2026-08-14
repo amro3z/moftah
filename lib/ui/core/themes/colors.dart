@@ -1,10 +1,42 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const Color primary = Color(0xFF6200EE);
-  static const Color secondary = Color(0xFF03DAC6);
-  static const Color background = Color(0xFFF5F5F5);
-  static const Color surface = Color(0xFFFFFFFF);
-  static const Color error = Color(0xFFB00020);
-  static const Color textColor = Colors.grey;
+  AppColors._();
+
+  // Text
+  static const Color textColor = Colors.black;
+
+  // Brand
+  static const Color primary = Color(0xff0D2136);
+  static const Color secondary = Color(0xff1976D2);
+
+  // States
+  static const Color success = Color(0xff38D68A);
+  static const Color warning = Color(0xffFF9F43);
+  static const Color danger = Color(0xffD64545);
+  static const Color info = Color(0xff2AC4F5);
+
+  // Surfaces
+  static const Color surfaceDark = Color(0xff1E344B);
+  static const Color surfaceMedium = Color(0xff263D54);
+  static const Color surfaceLight = Color(0xffF5F8FC);
+
+  // Text
+  static const Color textPrimary = Colors.white;
+  static const Color textSecondary = Color(0xffAAB8C6);
+  static const Color textMuted = Color(0xff88A6C3);
+
+  // Borders
+  static const Color border = Color(0xff3B5269);
+  static const Color divider = Color(0xff496178);
+
+  // Progress
+  static const Color progressBackground = Color(0xff3A5065);
+
+  // Transparent state backgrounds
+  static const Color successBackground = Color(0xff0D584D);
+  static const Color infoBackground = Color(0xff07516A);
+
+  static const Color warningBackground = Color(0xff5A4514);
+  static const Color dangerBackground = Color(0xff5A2429);
 }

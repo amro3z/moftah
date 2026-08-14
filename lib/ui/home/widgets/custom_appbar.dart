@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:moftah/data/models/vehicle_card.dart';
+import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
 import 'package:moftah/ui/core/ui/custom_text.dart';
 import 'package:moftah/ui/home/widgets/vehicle_card.dart';
@@ -6,17 +8,8 @@ import 'package:moftah/utils/responsive.dart';
 
 PreferredSizeWidget customAppBar(
   BuildContext context, {
+  required VehicleCardModel data,
   required String userName,
-  required String carName,
-  required int year,
-  required String mileage,
-  required int healthScore,
-  required String maintenanceStatus,
-  required String documentStatus,
-  required String imageUrl,
-  required String nextMaintenance,
-  required String lastMaintenance,
-  required String repairStatus,
   VoidCallback? onChatTap,
   VoidCallback? onVehicleTap,
 }) {
@@ -25,14 +18,13 @@ PreferredSizeWidget customAppBar(
     child: AppBar(
       automaticallyImplyLeading: false,
       elevation: 0,
+      backgroundColor: AppColors.primary,
 
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           bottom: Radius.circular(AppSizes.radiusLg),
         ),
       ),
-
-      backgroundColor: const Color(0xff0D2136),
 
       flexibleSpace: SafeArea(
         child: Padding(
@@ -57,7 +49,7 @@ PreferredSizeWidget customAppBar(
                             context,
                             AppSizes.fontXxl,
                           ),
-                          color: const Color(0xffB8C7D9),
+                          color: AppColors.textSecondary,
                         ),
 
                         SizedBox(height: ResponsiveSize.height(context, 0.3)),
@@ -70,7 +62,7 @@ PreferredSizeWidget customAppBar(
                                 context,
                                 AppSizes.fontXxxl,
                               ),
-                              color: Colors.white,
+                              color: AppColors.textPrimary,
                               isBold: true,
                             ),
 
@@ -82,7 +74,7 @@ PreferredSizeWidget customAppBar(
                                 context,
                                 AppSizes.fontXl,
                               ),
-                              color: Colors.white,
+                              color: AppColors.textPrimary,
                             ),
                           ],
                         ),
@@ -96,18 +88,18 @@ PreferredSizeWidget customAppBar(
                         width: ResponsiveSize.width(context, 10),
                         height: ResponsiveSize.width(context, 10),
                         decoration: BoxDecoration(
-                          color: const Color(0xff1B3046),
+                          color: AppColors.surfaceDark,
                           borderRadius: BorderRadius.circular(
                             AppSizes.radiusSm,
                           ),
-                          border: Border.all(color: const Color(0xff617486)),
+                          border: Border.all(color: AppColors.border),
                         ),
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
                             Icon(
                               Icons.chat_bubble_outline_rounded,
-                              color: Colors.white,
+                              color: AppColors.textPrimary,
                               size: ResponsiveSize.width(context, 5),
                             ),
 
@@ -118,7 +110,7 @@ PreferredSizeWidget customAppBar(
                                 width: ResponsiveSize.width(context, 1.8),
                                 height: ResponsiveSize.width(context, 1.8),
                                 decoration: const BoxDecoration(
-                                  color: Colors.red,
+                                  color: AppColors.danger,
                                   shape: BoxShape.circle,
                                 ),
                               ),
@@ -134,16 +126,7 @@ PreferredSizeWidget customAppBar(
               SizedBox(height: ResponsiveSize.height(context, 2)),
 
               VehicleCard(
-                carName: carName,
-                year: year,
-                mileage: mileage,
-                healthScore: healthScore,
-                maintenanceStatus: maintenanceStatus,
-                documentStatus: documentStatus,
-                imageUrl: imageUrl,
-                nextMaintenance: nextMaintenance,
-                lastMaintenance: lastMaintenance,
-                repairStatus: repairStatus,
+               data: data ,
                 onTap: onVehicleTap,
               ),
             ],
