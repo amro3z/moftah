@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:moftah/data/models/current_repair_model.dart';
 import 'package:moftah/data/models/vehicle_card.dart';
 import 'package:moftah/data/models/home_options_model.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
 import 'package:moftah/ui/core/ui/custom_text.dart';
+import 'package:moftah/ui/core/ui/section_title.dart';
+import 'package:moftah/ui/home/widgets/current%20repair/current_repair_card.dart';
 import 'package:moftah/ui/home/widgets/custom_appbar.dart';
 import 'package:moftah/ui/home/widgets/home_options_list.dart';
 import 'package:moftah/utils/responsive.dart';
@@ -43,8 +46,21 @@ class _HomeScreenState extends State<HomeScreen> {
               onVehicleTap: () {},
             ),
             SizedBox(height: ResponsiveSize.height(context, 1.5)),
-            HomeOptionsList(
-              options: HomeOptionsInfo.options,
+            HomeOptionsList(options: HomeOptionsInfo.options),
+            SizedBox(height: ResponsiveSize.height(context, 1.5)),
+            const SectionTitle(title: 'الإصلاح الحالي'),
+            SizedBox(height: ResponsiveSize.height(context, 1)),
+
+            CurrentRepairCard(
+              data: const CurrentRepairModel(
+                title: 'تغيير زيت المحرك + فلتر',
+                workshopName: 'Auto Pro Center',
+                location: 'مدينة نصر',
+                currentStage: RepairStage.repairing,
+              ),
+              onTap: () {
+                Navigator.pushNamed(context, '/repair-details');
+              },
             ),
           ],
         ),
@@ -52,4 +68,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
