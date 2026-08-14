@@ -32,7 +32,7 @@ class VehicleCardHeader extends StatelessWidget {
               customText(
                 text: data.carName,
                 fontSize: ResponsiveSize.width(context, AppSizes.fontXl),
-                color: AppColors.textPrimary,
+                color: AppColors.textSecondary,
                 isBold: true,
               ),
 
@@ -89,7 +89,7 @@ class VehicleCardHeader extends StatelessWidget {
               customText(
                 text: '${data.healthScore}',
                 fontSize: ResponsiveSize.width(context, AppSizes.fontLg),
-                color: AppColors.textPrimary,
+                color: AppColors.textSecondary,
                 isBold: true,
               ),
             ],

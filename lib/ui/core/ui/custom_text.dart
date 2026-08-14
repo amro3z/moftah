@@ -8,7 +8,7 @@ Widget customText({required String text , required double fontSize ,  bool? isBo
        fontWeight: isBold == true ? FontWeight.bold : FontWeight.normal,
       fontSize: fontSize,
       fontFamily: 'Cairo',
-      color: color ?? AppColors.textColor,
+      color: color ?? AppColors.textPrimary,
     ),
   );
 }

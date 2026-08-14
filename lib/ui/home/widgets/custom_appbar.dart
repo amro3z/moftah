@@ -62,7 +62,7 @@ PreferredSizeWidget customAppBar(
                                 context,
                                 AppSizes.fontXxxl,
                               ),
-                              color: AppColors.textPrimary,
+                              color: AppColors.textSecondary,
                               isBold: true,
                             ),
 
@@ -74,7 +74,7 @@ PreferredSizeWidget customAppBar(
                                 context,
                                 AppSizes.fontXl,
                               ),
-                              color: AppColors.textPrimary,
+                              color: AppColors.textSecondary,
                             ),
                           ],
                         ),
@@ -99,7 +99,7 @@ PreferredSizeWidget customAppBar(
                           children: [
                             Icon(
                               Icons.chat_bubble_outline_rounded,
-                              color: AppColors.textPrimary,
+                              color: AppColors.textSecondary,
                               size: ResponsiveSize.width(context, 5),
                             ),
 

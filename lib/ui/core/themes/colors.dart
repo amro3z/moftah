@@ -4,7 +4,6 @@ class AppColors {
   AppColors._();
 
   // Text
-  static const Color textColor = Colors.black;
 
   // Brand
   static const Color primary = Color(0xff0D2136);
@@ -22,8 +21,8 @@ class AppColors {
   static const Color surfaceLight = Color(0xffF5F8FC);
 
   // Text
-  static const Color textPrimary = Colors.white;
-  static const Color textSecondary = Color(0xffAAB8C6);
+  static const Color textPrimary = Colors.black;
+  static const Color textSecondary = Colors.white;
   static const Color textMuted = Color(0xff88A6C3);
 
   // Borders
@@ -39,4 +38,6 @@ class AppColors {
 
   static const Color warningBackground = Color(0xff5A4514);
   static const Color dangerBackground = Color(0xff5A2429);
+  // background
+  static const Color background = Color(0xFFF4F7FB);
 }

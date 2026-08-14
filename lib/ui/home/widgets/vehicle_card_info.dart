@@ -44,7 +44,7 @@ class VehicleCardInfo extends StatelessWidget {
               context,
               title: 'آخر صيانة',
               value: lastMaintenance,
-              valueColor: AppColors.textPrimary,
+              valueColor: AppColors.textSecondary,
             ),
           ),
 
