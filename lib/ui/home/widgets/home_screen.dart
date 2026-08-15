@@ -7,7 +7,7 @@ import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/ui/section_title.dart';
 import 'package:moftah/ui/home/widgets/current%20repair/current_repair_card.dart';
 import 'package:moftah/ui/home/widgets/custom_appbar.dart';
-import 'package:moftah/ui/home/widgets/home_options_list.dart';
+import 'package:moftah/ui/home/widgets/home%20options/home_options_list.dart';
 import 'package:moftah/ui/home/widgets/nerbay%20places/nerbay_places.dart';
 import 'package:moftah/utils/responsive.dart';
 

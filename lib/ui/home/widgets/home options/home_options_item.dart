@@ -5,37 +5,6 @@ import 'package:moftah/ui/core/themes/sizes.dart';
 import 'package:moftah/ui/core/ui/custom_text.dart';
 import 'package:moftah/utils/responsive.dart';
 
-class HomeOptionsList extends StatelessWidget {
-  final List<HomeOptionItemModel> options;
-
-  const HomeOptionsList({super.key, required this.options});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: ResponsiveSize.height(context, 12),
-      child: ListView.separated(
-        reverse: true,
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
-        itemCount: options.length,
-        padding: EdgeInsets.symmetric(
-          horizontal: ResponsiveSize.width(context, 5),
-          vertical: ResponsiveSize.height(context, 0.8),
-        ),
-        separatorBuilder: (context, index) {
-          return SizedBox(width: ResponsiveSize.width(context, 2));
-        },
-        itemBuilder: (context, index) {
-          final item = options[index];
-
-          return HomeOptionItem(item: item);
-        },
-      ),
-    );
-  }
-}
-
 class HomeOptionItem extends StatelessWidget {
   final HomeOptionItemModel item;
 
@@ -45,8 +14,8 @@ class HomeOptionItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-      //  Navigator.pushNamed(context, item.path);
-      //   ;
+        //  Navigator.pushNamed(context, item.path);
+        //   ;
       },
       child: Container(
         width: ResponsiveSize.width(context, 21),
