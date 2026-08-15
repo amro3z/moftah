@@ -52,7 +52,7 @@ class RepairHeader extends StatelessWidget {
               customText(
                 text: '${data.workshopName} • ${data.location}',
                 fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
-                color: AppColors.textSecondary,
+                color: AppColors.progressBackground,
               ),
             ],
           ),

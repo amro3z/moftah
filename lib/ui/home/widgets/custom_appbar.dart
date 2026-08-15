@@ -125,10 +125,8 @@ PreferredSizeWidget customAppBar(
 
               SizedBox(height: ResponsiveSize.height(context, 2)),
 
-              VehicleCard(
-               data: data ,
-                onTap: onVehicleTap,
-              ),
+              VehicleCard(data: data, onTap: onVehicleTap),
+              SizedBox(height: ResponsiveSize.height(context, 1)),
             ],
           ),
         ),

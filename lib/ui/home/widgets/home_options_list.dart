@@ -85,14 +85,11 @@ class HomeOptionItem extends StatelessWidget {
 
             SizedBox(height: ResponsiveSize.height(context, 0.5)),
 
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              child: customText(
-                text: item.title,
-                isBold: true,
-                fontSize: ResponsiveSize.width(context, AppSizes.fontMd),
-                color: AppColors.primary,
-              ),
+            customText(
+              text: item.title,
+              isBold: true,
+              fontSize: ResponsiveSize.width(context, AppSizes.fontMd),
+              color: AppColors.primary,
             ),
           ],
         ),
