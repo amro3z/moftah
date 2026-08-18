@@ -6,6 +6,7 @@ class HomeNearbyPlacesModel {
   final int reviewsCount;
   final bool? isOpen;
   final String? openingHours;
+  final List<String> phones;
   final double distance;
   final String path;
   final double latitude;
@@ -19,6 +20,7 @@ class HomeNearbyPlacesModel {
     required this.reviewsCount,
     required this.isOpen,
     required this.openingHours,
+    required this.phones,
     required this.distance,
     required this.path,
     required this.latitude,

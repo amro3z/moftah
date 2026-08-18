@@ -3,10 +3,9 @@ import 'package:moftah/data/datasources/overpass_nearby_places_data_source.dart'
 import 'package:moftah/data/models/nerbay_places_model.dart';
 import 'package:moftah/data/models/overpass_dto.dart';
 import 'package:moftah/data/repos/workshop_rating_repository.dart';
-import 'package:moftah/domain/repositories/nearby_places_repository_contract.dart';
 import 'package:moftah/ui/core/constant/nerbay_places.dart';
 
-class NearbyPlacesRepository implements NearbyPlacesRepositoryContract {
+class NearbyPlacesRepository {
   NearbyPlacesRepository({
     OverpassNearbyPlacesDataSource? dataSource,
     WorkshopRatingRepository? ratingRepository,
@@ -17,15 +16,17 @@ class NearbyPlacesRepository implements NearbyPlacesRepositoryContract {
   final OverpassNearbyPlacesDataSource _dataSource;
   final WorkshopRatingRepository _ratingRepository;
 
-  @override
   Future<List<HomeNearbyPlacesModel>> getNearestWorkshops({
     required double userLatitude,
     required double userLongitude,
+    void Function(int radiusMeters)? onSearchRadius,
   }) async {
     final placesById = <String, HomeNearbyPlacesModel>{};
     Object? lastError;
 
     for (final radiusMeters in HomeNearbyPlacesInfo.searchRadiiMeters) {
+      onSearchRadius?.call(radiusMeters);
+
       try {
         final rawPlaces = await _dataSource.getNearbyCarRepairPlaces(
           latitude: userLatitude,
@@ -61,16 +62,18 @@ class NearbyPlacesRepository implements NearbyPlacesRepositoryContract {
     return const [];
   }
 
-  @override
   Future<List<HomeNearbyPlacesModel>> getWorkshopDirectory({
     required double userLatitude,
     required double userLongitude,
     int maxPlaces = 80,
+    void Function(int radiusMeters)? onSearchRadius,
   }) async {
     final placesById = <String, HomeNearbyPlacesModel>{};
     Object? lastError;
 
     for (final radiusMeters in HomeNearbyPlacesInfo.searchRadiiMeters) {
+      onSearchRadius?.call(radiusMeters);
+
       try {
         final rawPlaces = await _dataSource.getNearbyCarRepairPlaces(
           latitude: userLatitude,
@@ -102,7 +105,6 @@ class NearbyPlacesRepository implements NearbyPlacesRepositoryContract {
     return const [];
   }
 
-  @override
   Future<List<HomeNearbyPlacesModel>> getWorkshopsInMapArea({
     required double searchLatitude,
     required double searchLongitude,
@@ -188,6 +190,7 @@ class NearbyPlacesRepository implements NearbyPlacesRepositoryContract {
         reviewsCount: rating.reviewsCount,
         isOpen: place.isOpen,
         openingHours: place.openingHours,
+        phones: place.phones,
         distance: userDistanceMeters / 1000,
         path: '/map',
         latitude: place.latitude,

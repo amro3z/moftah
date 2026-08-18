@@ -13,27 +13,42 @@ class HomeNearbyPlacesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        vertical: ResponsiveSize.height(context, 1.6),
-      ),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
+    return TweenAnimationBuilder<double>(
+      key: ValueKey(nearbyPlaces.map((e) => e.externalId).join('|')),
+      duration: const Duration(milliseconds: 650),
+      curve: Curves.easeOutCubic,
+      tween: Tween(begin: 0, end: 1),
+      builder: (context, value, child) {
+        return Opacity(
+          opacity: value,
+          child: Transform.translate(
+            offset: Offset(0, 24 * (1 - value)),
+            child: child,
+          ),
+        );
+      },
+      child: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: ResponsiveSize.width(context, 5),
-          vertical: ResponsiveSize.height(context, 0.6),
+          vertical: ResponsiveSize.height(context, 1.6),
         ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: nearbyPlaces
-              .map(
-                (item) => HomeNearbyPlacesListItem(
-                  item: item,
-                  nearbyPlaces: nearbyPlaces,
-                ),
-              )
-              .toList(),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          padding: EdgeInsets.symmetric(
+            horizontal: ResponsiveSize.width(context, 5),
+            vertical: ResponsiveSize.height(context, 0.6),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: nearbyPlaces
+                .map(
+                  (item) => HomeNearbyPlacesListItem(
+                    item: item,
+                    nearbyPlaces: nearbyPlaces,
+                  ),
+                )
+                .toList(),
+          ),
         ),
       ),
     );

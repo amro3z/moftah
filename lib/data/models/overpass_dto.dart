@@ -4,6 +4,7 @@ class OverpassPlaceDto {
   final String supportedVehicles;
   final bool? isOpen;
   final String? openingHours;
+  final List<String> phones;
   final double latitude;
   final double longitude;
 
@@ -13,6 +14,7 @@ class OverpassPlaceDto {
     required this.supportedVehicles,
     required this.isOpen,
     required this.openingHours,
+    required this.phones,
     required this.latitude,
     required this.longitude,
   });

@@ -119,6 +119,13 @@ out center tags;
         final openingHours = tags['opening_hours']?.toString().trim();
         final bool? isOpen = OpeningHoursHelper.isOpenNow(openingHours);
 
+        final phones = _extractPhones([
+          tags['phone'],
+          tags['contact:phone'],
+          tags['mobile'],
+          tags['contact:mobile'],
+        ]);
+
         final externalId = '${type}_$id';
         placesById[externalId] = OverpassPlaceDto(
           externalId: externalId,
@@ -126,6 +133,7 @@ out center tags;
           supportedVehicles: details,
           isOpen: isOpen,
           openingHours: openingHours,
+          phones: phones,
           latitude: lat,
           longitude: lon,
         );
@@ -155,6 +163,26 @@ out center tags;
     }
 
     return null;
+  }
+
+  List<String> _extractPhones(List<dynamic> values) {
+    final phones = <String>[];
+
+    for (final value in values) {
+      final text = value?.toString().trim();
+      if (text == null || text.isEmpty) continue;
+
+      final parts = text
+          .split(RegExp(r'[;,/]'))
+          .map((number) => number.trim())
+          .where((number) => number.isNotEmpty);
+
+      for (final number in parts) {
+        if (!phones.contains(number)) phones.add(number);
+      }
+    }
+
+    return phones;
   }
 
   String? _firstNonEmpty(List<dynamic> values) {

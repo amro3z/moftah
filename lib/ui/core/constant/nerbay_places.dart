@@ -6,7 +6,6 @@ class HomeNearbyPlacesInfo {
   static const List<int> searchRadiiMeters = [
     15000,
     30000,
-    60000,
     100000,
   ];
 

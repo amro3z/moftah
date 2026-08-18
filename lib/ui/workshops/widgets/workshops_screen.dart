@@ -7,11 +7,19 @@ import 'package:moftah/ui/core/ui/app_loading_indicator.dart';
 import 'package:moftah/ui/core/ui/custom_text.dart';
 import 'package:moftah/ui/home/cubit/nearby_places_cubit.dart';
 import 'package:moftah/ui/home/cubit/nearby_places_state.dart';
+import 'package:moftah/ui/home/widgets/nerbay%20places/nearby_places_loading_indicator.dart';
 import 'package:moftah/ui/workshops/widgets/workshop_directory_card.dart';
 import 'package:moftah/utils/responsive.dart';
 
 class WorkshopsScreen extends StatelessWidget {
-  const WorkshopsScreen({super.key});
+  final double? userLatitude;
+  final double? userLongitude;
+
+  const WorkshopsScreen({
+    super.key,
+    this.userLatitude,
+    this.userLongitude,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -159,21 +167,48 @@ class WorkshopsScreen extends StatelessWidget {
   }
 
   Widget _body(BuildContext context, NearbyPlacesState state) {
-    if (state is NearbyPlacesInitial || state is NearbyPlacesLoading) {
-      return const Center(
-        child: AppLoadingIndicator(
-          message: 'بنجمعلك الورش ومراكز الصيانة...',
+    if (state is NearbyPlacesInitial) {
+      return const SingleChildScrollView(
+        child: NearbyPlacesLoadingIndicator(
+          state: NearbyPlacesLoading(
+            step: NearbyLoadingStep.checkingPermission,
+          ),
+          directoryMode: true,
+        ),
+      );
+    }
+
+    if (state is NearbyPlacesLoading) {
+      return SingleChildScrollView(
+        child: NearbyPlacesLoadingIndicator(
+          state: state,
+          directoryMode: true,
         ),
       );
     }
 
     if (state is NearbyPlacesError) {
       return Center(
-        child: AppRetryIndicator(
-          message: state.message,
-          onRetry: () {
-            context.read<NearbyPlacesCubit>().loadWorkshopDirectory();
-          },
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: ResponsiveSize.width(context, 5),
+          ),
+          child: AppRetryIndicator(
+            message: state.message,
+            onRetry: () async {
+              final cubit = context.read<NearbyPlacesCubit>();
+              await cubit.handleErrorAction(state);
+
+              if (userLatitude != null && userLongitude != null) {
+                await cubit.loadWorkshopDirectoryFromPosition(
+                  userLatitude: userLatitude!,
+                  userLongitude: userLongitude!,
+                );
+              } else {
+                await cubit.loadWorkshopDirectory();
+              }
+            },
+          ),
         ),
       );
     }
@@ -183,7 +218,16 @@ class WorkshopsScreen extends StatelessWidget {
     return RefreshIndicator(
       color: AppColors.secondary,
       onRefresh: () {
-        return context.read<NearbyPlacesCubit>().loadWorkshopDirectory();
+        final cubit = context.read<NearbyPlacesCubit>();
+
+        if (userLatitude != null && userLongitude != null) {
+          return cubit.loadWorkshopDirectoryFromPosition(
+            userLatitude: userLatitude!,
+            userLongitude: userLongitude!,
+          );
+        }
+
+        return cubit.loadWorkshopDirectory();
       },
       child: ListView.separated(
         physics: const AlwaysScrollableScrollPhysics(

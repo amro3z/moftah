@@ -17,15 +17,11 @@ class OsrmRoutingDataSource {
       '?overview=simplified&geometries=geojson&steps=true&alternatives=false',
     );
 
-    final client = HttpClient()
-      ..connectionTimeout = const Duration(seconds: 8);
+    final client = HttpClient()..connectionTimeout = const Duration(seconds: 8);
 
     try {
       final request = await client.getUrl(uri);
-      request.headers.set(
-        HttpHeaders.userAgentHeader,
-        'Moftah/1.0 Flutter',
-      );
+      request.headers.set(HttpHeaders.userAgentHeader, 'Moftah/1.0 Flutter');
 
       final response = await request.close().timeout(
         const Duration(seconds: 15),
@@ -51,7 +47,8 @@ class OsrmRoutingDataSource {
 
       final route = routes.first as Map<String, dynamic>;
       final geometry = route['geometry'] as Map<String, dynamic>?;
-      final coordinates = geometry?['coordinates'] as List<dynamic>? ?? const [];
+      final coordinates =
+          geometry?['coordinates'] as List<dynamic>? ?? const [];
 
       final points = <RouteCoordinate>[];
 
@@ -64,12 +61,7 @@ class OsrmRoutingDataSource {
         if (latitude == null || longitude == null) continue;
         if (!isValidCoordinate(latitude, longitude)) continue;
 
-        points.add(
-          RouteCoordinate(
-            latitude: latitude,
-            longitude: longitude,
-          ),
-        );
+        points.add(RouteCoordinate(latitude: latitude, longitude: longitude));
       }
 
       if (points.length < 2) {
@@ -88,7 +80,6 @@ class OsrmRoutingDataSource {
     }
   }
 
-
   double _parseInitialBearing(Map<String, dynamic> route) {
     final legs = route['legs'] as List<dynamic>? ?? const [];
     if (legs.isEmpty || legs.first is! Map<String, dynamic>) return 0;
@@ -104,9 +95,7 @@ class OsrmRoutingDataSource {
     return asDouble(maneuver['bearing_after']) ?? 0;
   }
 
-  List<RouteNavigationStep> _parseNavigationSteps(
-    Map<String, dynamic> route,
-  ) {
+  List<RouteNavigationStep> _parseNavigationSteps(Map<String, dynamic> route) {
     final legs = route['legs'] as List<dynamic>? ?? const [];
     if (legs.isEmpty || legs.first is! Map<String, dynamic>) return const [];
 
@@ -134,7 +123,8 @@ class OsrmRoutingDataSource {
       final type = maneuver['type']?.toString() ?? 'continue';
       if (type == 'depart') continue;
 
-      final previousStep = index > 0 && rawSteps[index - 1] is Map<String, dynamic>
+      final previousStep =
+          index > 0 && rawSteps[index - 1] is Map<String, dynamic>
           ? rawSteps[index - 1] as Map<String, dynamic>
           : null;
 
@@ -149,15 +139,11 @@ class OsrmRoutingDataSource {
           roadName: rawStep['name']?.toString() ?? '',
           distanceMeters: distanceToManeuver,
           bearingAfter: asDouble(maneuver['bearing_after']) ?? 0,
-          location: RouteCoordinate(
-            latitude: latitude,
-            longitude: longitude,
-          ),
+          location: RouteCoordinate(latitude: latitude, longitude: longitude),
         ),
       );
     }
 
     return parsedSteps;
   }
-  
 }

@@ -13,6 +13,7 @@ import 'package:moftah/ui/home/cubit/nearby_places_state.dart';
 import 'package:moftah/ui/home/widgets/current%20repair/current_repair_card.dart';
 import 'package:moftah/ui/home/widgets/custom_appbar.dart';
 import 'package:moftah/ui/home/widgets/home%20options/home_options_list.dart';
+import 'package:moftah/ui/home/widgets/nerbay%20places/nearby_places_loading_indicator.dart';
 import 'package:moftah/ui/home/widgets/nerbay%20places/nerbay_places.dart';
 import 'package:moftah/utils/responsive.dart';
 
@@ -96,23 +97,29 @@ class HomeScreen extends StatelessWidget {
               },
             ),
             SizedBox(height: ResponsiveSize.height(context, 1)),
-            if (state is NearbyPlacesInitial || state is NearbyPlacesLoading)
-              SizedBox(
-                height: ResponsiveSize.height(context, 13),
-                child: const Center(
-                  child: AppLoadingIndicator(
-                    message: 'بندور على أقرب الورش ليك...',
-                  ),
+            if (state is NearbyPlacesInitial)
+              NearbyPlacesLoadingIndicator(
+                state: const NearbyPlacesLoading(
+                  step: NearbyLoadingStep.checkingPermission,
                 ),
               )
+            else if (state is NearbyPlacesLoading)
+              NearbyPlacesLoadingIndicator(
+                state: state,
+              )
             else if (state is NearbyPlacesError)
-              SizedBox(
-                height: ResponsiveSize.height(context, 17),
-                child: Center(
-                  child: AppRetryIndicator(
-                    message: state.message,
-                    onRetry: context.read<NearbyPlacesCubit>().loadNearestWorkshops,
-                  ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: ResponsiveSize.width(context, 5),
+                  vertical: ResponsiveSize.height(context, 1),
+                ),
+                child: AppRetryIndicator(
+                  message: state.message,
+                  onRetry: () async {
+                    final cubit = context.read<NearbyPlacesCubit>();
+                    await cubit.handleErrorAction(state);
+                    await cubit.loadNearestWorkshops();
+                  },
                 ),
               )
             else if (state is NearbyPlacesSuccess)

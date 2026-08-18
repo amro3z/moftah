@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moftah/data/models/home_options_model.dart';
+import 'package:moftah/routing/workshops_route_arguments.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
 import 'package:moftah/ui/core/ui/custom_text.dart';
+import 'package:moftah/ui/home/cubit/nearby_places_cubit.dart';
+import 'package:moftah/ui/home/cubit/nearby_places_state.dart';
 import 'package:moftah/utils/responsive.dart';
 
 class HomeOptionItem extends StatelessWidget {
@@ -14,9 +18,27 @@ class HomeOptionItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (item.path == '/nearby-workshops') {
-          Navigator.pushNamed(context, item.path);
+        if (item.path != '/nearby-workshops') return;
+
+        final state = context.read<NearbyPlacesCubit>().state;
+
+        if (state is! NearbyPlacesSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('استنى لحظة لحد ما نحدد موقعك ونجيب أقرب الورش'),
+            ),
+          );
+          return;
         }
+
+        Navigator.pushNamed(
+          context,
+          item.path,
+          arguments: WorkshopsRouteArguments(
+            userLatitude: state.userLatitude,
+            userLongitude: state.userLongitude,
+          ),
+        );
       },
       child: Container(
         width: ResponsiveSize.width(context, 21),
@@ -52,9 +74,7 @@ class HomeOptionItem extends StatelessWidget {
                 color: AppColors.secondary,
               ),
             ),
-
             SizedBox(height: ResponsiveSize.height(context, 0.5)),
-
             customText(
               text: item.title,
               isBold: true,

@@ -15,6 +15,7 @@ import 'package:moftah/ui/core/ui/custom_text.dart';
 import 'package:moftah/ui/map/helper/navigation_instruction_helper.dart';
 import 'package:moftah/utils/location_service.dart';
 import 'package:moftah/utils/opening_hours_helper.dart';
+import 'package:moftah/ui/home/widgets/nerbay%20places/workshop_phone_button.dart';
 import 'package:moftah/utils/responsive.dart';
 
 class MapScreen extends StatefulWidget {
@@ -411,7 +412,9 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
 
   Future<void> _goToMyLocation() async {
     if (_currentLocation == null) {
-      final position = await LocationService.getCurrentPosition();
+      final position = await LocationService.getCurrentPosition(
+        forceRefresh: true,
+      );
 
       if (position != null && mounted) {
         setState(() {
@@ -1069,6 +1072,10 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
                 fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
                 color: AppColors.progressBackground,
               ),
+              if (place.phones.isNotEmpty) ...[
+                SizedBox(height: ResponsiveSize.height(context, 0.8)),
+                WorkshopPhoneButton(phones: place.phones),
+              ],
               SizedBox(height: ResponsiveSize.height(context, 0.4)),
               customText(
                 text: OpeningHoursHelper.displayText(place.openingHours),
