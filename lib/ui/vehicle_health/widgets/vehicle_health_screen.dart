@@ -6,6 +6,7 @@ import 'package:moftah/ui/core/ui/custom_text.dart';
 import 'package:moftah/utils/vehicle_brand_logo.dart';
 import 'package:moftah/ui/vehicle_health/widgets/health_item_card.dart';
 import 'package:moftah/ui/vehicle_health/widgets/health_score_ring.dart';
+import 'package:moftah/ui/vehicle_health/widgets/obd_diagnostics_card.dart';
 import 'package:moftah/utils/responsive.dart';
 
 class VehicleHealthScreen extends StatelessWidget {
@@ -54,6 +55,8 @@ class VehicleHealthScreen extends StatelessWidget {
                     fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
                     color: const Color(0xff6D8195),
                   ),
+                  SizedBox(height: ResponsiveSize.height(context, 1.5)),
+                  const ObdDiagnosticsCard(),
                   SizedBox(height: ResponsiveSize.height(context, 1.5)),
                   ...data.items.expand(
                     (item) => [

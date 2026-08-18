@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moftah/data/models/nerbay_places_model.dart';
 import 'package:moftah/data/models/vehicle_health_model.dart';
 import 'package:moftah/data/repos/nearby_places_repository.dart';
+import 'package:moftah/data/repos/obd_repository.dart';
+import 'package:moftah/ui/vehicle_health/cubit/obd_cubit.dart';
 import 'package:moftah/routing/map_route_arguments.dart';
 import 'package:moftah/routing/workshops_route_arguments.dart';
 import 'package:moftah/ui/home/cubit/nearby_places_cubit.dart';
@@ -60,7 +62,12 @@ class AppRoute {
           );
         }
         return MaterialPageRoute(
-          builder: (_) => VehicleHealthScreen(data: arguments),
+          builder: (_) => BlocProvider(
+            create: (_) => ObdCubit(
+              repository: ObdRepository(),
+            )..loadPairedDevices(),
+            child: VehicleHealthScreen(data: arguments),
+          ),
         );
 
       case '/map':
