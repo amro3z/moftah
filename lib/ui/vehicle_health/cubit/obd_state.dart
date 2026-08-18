@@ -10,8 +10,19 @@ enum ObdStatus {
   error,
 }
 
+enum ObdConnectionStage {
+  idle,
+  checkingPairedDevices,
+  findingAdapter,
+  connectingBluetooth,
+  initializingAdapter,
+  readingVehicle,
+  done,
+}
+
 class ObdState {
   final ObdStatus status;
+  final ObdConnectionStage connectionStage;
   final List<ObdDeviceModel> devices;
   final ObdDeviceModel? connectedDevice;
   final String adapterName;
@@ -20,6 +31,7 @@ class ObdState {
 
   const ObdState({
     this.status = ObdStatus.initial,
+    this.connectionStage = ObdConnectionStage.idle,
     this.devices = const [],
     this.connectedDevice,
     this.adapterName = '',
@@ -29,8 +41,13 @@ class ObdState {
 
   bool get isConnected => connectedDevice != null;
 
+  bool get isConnectionFlowRunning =>
+      connectionStage != ObdConnectionStage.idle &&
+      connectionStage != ObdConnectionStage.done;
+
   ObdState copyWith({
     ObdStatus? status,
+    ObdConnectionStage? connectionStage,
     List<ObdDeviceModel>? devices,
     ObdDeviceModel? connectedDevice,
     bool clearConnectedDevice = false,
@@ -42,6 +59,7 @@ class ObdState {
   }) {
     return ObdState(
       status: status ?? this.status,
+      connectionStage: connectionStage ?? this.connectionStage,
       devices: devices ?? this.devices,
       connectedDevice:
           clearConnectedDevice ? null : connectedDevice ?? this.connectedDevice,

@@ -1,4 +1,10 @@
-enum VehicleHealthSource { obd, maintenanceHistory, technicianInspection, userInput, estimated }
+enum VehicleHealthSource {
+  obd,
+  maintenanceHistory,
+  technicianInspection,
+  userInput,
+  estimated,
+}
 
 enum VehicleHealthStatus { excellent, good, attention, critical, unknown }
 
@@ -20,6 +26,28 @@ class VehicleHealthItemModel {
     required this.reason,
     this.actionText,
   });
+
+  VehicleHealthItemModel copyWith({
+    String? title,
+    int? score,
+    bool clearScore = false,
+    int? confidence,
+    VehicleHealthStatus? status,
+    VehicleHealthSource? source,
+    String? reason,
+    String? actionText,
+    bool clearActionText = false,
+  }) {
+    return VehicleHealthItemModel(
+      title: title ?? this.title,
+      score: clearScore ? null : score ?? this.score,
+      confidence: confidence ?? this.confidence,
+      status: status ?? this.status,
+      source: source ?? this.source,
+      reason: reason ?? this.reason,
+      actionText: clearActionText ? null : actionText ?? this.actionText,
+    );
+  }
 
   factory VehicleHealthItemModel.fromJson(Map<String, dynamic> json) {
     return VehicleHealthItemModel(
@@ -73,7 +101,11 @@ class VehicleHealthModel {
       overallConfidence: (json['overallConfidence'] as num?)?.toInt() ?? 0,
       items: rawItems
           .whereType<Map>()
-          .map((item) => VehicleHealthItemModel.fromJson(Map<String, dynamic>.from(item)))
+          .map(
+            (item) => VehicleHealthItemModel.fromJson(
+              Map<String, dynamic>.from(item),
+            ),
+          )
           .toList(),
     );
   }

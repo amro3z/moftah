@@ -9,94 +9,178 @@ class ObdCubit extends Cubit<ObdState> {
   ObdCubit({required this.repository}) : super(const ObdState());
 
   Future<void> loadPairedDevices() async {
-    emit(state.copyWith(
-      status: ObdStatus.loadingDevices,
-      clearMessage: true,
-    ));
+    emit(
+      state.copyWith(
+        status: ObdStatus.loadingDevices,
+        connectionStage: ObdConnectionStage.checkingPairedDevices,
+        clearMessage: true,
+      ),
+    );
 
     try {
       final devices = await repository.getPairedDevices();
-      emit(state.copyWith(
-        status: ObdStatus.ready,
-        devices: devices,
-        message: devices.isEmpty
-            ? 'اعمل Pair مع ELM327 من إعدادات البلوتوث أولاً.'
-            : null,
-        clearMessage: devices.isNotEmpty,
-      ));
+      emit(
+        state.copyWith(
+          status: ObdStatus.ready,
+          connectionStage: ObdConnectionStage.idle,
+          devices: devices,
+          message: devices.isEmpty
+              ? 'اعمل Pair مع ELM327 من إعدادات البلوتوث أولاً.'
+              : null,
+          clearMessage: devices.isNotEmpty,
+        ),
+      );
     } catch (_) {
-      emit(state.copyWith(
-        status: ObdStatus.error,
-        message: 'تعذر قراءة أجهزة البلوتوث المقترنة.',
-      ));
+      emit(
+        state.copyWith(
+          status: ObdStatus.error,
+          connectionStage: ObdConnectionStage.idle,
+          message: 'تعذر قراءة أجهزة البلوتوث المقترنة.',
+        ),
+      );
     }
   }
 
   Future<void> connectPreferredDevice() async {
-    if (state.devices.isEmpty) {
-      await loadPairedDevices();
-      if (state.devices.isEmpty) return;
-    }
-
-    final device = _preferredDevice(state.devices);
-    await connect(device);
-  }
-
-  Future<void> connect(ObdDeviceModel device) async {
-    emit(state.copyWith(
-      status: ObdStatus.connecting,
-      clearMessage: true,
-    ));
+    emit(
+      state.copyWith(
+        status: ObdStatus.loadingDevices,
+        connectionStage: ObdConnectionStage.checkingPairedDevices,
+        clearMessage: true,
+      ),
+    );
 
     try {
-      final result = await repository.connect(device.address);
-      if (!result.connected) {
-        emit(state.copyWith(
-          status: ObdStatus.error,
-          message: 'فشل الاتصال بـ ${device.name}.',
-        ));
+      var devices = state.devices;
+      if (devices.isEmpty) {
+        devices = await repository.getPairedDevices();
+        emit(state.copyWith(devices: devices));
+      }
+
+      if (devices.isEmpty) {
+        emit(
+          state.copyWith(
+            status: ObdStatus.ready,
+            connectionStage: ObdConnectionStage.idle,
+            message: 'مش لاقيين جهاز مقترن. اعمل Pair مع ELM327 من إعدادات البلوتوث.',
+          ),
+        );
         return;
       }
 
-      emit(state.copyWith(
-        status: ObdStatus.connected,
-        connectedDevice: device,
-        adapterName: result.adapterName,
-        clearSnapshot: true,
-      ));
+      emit(
+        state.copyWith(
+          status: ObdStatus.loadingDevices,
+          connectionStage: ObdConnectionStage.findingAdapter,
+        ),
+      );
 
-      await refreshDiagnostics();
+      // Small visual pause so the user can actually see this connection step.
+      await Future<void>.delayed(const Duration(milliseconds: 250));
+
+      final device = _preferredDevice(devices);
+      await connect(device);
     } catch (_) {
-      emit(state.copyWith(
-        status: ObdStatus.error,
-        message: 'تعذر الاتصال بالـ ELM327. تأكد إنه شغال ومقترن بالموبايل.',
-      ));
+      emit(
+        state.copyWith(
+          status: ObdStatus.error,
+          connectionStage: ObdConnectionStage.idle,
+          message: 'حصلت مشكلة أثناء البحث عن ELM327.',
+        ),
+      );
     }
   }
 
-  Future<void> refreshDiagnostics() async {
+  Future<void> connect(ObdDeviceModel device) async {
+    emit(
+      state.copyWith(
+        status: ObdStatus.connecting,
+        connectionStage: ObdConnectionStage.connectingBluetooth,
+        clearMessage: true,
+      ),
+    );
+
+    try {
+      final connected = await repository.connectBluetooth(device.address);
+      if (!connected) {
+        emit(
+          state.copyWith(
+            status: ObdStatus.error,
+            connectionStage: ObdConnectionStage.idle,
+            message: 'فشل الاتصال بـ ${device.name}.',
+          ),
+        );
+        return;
+      }
+
+      emit(
+        state.copyWith(
+          status: ObdStatus.connecting,
+          connectionStage: ObdConnectionStage.initializingAdapter,
+          connectedDevice: device,
+          clearSnapshot: true,
+        ),
+      );
+
+      await repository.initializeAdapter();
+      final adapterName = await repository.readAdapterName();
+
+      emit(
+        state.copyWith(
+          status: ObdStatus.reading,
+          connectionStage: ObdConnectionStage.readingVehicle,
+          connectedDevice: device,
+          adapterName: adapterName,
+          clearSnapshot: true,
+        ),
+      );
+
+      await refreshDiagnostics(showConnectionStage: true);
+    } catch (_) {
+      emit(
+        state.copyWith(
+          status: ObdStatus.error,
+          connectionStage: ObdConnectionStage.idle,
+          message: 'تعذر الاتصال بالـ ELM327. تأكد إنه شغال ومقترن بالموبايل.',
+        ),
+      );
+    }
+  }
+
+  Future<void> refreshDiagnostics({bool showConnectionStage = false}) async {
     if (!state.isConnected) return;
 
-    emit(state.copyWith(
-      status: ObdStatus.reading,
-      clearMessage: true,
-    ));
+    emit(
+      state.copyWith(
+        status: ObdStatus.reading,
+        connectionStage: showConnectionStage
+            ? ObdConnectionStage.readingVehicle
+            : state.connectionStage,
+        clearMessage: true,
+      ),
+    );
 
     try {
       final snapshot = await repository.readSnapshot();
-      emit(state.copyWith(
-        status: ObdStatus.connected,
-        snapshot: snapshot,
-        message: snapshot.ecuAvailable
-            ? null
-            : 'القطعة متصلة، لكن مفيش استجابة من ECU. ده طبيعي لو الـ ELM327 واخدة باور فقط ومش متوصلة بالعربية.',
-        clearMessage: snapshot.ecuAvailable,
-      ));
+      emit(
+        state.copyWith(
+          status: ObdStatus.connected,
+          connectionStage: ObdConnectionStage.done,
+          snapshot: snapshot,
+          message: snapshot.ecuAvailable
+              ? null
+              : 'القطعة متصلة، لكن مفيش استجابة من ECU. ده طبيعي لو الـ ELM327 واخدة باور فقط ومش متوصلة بالعربية.',
+          clearMessage: snapshot.ecuAvailable,
+        ),
+      );
     } catch (_) {
-      emit(state.copyWith(
-        status: ObdStatus.connected,
-        message: 'اتصلنا بالقطعة لكن فشلنا في قراءة بيانات العربية.',
-      ));
+      emit(
+        state.copyWith(
+          status: ObdStatus.connected,
+          connectionStage: ObdConnectionStage.done,
+          message: 'اتصلنا بالقطعة لكن فشلنا في قراءة بيانات العربية.',
+        ),
+      );
     }
   }
 
@@ -104,13 +188,16 @@ class ObdCubit extends Cubit<ObdState> {
     try {
       await repository.disconnect();
     } finally {
-      emit(state.copyWith(
-        status: ObdStatus.ready,
-        clearConnectedDevice: true,
-        clearSnapshot: true,
-        adapterName: '',
-        clearMessage: true,
-      ));
+      emit(
+        state.copyWith(
+          status: ObdStatus.ready,
+          connectionStage: ObdConnectionStage.idle,
+          clearConnectedDevice: true,
+          clearSnapshot: true,
+          adapterName: '',
+          clearMessage: true,
+        ),
+      );
     }
   }
 

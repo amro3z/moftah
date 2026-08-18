@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moftah/data/models/vehicle_health_model.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
 import 'package:moftah/ui/core/ui/custom_text.dart';
-import 'package:moftah/utils/vehicle_brand_logo.dart';
+import 'package:moftah/ui/vehicle_health/cubit/obd_cubit.dart';
+import 'package:moftah/ui/vehicle_health/cubit/obd_state.dart';
 import 'package:moftah/ui/vehicle_health/widgets/health_item_card.dart';
 import 'package:moftah/ui/vehicle_health/widgets/health_score_ring.dart';
 import 'package:moftah/ui/vehicle_health/widgets/obd_diagnostics_card.dart';
+import 'package:moftah/ui/vehicle_health/widgets/vehicle_health_info_note.dart';
 import 'package:moftah/utils/responsive.dart';
+import 'package:moftah/utils/vehicle_brand_logo.dart';
 
 class VehicleHealthScreen extends StatelessWidget {
   final VehicleHealthModel data;
@@ -48,21 +52,30 @@ class VehicleHealthScreen extends StatelessWidget {
                       _confidenceBadge(context, data.overallConfidence),
                     ],
                   ),
-                  SizedBox(height: ResponsiveSize.height(context, .6)),
-                  customText(
-                    text:
-                        'التقييم مبني على البيانات المتاحة، ومع كل مصدر جديد تزيد دقة النتيجة.',
-                    fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
-                    color: const Color(0xff6D8195),
-                  ),
+                  SizedBox(height: ResponsiveSize.height(context, .8)),
+                  const VehicleHealthInfoNote(),
                   SizedBox(height: ResponsiveSize.height(context, 1.5)),
                   const ObdDiagnosticsCard(),
                   SizedBox(height: ResponsiveSize.height(context, 1.5)),
-                  ...data.items.expand(
-                    (item) => [
-                      HealthItemCard(item: item),
-                      SizedBox(height: ResponsiveSize.height(context, 1.2)),
-                    ],
+                  BlocBuilder<ObdCubit, ObdState>(
+                    buildWhen: (previous, current) =>
+                        previous.snapshot != current.snapshot ||
+                        previous.status != current.status,
+                    builder: (context, obdState) {
+                      return Column(
+                        children: [
+                          for (final item in data.items) ...[
+                            HealthItemCard(
+                              item: item,
+                              obdSnapshot: obdState.snapshot,
+                            ),
+                            SizedBox(
+                              height: ResponsiveSize.height(context, 1.2),
+                            ),
+                          ],
+                        ],
+                      );
+                    },
                   ),
                   SizedBox(height: ResponsiveSize.height(context, .5)),
                   SizedBox(
@@ -159,8 +172,7 @@ class VehicleHealthScreen extends StatelessWidget {
                     ),
                     SizedBox(height: ResponsiveSize.height(context, .35)),
                     customText(
-                      text:
-                          '${data.year}  •  ${_formatNumber(data.mileage)} كم',
+                      text: '${data.year}  •  ${_formatNumber(data.mileage)} كم',
                       fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
                       color: Colors.white70,
                     ),
@@ -189,19 +201,19 @@ class VehicleHealthScreen extends StatelessWidget {
   }
 
   Widget _confidenceBadge(BuildContext context, int value) => Container(
-    padding: EdgeInsets.symmetric(
-      horizontal: ResponsiveSize.width(context, 2.5),
-      vertical: ResponsiveSize.height(context, .6),
-    ),
-    decoration: BoxDecoration(
-      color: AppColors.secondary.withValues(alpha: .09),
-      borderRadius: BorderRadius.circular(30),
-    ),
-    child: customText(
-      text: 'دقة التقييم $value%',
-      fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
-      color: AppColors.secondary,
-      isBold: true,
-    ),
-  );
+        padding: EdgeInsets.symmetric(
+          horizontal: ResponsiveSize.width(context, 2.5),
+          vertical: ResponsiveSize.height(context, .6),
+        ),
+        decoration: BoxDecoration(
+          color: AppColors.secondary.withValues(alpha: .09),
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: customText(
+          text: 'دقة التقييم $value%',
+          fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
+          color: AppColors.secondary,
+          isBold: true,
+        ),
+      );
 }

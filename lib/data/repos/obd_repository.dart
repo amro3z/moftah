@@ -22,8 +22,21 @@ class ObdRepository {
     return _dataSource.getPairedDevices();
   }
 
+  Future<bool> connectBluetooth(String address) {
+    return _dataSource.connect(address);
+  }
+
+  Future<void> initializeAdapter() {
+    return _initializeAdapter();
+  }
+
+  Future<String> readAdapterName() async {
+    final adapterName = await _dataSource.sendCommand('ATI');
+    return adapterName.isEmpty ? 'ELM327' : adapterName;
+  }
+
   Future<ObdConnectionResult> connect(String address) async {
-    final connected = await _dataSource.connect(address);
+    final connected = await connectBluetooth(address);
     if (!connected) {
       return const ObdConnectionResult(
         connected: false,
@@ -31,12 +44,12 @@ class ObdRepository {
       );
     }
 
-    await _initializeAdapter();
-    final adapterName = await _dataSource.sendCommand('ATI');
+    await initializeAdapter();
+    final adapterName = await readAdapterName();
 
     return ObdConnectionResult(
       connected: true,
-      adapterName: adapterName.isEmpty ? 'ELM327' : adapterName,
+      adapterName: adapterName,
     );
   }
 

@@ -87,15 +87,21 @@ class _ObdDiagnosticsCardState extends State<ObdDiagnosticsCard>
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               InkWell(
-                onTap: state.isConnected ? () => _toggleExpanded(state) : null,
+                onTap: state.isConnected && !state.isConnectionFlowRunning
+                    ? () => _toggleExpanded(state)
+                    : null,
                 borderRadius: BorderRadius.circular(AppSizes.radiusSm),
                 child: _header(context, state),
               ),
+              if (state.isConnectionFlowRunning) ...[
+                SizedBox(height: ResponsiveSize.height(context, 1.2)),
+                _connectionProgress(context, state),
+              ],
               if (state.message != null) ...[
                 SizedBox(height: ResponsiveSize.height(context, 1)),
                 _message(context, state.message!),
               ],
-              if (state.isConnected) ...[
+              if (state.isConnected && !state.isConnectionFlowRunning) ...[
                 SizedBox(height: ResponsiveSize.height(context, 1.1)),
                 _connectionInfo(context, state),
                 SizedBox(height: ResponsiveSize.height(context, .9)),
@@ -105,7 +111,9 @@ class _ObdDiagnosticsCardState extends State<ObdDiagnosticsCard>
                 duration: const Duration(milliseconds: 420),
                 curve: Curves.easeInOutCubic,
                 alignment: Alignment.topCenter,
-                child: _expanded && state.isConnected
+                child: _expanded &&
+                        state.isConnected &&
+                        !state.isConnectionFlowRunning
                     ? Padding(
                         padding: EdgeInsets.only(
                           top: ResponsiveSize.height(context, 1.4),
@@ -140,6 +148,7 @@ class _ObdDiagnosticsCardState extends State<ObdDiagnosticsCard>
 
   Widget _header(BuildContext context, ObdState state) {
     final connected = state.isConnected;
+    final connecting = state.isConnectionFlowRunning;
 
     return Row(
       children: [
@@ -173,9 +182,11 @@ class _ObdDiagnosticsCardState extends State<ObdDiagnosticsCard>
               ),
               SizedBox(height: ResponsiveSize.height(context, .25)),
               customText(
-                text: connected
-                    ? 'بيانات حية من السيارة عبر ELM327'
-                    : 'وصّل ELM327 علشان تقرأ الأعطال والبيانات الحية',
+                text: connecting
+                    ? _stageText(state.connectionStage)
+                    : connected
+                        ? 'بيانات حية من السيارة عبر ELM327'
+                        : 'وصّل ELM327 علشان تقرأ الأعطال والبيانات الحية',
                 fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
                 color: Colors.white70,
               ),
@@ -193,15 +204,118 @@ class _ObdDiagnosticsCardState extends State<ObdDiagnosticsCard>
             borderRadius: BorderRadius.circular(30),
           ),
           child: customText(
-            text: connected ? 'متصل' : 'غير متصل',
+            text: connecting ? 'جاري الاتصال' : connected ? 'متصل' : 'غير متصل',
             fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
-            color: connected ? AppColors.success : Colors.white70,
+            color: connecting
+                ? AppColors.info
+                : connected
+                    ? AppColors.success
+                    : Colors.white70,
             isBold: true,
           ),
         ),
       ],
     );
   }
+
+  Widget _connectionProgress(BuildContext context, ObdState state) {
+    final stages = <ObdConnectionStage>[
+      ObdConnectionStage.checkingPairedDevices,
+      ObdConnectionStage.findingAdapter,
+      ObdConnectionStage.connectingBluetooth,
+      ObdConnectionStage.initializingAdapter,
+      ObdConnectionStage.readingVehicle,
+    ];
+
+    final currentIndex = stages.indexOf(state.connectionStage);
+
+    return Container(
+      padding: EdgeInsets.all(ResponsiveSize.width(context, 3.2)),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: .055),
+        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        border: Border.all(color: Colors.white.withValues(alpha: .06)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 280),
+            transitionBuilder: (child, animation) => FadeTransition(
+              opacity: animation,
+              child: SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0, .15),
+                  end: Offset.zero,
+                ).animate(animation),
+                child: child,
+              ),
+            ),
+            child: Row(
+              key: ValueKey(state.connectionStage),
+              children: [
+                SizedBox(
+                  width: ResponsiveSize.width(context, 5),
+                  height: ResponsiveSize.width(context, 5),
+                  child: const CircularProgressIndicator(
+                    strokeWidth: 2.4,
+                    color: AppColors.info,
+                  ),
+                ),
+                SizedBox(width: ResponsiveSize.width(context, 2.5)),
+                Expanded(
+                  child: customText(
+                    text: _stageText(state.connectionStage),
+                    fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
+                    color: Colors.white,
+                    isBold: true,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: ResponsiveSize.height(context, 1.2)),
+          Row(
+            children: List.generate(stages.length, (index) {
+              final completed = currentIndex > index;
+              final current = currentIndex == index;
+              return Expanded(
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  height: 4,
+                  margin: EdgeInsets.symmetric(
+                    horizontal: ResponsiveSize.width(context, .35),
+                  ),
+                  decoration: BoxDecoration(
+                    color: completed
+                        ? AppColors.success
+                        : current
+                            ? AppColors.info
+                            : Colors.white.withValues(alpha: .12),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+              );
+            }),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _stageText(ObdConnectionStage stage) => switch (stage) {
+        ObdConnectionStage.checkingPairedDevices =>
+          'بنفحص أجهزة البلوتوث المقترنة...',
+        ObdConnectionStage.findingAdapter => 'بندور على ELM327...',
+        ObdConnectionStage.connectingBluetooth =>
+          'بنعمل اتصال Bluetooth مع القطعة...',
+        ObdConnectionStage.initializingAdapter =>
+          'بنجهز ELM327 ونحدد بروتوكول العربية...',
+        ObdConnectionStage.readingVehicle =>
+          'بنتواصل مع ECU ونقرأ بيانات العربية...',
+        ObdConnectionStage.done => 'تم الاتصال وقراءة البيانات',
+        ObdConnectionStage.idle => 'جاهز للاتصال',
+      };
 
   Widget _connectionInfo(BuildContext context, ObdState state) {
     return Container(
