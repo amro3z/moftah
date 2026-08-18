@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moftah/data/models/current_repair_model.dart';
+import 'package:moftah/data/models/nerbay_places_model.dart';
 import 'package:moftah/data/models/vehicle_card.dart';
+import 'package:moftah/routing/map_route_arguments.dart';
 import 'package:moftah/ui/core/constant/home_options.dart';
-import 'package:moftah/ui/core/constant/nerbay_places.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
+import 'package:moftah/ui/core/ui/app_loading_indicator.dart';
 import 'package:moftah/ui/core/ui/section_title.dart';
+import 'package:moftah/ui/home/cubit/nearby_places_cubit.dart';
+import 'package:moftah/ui/home/cubit/nearby_places_state.dart';
 import 'package:moftah/ui/home/widgets/current%20repair/current_repair_card.dart';
 import 'package:moftah/ui/home/widgets/custom_appbar.dart';
 import 'package:moftah/ui/home/widgets/home%20options/home_options_list.dart';
 import 'package:moftah/ui/home/widgets/nerbay%20places/nerbay_places.dart';
 import 'package:moftah/utils/responsive.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -52,7 +52,6 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(height: ResponsiveSize.height(context, 1.5)),
               const SectionTitle(title: 'الإصلاح الحالي'),
               SizedBox(height: ResponsiveSize.height(context, 1)),
-
               CurrentRepairCard(
                 data: const CurrentRepairModel(
                   title: 'تغيير زيت المحرك + فلتر',
@@ -65,14 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
               SizedBox(height: ResponsiveSize.height(context, 1.5)),
-              const SectionTitle(
-                title: 'ورش قريبة منك',
-                actionText: 'عرض الخريطة',
-              ),
-              SizedBox(height: ResponsiveSize.height(context, 1)),
-              HomeNearbyPlacesList(
-                nearbyPlaces: HomeNearbyPlacesInfo.places,
-              ),
+              _buildNearbyPlacesSection(context),
               SizedBox(height: ResponsiveSize.height(context, 10.5)),
             ],
           ),
@@ -80,7 +72,56 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
+  Widget _buildNearbyPlacesSection(BuildContext context) {
+    return BlocBuilder<NearbyPlacesCubit, NearbyPlacesState>(
+      builder: (context, state) {
+       final List<HomeNearbyPlacesModel> places = state is NearbyPlacesSuccess
+            ? state.places
+            : const <HomeNearbyPlacesModel>[];
+
+        return Column(
+          children: [
+            SectionTitle(
+              title: 'ورش قريبة منك',
+              actionText: 'عرض الخريطة',
+              onActionTap: () {
+                Navigator.pushNamed(
+                  context,
+                  '/map',
+                  arguments: MapRouteArguments(
+                    nearbyPlaces: places,
+                  ),
+                );
+              },
+            ),
+            SizedBox(height: ResponsiveSize.height(context, 1)),
+            if (state is NearbyPlacesInitial || state is NearbyPlacesLoading)
+              SizedBox(
+                height: ResponsiveSize.height(context, 13),
+                child: const Center(
+                  child: AppLoadingIndicator(
+                    message: 'بندور على أقرب الورش ليك...',
+                  ),
+                ),
+              )
+            else if (state is NearbyPlacesError)
+              SizedBox(
+                height: ResponsiveSize.height(context, 17),
+                child: Center(
+                  child: AppRetryIndicator(
+                    message: state.message,
+                    onRetry: context.read<NearbyPlacesCubit>().loadNearestWorkshops,
+                  ),
+                ),
+              )
+            else if (state is NearbyPlacesSuccess)
+              HomeNearbyPlacesList(
+                nearbyPlaces: state.places,
+              ),
+          ],
+        );
+      },
+    );
+  }
 }
-
-
-

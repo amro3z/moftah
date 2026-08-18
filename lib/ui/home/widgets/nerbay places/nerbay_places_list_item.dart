@@ -1,27 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:moftah/data/models/nerbay_places_model.dart';
+import 'package:moftah/routing/map_route_arguments.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
 import 'package:moftah/ui/core/ui/custom_text.dart';
 import 'package:moftah/ui/home/helper/nerbay_places_stars.dart';
+import 'package:moftah/utils/opening_hours_helper.dart';
 import 'package:moftah/utils/responsive.dart';
 
 class HomeNearbyPlacesListItem extends StatelessWidget {
   final HomeNearbyPlacesModel item;
-  const HomeNearbyPlacesListItem({super.key, required this.item});
+  final List<HomeNearbyPlacesModel> nearbyPlaces;
+
+  const HomeNearbyPlacesListItem({
+    super.key,
+    required this.item,
+    required this.nearbyPlaces,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: ResponsiveSize.width(context, 2)),
       child: GestureDetector(
         onTap: () {
-          Navigator.pushNamed(context, item.path , arguments: item);
+          Navigator.pushNamed(
+            context,
+            item.path,
+            arguments: MapRouteArguments(
+              selectedPlace: item,
+              nearbyPlaces: nearbyPlaces,
+            ),
+          );
         },
         child: Container(
           constraints: BoxConstraints(
-            minWidth: ResponsiveSize.width(context, 45),
+            minWidth: ResponsiveSize.width(context, 48),
             maxWidth: ResponsiveSize.width(context, 60),
-            maxHeight: ResponsiveSize.height(context, 45),
           ),
           padding: EdgeInsets.symmetric(
             horizontal: ResponsiveSize.width(context, 4),
@@ -43,39 +58,44 @@ class HomeNearbyPlacesListItem extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              /// Rating on left - Status on right
               Row(
                 textDirection: TextDirection.ltr,
                 children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SizedBox(width: ResponsiveSize.width(context, 1)),
-        
-                      ratingStars(context: context, numberOfStars: item.rating),
-                      SizedBox(width: ResponsiveSize.width(context, 1)),
-                      customText(
-                        text: item.rating.toString(),
-                        fontSize: ResponsiveSize.width(context, AppSizes.fontMd),
-                        color: AppColors.textPrimary,
-                      ),
-                    ],
-                  ),
-        
+                  if (item.reviewsCount > 0)
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ratingStars(
+                          context: context,
+                          numberOfStars: item.rating,
+                        ),
+                        SizedBox(width: ResponsiveSize.width(context, 1)),
+                        customText(
+                          text: item.rating.toStringAsFixed(1),
+                          fontSize: ResponsiveSize.width(
+                            context,
+                            AppSizes.fontMd,
+                          ),
+                          color: AppColors.textPrimary,
+                        ),
+                      ],
+                    )
+                  else
+                    customText(
+                      text: 'بدون تقييم',
+                      fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
+                      color: AppColors.progressBackground,
+                    ),
                   const Spacer(),
-        
                   customText(
-                    text: item.isOpen ? 'مفتوح' : 'مغلق',
+                    text: _openStatusText,
                     fontSize: ResponsiveSize.width(context, AppSizes.fontMd),
-                    color: item.isOpen ? AppColors.success : AppColors.danger,
+                    color: _openStatusColor,
                     isBold: true,
                   ),
                 ],
               ),
-        
               SizedBox(height: ResponsiveSize.height(context, 1)),
-        
-              /// Center name
               Align(
                 alignment: Alignment.centerRight,
                 child: customText(
@@ -85,10 +105,7 @@ class HomeNearbyPlacesListItem extends StatelessWidget {
                   isBold: true,
                 ),
               ),
-        
               SizedBox(height: ResponsiveSize.height(context, 0.5)),
-        
-              /// Supported vehicles
               Align(
                 alignment: Alignment.centerRight,
                 child: customText(
@@ -97,10 +114,16 @@ class HomeNearbyPlacesListItem extends StatelessWidget {
                   color: AppColors.progressBackground,
                 ),
               ),
-        
+              SizedBox(height: ResponsiveSize.height(context, 0.5)),
+              Align(
+                alignment: Alignment.centerRight,
+                child: customText(
+                  text: OpeningHoursHelper.displayText(item.openingHours),
+                  fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
+                  color: AppColors.textMuted,
+                ),
+              ),
               SizedBox(height: ResponsiveSize.height(context, 0.8)),
-        
-              /// Distance
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -109,11 +132,9 @@ class HomeNearbyPlacesListItem extends StatelessWidget {
                     color: AppColors.warning,
                     size: ResponsiveSize.width(context, 3.5),
                   ),
-        
                   SizedBox(width: ResponsiveSize.width(context, 1)),
-        
                   customText(
-                    text: '${item.distance.toString()} كم',
+                    text: '${item.distance.toStringAsFixed(1)} كم',
                     color: AppColors.secondary,
                     fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
                     isBold: true,
@@ -125,5 +146,20 @@ class HomeNearbyPlacesListItem extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  bool? get _liveOpenStatus =>
+      OpeningHoursHelper.isOpenNow(item.openingHours) ?? item.isOpen;
+
+  String get _openStatusText {
+    if (_liveOpenStatus == true) return 'مفتوح الآن';
+    if (_liveOpenStatus == false) return 'مغلق الآن';
+    return 'المواعيد غير مؤكدة';
+  }
+
+  Color get _openStatusColor {
+    if (_liveOpenStatus == true) return AppColors.success;
+    if (_liveOpenStatus == false) return AppColors.danger;
+    return AppColors.progressBackground;
   }
 }

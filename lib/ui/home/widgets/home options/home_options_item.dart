@@ -14,8 +14,9 @@ class HomeOptionItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        //  Navigator.pushNamed(context, item.path);
-        //   ;
+        if (item.path == '/nearby-workshops') {
+          Navigator.pushNamed(context, item.path);
+        }
       },
       child: Container(
         width: ResponsiveSize.width(context, 21),
