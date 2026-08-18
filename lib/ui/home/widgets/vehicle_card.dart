@@ -3,6 +3,7 @@ import 'package:moftah/data/models/vehicle_card.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
 import 'package:moftah/ui/home/helper/vehicle_status_ui.dart';
+import 'package:moftah/utils/vehicle_brand_logo.dart';
 import 'package:moftah/ui/home/widgets/vehicle_card_header.dart';
 import 'package:moftah/ui/home/widgets/vehicle_card_info.dart';
 import 'package:moftah/utils/responsive.dart';
@@ -13,99 +14,73 @@ class VehicleCard extends StatelessWidget {
 
   const VehicleCard({super.key, required this.data, this.onTap});
 
-  String _formattedMillage({required int number}) {
-    if (number == 0) return '0';
+  String _formatNumber(int number) {
+    final value = number.toString();
 
-    int counter = 0;
-    String formattedNumber = '';
-    String temp = '';
-
-    while (number > 0) {
-      counter++;
-
-      temp = (number % 10).toString() + temp;
-
-      number ~/= 10;
-
-      if (counter % 3 == 0 && number > 0) {
-        formattedNumber = ',$temp$formattedNumber';
-        temp = '';
-      }
-    }
-
-    return temp + formattedNumber;
+    return value.replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (_) => ',');
   }
 
   @override
   Widget build(BuildContext context) {
     final repairUi = VehicleStatusUi.repair(data.repairStatus);
 
+    final formattedMileage = _formatNumber(data.mileage);
+
     return Directionality(
       textDirection: TextDirection.rtl,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(AppSizes.radiusLg),
-        child: Container(
-          width: ResponsiveSize.width(context, 85),
-          height: ResponsiveSize.height(context, 32),
-          padding: EdgeInsets.all(ResponsiveSize.width(context, 4)),
-          decoration: BoxDecoration(
-            color: AppColors.surfaceDark,
-            borderRadius: BorderRadius.circular(AppSizes.radiusLg),
-            border: Border.all(color: AppColors.border),
-          ),
-          child: Column(
-            children: [
-              VehicleCardHeader(
-                data: data,
-                formattedMileage: _formattedMillage(number: data.mileage),
-              ),
-
-              SizedBox(height: ResponsiveSize.height(context, 1)),
-
-              ClipRRect(
-                borderRadius: BorderRadius.circular(AppSizes.radiusSm),
-                child: Image.network(
-                  data.imageUrl,
-                  width: double.infinity,
-                  height: ResponsiveSize.height(context, 11),
-                  fit: BoxFit.cover,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) {
-                      return child;
-                    }
-
-                    return SizedBox(
-                      height: ResponsiveSize.height(context, 11),
-                      child: const Center(child: CircularProgressIndicator()),
-                    );
-                  },
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      height: ResponsiveSize.height(context, 11),
-                      color: AppColors.surfaceMedium,
-                      child: const Center(
-                        child: Icon(
-                          Icons.directions_car_rounded,
-                          color: AppColors.textMuted,
-                          size: 50,
-                        ),
-                      ),
-                    );
-                  },
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(AppSizes.radiusLg),
+          child: Ink(
+            width: ResponsiveSize.width(context, 90),
+            padding: EdgeInsets.all(ResponsiveSize.width(context, 4)),
+            decoration: BoxDecoration(
+              color: AppColors.surfaceDark,
+              borderRadius: BorderRadius.circular(AppSizes.radiusLg),
+              border: Border.all(color: Colors.white.withValues(alpha: .08)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: .16),
+                  blurRadius: 18,
+                  offset: const Offset(0, 8),
                 ),
-              ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    VehicleBrandLogo(
+                      brand: data.brand,
+                      logoUrl: data.brandLogoUrl,
+                      sizePercent: 15,
+                    ),
 
-              SizedBox(height: ResponsiveSize.height(context, 1)),
+                    SizedBox(width: ResponsiveSize.width(context, 3)),
 
-              VehicleCardInfo(
-                nextMaintenance:
-                    '${_formattedMillage(number: data.nextMaintenance)} كم',
-                lastMaintenance: data.lastMaintenance,
-                repairText: repairUi.text,
-                repairColor: repairUi.color,
-              ),
-            ],
+                    Expanded(
+                      child: VehicleCardHeader(
+                        data: data,
+                        formattedMileage: formattedMileage,
+                      ),
+                    ),
+                  ],
+                ),
+
+                SizedBox(height: ResponsiveSize.height(context, 1.4)),
+
+                VehicleCardInfo(
+                  nextMaintenance: '${_formatNumber(data.nextMaintenance)} كم',
+                  lastMaintenance: data.lastMaintenance,
+                  repairText: repairUi.text,
+                  repairColor: repairUi.color,
+                ),
+              ],
+            ),
           ),
         ),
       ),

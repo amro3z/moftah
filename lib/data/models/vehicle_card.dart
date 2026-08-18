@@ -13,7 +13,8 @@ class VehicleCardModel {
   final MaintenanceStatus maintenanceStatus;
   final DocumentStatus documentStatus;
 
-  final String imageUrl;
+  final String brand;
+  final String? brandLogoUrl;
 
   final int nextMaintenance;
   final String lastMaintenance;
@@ -27,7 +28,8 @@ class VehicleCardModel {
     required this.healthScore,
     required this.maintenanceStatus,
     required this.documentStatus,
-    required this.imageUrl,
+    required this.brand,
+    this.brandLogoUrl,
     required this.nextMaintenance,
     required this.lastMaintenance,
     required this.repairStatus,

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moftah/data/models/current_repair_model.dart';
 import 'package:moftah/data/models/nerbay_places_model.dart';
 import 'package:moftah/data/models/vehicle_card.dart';
+import 'package:moftah/domain/vehicle_health/vehicle_health_calculator.dart';
 import 'package:moftah/routing/map_route_arguments.dart';
 import 'package:moftah/ui/core/constant/home_options.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
@@ -39,14 +40,26 @@ class HomeScreen extends StatelessWidget {
                   healthScore: 85,
                   maintenanceStatus: MaintenanceStatus.good,
                   documentStatus: DocumentStatus.verified,
-                  imageUrl:
-                      'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1200',
+                  brand: 'Toyota',
+                  brandLogoUrl: null,
                   nextMaintenance: 1500,
                   lastMaintenance: '15 مارس',
                   repairStatus: RepairStatus.good,
                 ),
                 onChatTap: () {},
-                onVehicleTap: () {},
+                onVehicleTap: () {
+                  final vehicleHealth = const VehicleHealthCalculator().calculateDemo(
+                    vehicleName: 'Toyota Corolla',
+                    brand: 'Toyota',
+                    year: 2020,
+                    mileage: 100008,
+                  );
+                  Navigator.pushNamed(
+                    context,
+                    '/vehicle-health',
+                    arguments: vehicleHealth,
+                  );
+                },
               ),
               SizedBox(height: ResponsiveSize.height(context, 1.5)),
               HomeOptionsList(options: HomeOptionsInfo.options),

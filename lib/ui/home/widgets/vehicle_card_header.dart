@@ -23,7 +23,7 @@ class VehicleCardHeader extends StatelessWidget {
     final documentUi = VehicleStatusUi.document(data.documentStatus);
 
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
           child: Column(
@@ -32,23 +32,23 @@ class VehicleCardHeader extends StatelessWidget {
               customText(
                 text: data.carName,
                 fontSize: ResponsiveSize.width(context, AppSizes.fontXl),
-                color: AppColors.textSecondary,
+                color: Colors.white,
                 isBold: true,
               ),
 
-              SizedBox(height: ResponsiveSize.height(context, 0.3)),
+              SizedBox(height: ResponsiveSize.height(context, .35)),
 
               customText(
-                text: '${data.year} • $formattedMileage كم',
-                fontSize: ResponsiveSize.width(context, AppSizes.fontMd),
-                color: AppColors.textSecondary,
+                text: '${data.year}  •  $formattedMileage كم',
+                fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
+                color: AppColors.textMuted,
               ),
 
-              SizedBox(height: ResponsiveSize.height(context, 0.7)),
+              SizedBox(height: ResponsiveSize.height(context, .8)),
 
               Wrap(
-                spacing: ResponsiveSize.width(context, 2),
-                runSpacing: ResponsiveSize.height(context, 0.5),
+                spacing: ResponsiveSize.width(context, 1.5),
+                runSpacing: ResponsiveSize.height(context, .4),
                 children: [
                   _statusChip(context, data: maintenanceUi),
                   _statusChip(context, data: documentUi),
@@ -66,60 +66,68 @@ class VehicleCardHeader extends StatelessWidget {
   }
 
   Widget _healthScore(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          width: ResponsiveSize.width(context, 14),
-          height: ResponsiveSize.width(context, 14),
-          child: Stack(
-            alignment: Alignment.center,
+    return SizedBox(
+      width: ResponsiveSize.width(context, 21),
+      height: ResponsiveSize.width(context, 21),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            width: ResponsiveSize.width(context, 21),
+            height: ResponsiveSize.width(context, 21),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: .05),
+              shape: BoxShape.circle,
+            ),
+          ),
+
+          SizedBox(
+            width: ResponsiveSize.width(context, 18),
+            height: ResponsiveSize.width(context, 18),
+            child: CircularProgressIndicator(
+              value: data.healthScore / 100,
+              strokeWidth: 6,
+              strokeCap: StrokeCap.round,
+              backgroundColor: AppColors.progressBackground,
+              valueColor: const AlwaysStoppedAnimation(AppColors.success),
+            ),
+          ),
+
+          Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              CircularProgressIndicator(
-                constraints: BoxConstraints(
-                  minWidth: ResponsiveSize.width(context, 11),
-                  minHeight: ResponsiveSize.width(context, 11),
-                ),
-                value: data.healthScore / 100,
-                strokeWidth: 6,
-                strokeCap: StrokeCap.round,
-                backgroundColor: AppColors.progressBackground,
-                valueColor: const AlwaysStoppedAnimation(AppColors.success),
+              customText(
+                text: '${data.healthScore}',
+                fontSize: ResponsiveSize.width(context, AppSizes.fontXl),
+                color: Colors.white,
+                isBold: true,
               ),
 
               customText(
-                text: '${data.healthScore}',
-                fontSize: ResponsiveSize.width(context, AppSizes.fontLg),
-                color: AppColors.textSecondary,
-                isBold: true,
+                text: 'الصحة',
+                fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
+                color: AppColors.textMuted,
               ),
             ],
           ),
-        ),
-
-        SizedBox(height: ResponsiveSize.height(context, 0.3)),
-
-        customText(
-          text: 'صحة السيارة',
-          fontSize: ResponsiveSize.width(context, AppSizes.fontMd),
-          color: AppColors.textMuted,
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget _statusChip(BuildContext context, {required StatusUiData data}) {
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: ResponsiveSize.width(context, 2),
-        vertical: ResponsiveSize.height(context, 0.3),
+        horizontal: ResponsiveSize.width(context, 1.8),
+        vertical: ResponsiveSize.height(context, .25),
       ),
       decoration: BoxDecoration(
         color: data.backgroundColor,
-        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        borderRadius: BorderRadius.circular(30),
       ),
       child: customText(
         text: data.text,
-        fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
+        fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
         color: data.color,
         isBold: true,
       ),
