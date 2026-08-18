@@ -12,9 +12,12 @@ PreferredSizeWidget customAppBar(
   required String userName,
   VoidCallback? onChatTap,
   VoidCallback? onVehicleTap,
+  VoidCallback? onVehicleSwitchTap,
+  int notificationCount = 0,
+  VoidCallback? onNotificationTap,
 }) {
   return PreferredSize(
-    preferredSize: Size.fromHeight(ResponsiveSize.height(context, 45)),
+    preferredSize: Size.fromHeight(ResponsiveSize.height(context, 47)),
     child: AppBar(
       automaticallyImplyLeading: false,
       elevation: 0,
@@ -82,7 +85,7 @@ PreferredSizeWidget customAppBar(
                     ),
 
                     InkWell(
-                      onTap: onChatTap,
+                      onTap: onNotificationTap ?? onChatTap,
                       borderRadius: BorderRadius.circular(AppSizes.radiusSm),
                       child: Container(
                         width: ResponsiveSize.width(context, 10),
@@ -98,23 +101,44 @@ PreferredSizeWidget customAppBar(
                           alignment: Alignment.center,
                           children: [
                             Icon(
-                              Icons.chat_bubble_outline_rounded,
+                              Icons.notifications_none_rounded,
                               color: AppColors.textSecondary,
                               size: ResponsiveSize.width(context, 5),
                             ),
 
-                            Positioned(
-                              top: ResponsiveSize.width(context, 1.5),
-                              right: ResponsiveSize.width(context, 1.8),
-                              child: Container(
-                                width: ResponsiveSize.width(context, 1.8),
-                                height: ResponsiveSize.width(context, 1.8),
-                                decoration: const BoxDecoration(
-                                  color: AppColors.danger,
-                                  shape: BoxShape.circle,
+                            if (notificationCount > 0)
+                              Positioned(
+                                top: ResponsiveSize.width(context, .7),
+                                right: ResponsiveSize.width(context, .7),
+                                child: Container(
+                                  constraints: BoxConstraints(
+                                    minWidth: ResponsiveSize.width(context, 5),
+                                    minHeight: ResponsiveSize.width(context, 5),
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: ResponsiveSize.width(context, 1.1),
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.danger,
+                                    borderRadius: BorderRadius.circular(30),
+                                    border: Border.all(color: AppColors.primary, width: 1.5),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withValues(alpha: .22),
+                                        blurRadius: 6,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: customText(
+                                    text: notificationCount > 99 ? '99+' : '$notificationCount',
+                                    fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
+                                    color: Colors.white,
+                                    isBold: true,
+                                  ),
                                 ),
                               ),
-                            ),
                           ],
                         ),
                       ),
@@ -125,7 +149,11 @@ PreferredSizeWidget customAppBar(
 
               SizedBox(height: ResponsiveSize.height(context, 2)),
 
-              VehicleCard(data: data, onTap: onVehicleTap),
+              VehicleCard(
+                data: data,
+                onTap: onVehicleTap,
+                onSwitchTap: onVehicleSwitchTap,
+              ),
               SizedBox(height: ResponsiveSize.height(context, 1)),
             ],
           ),

@@ -34,9 +34,46 @@ class WorkshopsScreen extends StatelessWidget {
                   ? state.places
                   : const [];
 
+              final loadingMore = state is NearbyPlacesSuccess && state.isLoadingMore;
+
               return Column(
                 children: [
                   _header(context, places.length),
+                  if (loadingMore)
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: ResponsiveSize.width(context, 5),
+                      ),
+                      child: Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: ResponsiveSize.width(context, 3),
+                          vertical: ResponsiveSize.height(context, .8),
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.secondary.withValues(alpha: .07),
+                          borderRadius: BorderRadius.circular(AppSizes.radiusSm),
+                        ),
+                        child: Row(
+                          children: [
+                            const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(strokeWidth: 2.2),
+                            ),
+                            SizedBox(width: ResponsiveSize.width(context, 2)),
+                            Expanded(
+                              child: customText(
+                                text: 'عرضنا أقرب ${places.length} ورش وبنكمل تحميل باقي النتائج حتى 50...',
+                                fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
+                                color: AppColors.primary,
+                                isBold: true,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   Expanded(
                     child: _body(context, state),
                   ),

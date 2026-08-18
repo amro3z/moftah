@@ -46,3 +46,5 @@ app.*.map.json
 
 *.zip
 *.tmp
+*.txt
+*.md

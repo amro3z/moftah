@@ -16,9 +16,9 @@ class HomeOptionsInfo {
       path: '/nearby-workshops',
     ),
     HomeOptionItemModel(
-      icon: Icons.engineering_rounded,
-      title: 'احجز فني',
-      path: '/book-technician',
+      icon: Icons.local_offer_rounded,
+      title: 'العروض الواردة',
+      path: '/received-offers',
     ),
     HomeOptionItemModel(
       icon: Icons.settings_suggest_rounded,

@@ -12,9 +12,23 @@ import 'package:moftah/ui/home/widgets/home_screen.dart';
 import 'package:moftah/ui/map/widgets/map_screen.dart';
 import 'package:moftah/ui/workshops/widgets/workshops_screen.dart';
 import 'package:moftah/ui/vehicle_health/widgets/vehicle_health_screen.dart';
+import 'package:moftah/data/models/current_repair_model.dart';
+import 'package:moftah/ui/repair/repair_details_screen.dart';
+import 'package:moftah/ui/repair/repair_chat_screen.dart';
+import 'package:moftah/ui/repair/repair_offer_screen.dart';
+import 'package:moftah/data/models/problem_report_model.dart';
+import 'package:moftah/routing/report_workshops_route_arguments.dart';
+import 'package:moftah/ui/report_problem/report_problem_flow_screen.dart';
+import 'package:moftah/ui/report_problem/problem_analysis_screen.dart';
+import 'package:moftah/ui/report_problem/report_workshops_screen.dart';
+import 'package:moftah/ui/report_problem/received_offers_screen.dart';
+import 'package:moftah/ui/report_problem/report_technicians_screen.dart';
+import 'package:moftah/ui/report_problem/offer_details_screen.dart';
+import 'package:moftah/data/models/service_offer_model.dart';
+import 'package:moftah/ui/notifications/notifications_screen.dart';
 
 class AppRoute {
-  MaterialPageRoute<dynamic> onGenerateRoute(RouteSettings settings) {
+  Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case '/home':
         return MaterialPageRoute(
@@ -52,6 +66,75 @@ class AppRoute {
           ),
         );
 
+
+      case '/report-problem':
+        return _animatedRoute(const ReportProblemFlowScreen());
+
+      case '/problem-analysis':
+        final arguments = settings.arguments;
+        if (arguments is! ProblemReportModel) {
+          return MaterialPageRoute(
+            builder: (_) => const Scaffold(
+              body: Center(child: Text('Problem report data is required')),
+            ),
+          );
+        }
+        return _animatedRoute(ProblemAnalysisScreen(report: arguments));
+
+      case '/report-workshops':
+        final arguments = settings.arguments;
+        if (arguments is! ReportWorkshopsRouteArguments) {
+          return MaterialPageRoute(
+            builder: (_) => const Scaffold(
+              body: Center(child: Text('Report workshop data is required')),
+            ),
+          );
+        }
+        return _animatedRoute(
+          BlocProvider(
+            create: (_) => _createNearbyPlacesCubit()
+              ..loadWorkshopDirectoryFromPosition(
+                userLatitude: arguments.userLatitude,
+                userLongitude: arguments.userLongitude,
+                maxPlaces: 50,
+              ),
+            child: ReportWorkshopsScreen(
+              report: arguments.report,
+              userLatitude: arguments.userLatitude,
+              userLongitude: arguments.userLongitude,
+            ),
+          ),
+        );
+
+      case '/report-technicians':
+        final arguments = settings.arguments;
+        if (arguments is! ProblemReportModel) {
+          return MaterialPageRoute(
+            builder: (_) => const Scaffold(
+              body: Center(child: Text('Problem report data is required')),
+            ),
+          );
+        }
+        return _animatedRoute(ReportTechniciansScreen(report: arguments));
+
+
+      case '/notifications':
+        return _animatedRoute(const NotificationsScreen());
+
+      case '/received-offers':
+        return _animatedRoute(const ReceivedOffersScreen());
+
+      case '/offer-details':
+        final arguments = settings.arguments;
+        if (arguments is! ServiceOfferModel) {
+          return MaterialPageRoute(
+            builder: (_) => const Scaffold(
+              body: Center(child: Text('Offer data is required')),
+            ),
+          );
+        }
+        return _animatedRoute(OfferDetailsScreen(offer: arguments));
+
       case '/vehicle-health':
         final arguments = settings.arguments;
         if (arguments is! VehicleHealthModel) {
@@ -68,6 +151,47 @@ class AppRoute {
             )..loadPairedDevices(),
             child: VehicleHealthScreen(data: arguments),
           ),
+        );
+
+
+      case '/repair-details':
+        final arguments = settings.arguments;
+        final repair = arguments is CurrentRepairModel
+            ? arguments
+            : const CurrentRepairModel(
+                title: 'تغيير زيت المحرك + فلتر',
+                workshopName: 'Auto Pro Center',
+                location: 'مدينة نصر',
+                currentStage: RepairStage.approval,
+              );
+        return MaterialPageRoute(
+          builder: (_) => RepairDetailsScreen(data: repair),
+        );
+
+      case '/repair-chat':
+        final arguments = settings.arguments;
+        if (arguments is! CurrentRepairModel) {
+          return MaterialPageRoute(
+            builder: (_) => const Scaffold(
+              body: Center(child: Text('Repair data is required')),
+            ),
+          );
+        }
+        return MaterialPageRoute(
+          builder: (_) => RepairChatScreen(data: arguments),
+        );
+
+      case '/repair-offer':
+        final arguments = settings.arguments;
+        if (arguments is! CurrentRepairModel) {
+          return MaterialPageRoute(
+            builder: (_) => const Scaffold(
+              body: Center(child: Text('Repair offer data is required')),
+            ),
+          );
+        }
+        return MaterialPageRoute(
+          builder: (_) => RepairOfferScreen(data: arguments),
         );
 
       case '/map':
@@ -100,6 +224,25 @@ class AppRoute {
           ),
         );
     }
+  }
+
+
+  Route<dynamic> _animatedRoute(Widget child) {
+    return PageRouteBuilder<dynamic>(
+      transitionDuration: const Duration(milliseconds: 360),
+      reverseTransitionDuration: const Duration(milliseconds: 280),
+      pageBuilder: (_, animation, __) => child,
+      transitionsBuilder: (_, animation, __, page) {
+        final curved = CurvedAnimation(parent: animation, curve: Curves.easeOutCubic);
+        return FadeTransition(
+          opacity: curved,
+          child: SlideTransition(
+            position: Tween<Offset>(begin: const Offset(.045, 0), end: Offset.zero).animate(curved),
+            child: page,
+          ),
+        );
+      },
+    );
   }
 
   NearbyPlacesCubit _createNearbyPlacesCubit() {

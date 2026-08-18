@@ -1,7 +1,0 @@
-This update uses url_launcher so tapping a workshop phone number opens the phone dialer.
-Add this dependency to the main project's pubspec.yaml if it is not already present:
-
-  url_launcher: ^6.3.2
-
-Then run:
-  flutter pub get

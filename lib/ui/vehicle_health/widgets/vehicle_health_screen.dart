@@ -89,7 +89,7 @@ class VehicleHealthScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () => Navigator.pushNamed(context, '/report-problem'),
                       icon: const Icon(Icons.report_problem_outlined),
                       label: customText(
                         text: 'بلّغ عن مشكلة في السيارة',

@@ -30,11 +30,13 @@ class NearbyPlacesSuccess extends NearbyPlacesState {
   final List<HomeNearbyPlacesModel> places;
   final double userLatitude;
   final double userLongitude;
+  final bool isLoadingMore;
 
   const NearbyPlacesSuccess(
     this.places, {
     required this.userLatitude,
     required this.userLongitude,
+    this.isLoadingMore = false,
   });
 }
 

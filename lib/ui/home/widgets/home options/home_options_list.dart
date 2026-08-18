@@ -11,26 +11,24 @@ class HomeOptionsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: ResponsiveSize.height(context, 12),
+      height: ResponsiveSize.height(context, 16.5),
       child: ListView.separated(
-        reverse: true,
         scrollDirection: Axis.horizontal,
+        clipBehavior: Clip.none,
         physics: const BouncingScrollPhysics(),
         itemCount: options.length,
-        padding: EdgeInsets.symmetric(
-          horizontal: ResponsiveSize.width(context, 5),
-          vertical: ResponsiveSize.height(context, 0.8),
+        padding: EdgeInsets.fromLTRB(
+          ResponsiveSize.width(context, 5),
+          ResponsiveSize.height(context, 1.6),
+          ResponsiveSize.width(context, 5),
+          ResponsiveSize.height(context, 2.1),
         ),
-        separatorBuilder: (context, index) {
-          return SizedBox(width: ResponsiveSize.width(context, 2));
-        },
+        separatorBuilder: (_, __) =>
+            SizedBox(width: ResponsiveSize.width(context, 2.3)),
         itemBuilder: (context, index) {
-          final item = options[index];
-
-          return HomeOptionItem(item: item);
+          return HomeOptionItem(item: options[index]);
         },
       ),
     );
   }
 }
-

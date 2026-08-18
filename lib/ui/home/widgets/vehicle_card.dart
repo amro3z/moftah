@@ -11,8 +11,14 @@ import 'package:moftah/utils/responsive.dart';
 class VehicleCard extends StatelessWidget {
   final VehicleCardModel data;
   final VoidCallback? onTap;
+  final VoidCallback? onSwitchTap;
 
-  const VehicleCard({super.key, required this.data, this.onTap});
+  const VehicleCard({
+    super.key,
+    required this.data,
+    this.onTap,
+    this.onSwitchTap,
+  });
 
   String _formatNumber(int number) {
     final value = number.toString();
@@ -71,7 +77,51 @@ class VehicleCard extends StatelessWidget {
                   ],
                 ),
 
-                SizedBox(height: ResponsiveSize.height(context, 1.4)),
+                if (onSwitchTap != null) ...[
+                  SizedBox(height: ResponsiveSize.height(context, .8)),
+                  InkWell(
+                    onTap: onSwitchTap,
+                    borderRadius: BorderRadius.circular(30),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: ResponsiveSize.width(context, 2.2),
+                        vertical: ResponsiveSize.height(context, .45),
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: .06),
+                        borderRadius: BorderRadius.circular(30),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: .08),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: .12),
+                            blurRadius: 8,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.textMuted, size: 20),
+                          SizedBox(width: ResponsiveSize.width(context, .6)),
+                          Text(
+                            'تغيير السيارة',
+                            style: TextStyle(
+                              fontFamily: 'Cairo',
+                              fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
+                              color: AppColors.textMuted,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+
+                SizedBox(height: ResponsiveSize.height(context, 1.1)),
 
                 VehicleCardInfo(
                   nextMaintenance: '${_formatNumber(data.nextMaintenance)} كم',
