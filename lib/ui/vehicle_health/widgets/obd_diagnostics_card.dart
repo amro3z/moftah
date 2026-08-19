@@ -8,6 +8,8 @@ import 'package:moftah/ui/core/themes/sizes.dart';
 import 'package:moftah/ui/core/ui/custom_text.dart';
 import 'package:moftah/ui/vehicle_health/cubit/obd_cubit.dart';
 import 'package:moftah/ui/vehicle_health/cubit/obd_state.dart';
+import 'package:moftah/ui/vehicle_health/widgets/obd/obd_device_selector.dart';
+import 'package:moftah/ui/vehicle_health/widgets/obd/obd_trace_panel.dart';
 import 'package:moftah/utils/responsive.dart';
 
 class ObdDiagnosticsCard extends StatefulWidget {
@@ -137,6 +139,14 @@ class _ObdDiagnosticsCardState extends State<ObdDiagnosticsCard>
                       )
                     : const SizedBox.shrink(),
               ),
+              if (!state.isConnected) ...[
+                SizedBox(height: ResponsiveSize.height(context, 1.2)),
+                ObdDeviceSelector(state: state),
+              ],
+              if (state.trace.isNotEmpty) ...[
+                SizedBox(height: ResponsiveSize.height(context, 1.2)),
+                ObdTracePanel(state: state),
+              ],
               SizedBox(height: ResponsiveSize.height(context, 1.4)),
               _actions(context, state, busy),
             ],
@@ -221,9 +231,9 @@ class _ObdDiagnosticsCardState extends State<ObdDiagnosticsCard>
   Widget _connectionProgress(BuildContext context, ObdState state) {
     final stages = <ObdConnectionStage>[
       ObdConnectionStage.checkingPairedDevices,
-      ObdConnectionStage.findingAdapter,
       ObdConnectionStage.connectingBluetooth,
       ObdConnectionStage.initializingAdapter,
+      ObdConnectionStage.detectingProtocol,
       ObdConnectionStage.readingVehicle,
     ];
 
@@ -306,14 +316,18 @@ class _ObdDiagnosticsCardState extends State<ObdDiagnosticsCard>
   String _stageText(ObdConnectionStage stage) => switch (stage) {
         ObdConnectionStage.checkingPairedDevices =>
           'بنفحص أجهزة البلوتوث المقترنة...',
-        ObdConnectionStage.findingAdapter => 'بندور على ELM327...',
+        ObdConnectionStage.waitingForDeviceSelection => 'اختار جهاز Bluetooth المقترن...',
         ObdConnectionStage.connectingBluetooth =>
           'بنعمل اتصال Bluetooth مع القطعة...',
         ObdConnectionStage.initializingAdapter =>
-          'بنجهز ELM327 ونحدد بروتوكول العربية...',
+          'بنجهز ELM327 بأوامر AT...',
+        ObdConnectionStage.detectingProtocol =>
+          'بنطلب من ELM327 اكتشاف بروتوكول العربية...',
         ObdConnectionStage.readingVehicle =>
           'بنتواصل مع ECU ونقرأ بيانات العربية...',
-        ObdConnectionStage.done => 'تم الاتصال وقراءة البيانات',
+        ObdConnectionStage.ecuNotResponding =>
+          'Bluetooth متصل، لكن ECU لم يرد',
+        ObdConnectionStage.done => 'تم الاتصال وECU أرسل البيانات',
         ObdConnectionStage.idle => 'جاهز للاتصال',
       };
 
@@ -917,7 +931,7 @@ class _ObdDiagnosticsCardState extends State<ObdDiagnosticsCard>
       return FilledButton.icon(
         onPressed: busy
             ? null
-            : () => context.read<ObdCubit>().connectPreferredDevice(),
+            : () => context.read<ObdCubit>().loadPairedDevices(),
         style: FilledButton.styleFrom(
           backgroundColor: AppColors.secondary,
           padding: EdgeInsets.symmetric(
@@ -938,7 +952,7 @@ class _ObdDiagnosticsCardState extends State<ObdDiagnosticsCard>
               )
             : const Icon(Icons.bluetooth_searching_rounded),
         label: customText(
-          text: busy ? 'جاري التجهيز...' : 'اتصل بـ ELM327',
+          text: busy ? 'جاري فحص Bluetooth...' : 'عرض الأجهزة المقترنة',
           fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
           color: Colors.white,
           isBold: true,

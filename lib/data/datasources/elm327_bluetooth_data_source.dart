@@ -2,7 +2,12 @@ import 'package:bluetooth_serial_android/bluetooth_serial_android.dart';
 import 'package:moftah/data/models/obd_models.dart';
 
 class Elm327BluetoothDataSource {
-  static const String _sppUuid = '00001101-0000-1000-8000-00805F9B34FB';
+  static const String _sppUuid =
+      '00001101-0000-1000-8000-00805F9B34FB';
+
+  // This plugin uses connect(timeoutMs) as the socket/read timeout too.
+  // 10s gives auto-detection and slow K-line initialization enough room.
+  static const int _readTimeoutMs = 10000;
 
   Future<bool> ensurePermissions() {
     return FlutterBluetoothSerial.ensurePermissions();
@@ -15,7 +20,7 @@ class Elm327BluetoothDataSource {
     return devices
         .map(
           (device) => ObdDeviceModel(
-            name: (device['name'] ?? 'OBD-II').trim(),
+            name: (device['name'] ?? 'Bluetooth device').trim(),
             address: (device['address'] ?? '').trim(),
           ),
         )
@@ -28,7 +33,7 @@ class Elm327BluetoothDataSource {
     return FlutterBluetoothSerial.connect(
       address,
       uuid: _sppUuid,
-      timeoutMs: 3500,
+      timeoutMs: _readTimeoutMs,
     );
   }
 
@@ -37,13 +42,16 @@ class Elm327BluetoothDataSource {
   }
 
   Future<String> sendCommand(String command) async {
-    final normalizedCommand = command.trim().toUpperCase();
-    await FlutterBluetoothSerial.write('$normalizedCommand\r');
+    final normalized = command.trim().toUpperCase();
 
+    await FlutterBluetoothSerial.write('$normalized\r');
+
+    // ELM327 finishes a command with the '>' prompt, not a newline.
     final response = await FlutterBluetoothSerial.readLine('>');
+
     return _cleanResponse(
       response ?? '',
-      command: normalizedCommand,
+      command: normalized,
     );
   }
 
@@ -58,7 +66,6 @@ class Elm327BluetoothDataSource {
         .map((line) => line.trim())
         .where((line) => line.isNotEmpty)
         .where((line) => line.toUpperCase() != command)
-        .where((line) => !line.toUpperCase().startsWith('SEARCHING'))
         .join('\n')
         .trim();
   }

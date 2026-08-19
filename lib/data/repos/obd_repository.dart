@@ -1,6 +1,7 @@
 
 import 'package:moftah/data/datasources/elm327_bluetooth_data_source.dart';
 import 'package:moftah/data/models/obd_models.dart';
+import 'package:moftah/data/repos/obd_protocol_probe.dart';
 
 class ObdConnectionResult {
   final bool connected;
@@ -26,12 +27,12 @@ class ObdRepository {
     return _dataSource.connect(address);
   }
 
-  Future<void> initializeAdapter() {
-    return _initializeAdapter();
+  Future<void> initializeAdapter({void Function(String)? onTrace}) {
+    return _initializeAdapter(onTrace: onTrace);
   }
 
-  Future<String> readAdapterName() async {
-    final adapterName = await _dataSource.sendCommand('ATI');
+  Future<String> readAdapterName({void Function(String)? onTrace}) async {
+    final adapterName = await _command('ATI', onTrace: onTrace);
     return adapterName.isEmpty ? 'ELM327' : adapterName;
   }
 
@@ -57,38 +58,84 @@ class ObdRepository {
     return _dataSource.disconnect();
   }
 
-  Future<ObdSnapshotModel> readSnapshot() async {
-    final supportResponse = await _dataSource.sendCommand('0100');
-    final ecuAvailable = _hasEcuResponse(supportResponse);
+  Future<ObdSnapshotModel> readSnapshot({
+    void Function(String)? onTrace,
+  }) async {
+    final voltageResponse = await _command('ATRV', onTrace: onTrace);
+    final voltage = _parseVoltage(voltageResponse);
 
-    final voltage = _parseVoltage(await _dataSource.sendCommand('ATRV'));
+    if (voltage != null) {
+      onTrace?.call('جهد منفذ OBD: ${voltage.toStringAsFixed(1)}V');
+      if (voltage < 11.5) {
+        onTrace?.call(
+          'تنبيه: الجهد منخفض جدًا. هنكمل الفحص، لكن انخفاض الجهد ممكن '
+          'يخلي بعض وحدات ECU لا تبدأ أو لا ترد بشكل ثابت.',
+        );
+      }
+    } else {
+      onTrace?.call('لم نتمكن من قراءة جهد منفذ OBD من ATRV.');
+    }
 
-    if (!ecuAvailable) {
+    onTrace?.call('بدء البحث التلقائي عن بروتوكول OBD-II...');
+    await _command('ATPC', onTrace: onTrace);
+    await _command('ATSP0', onTrace: onTrace);
+
+    var probe = await _probeCurrentProtocol(
+      onTrace: onTrace,
+      label: 'Auto',
+    );
+
+    if (!probe.success) {
+      onTrace?.call(
+        'البحث التلقائي لم يجد استجابة OBD صالحة. '
+        'هنجرب البروتوكولات القياسية واحدًا واحدًا.',
+      );
+      probe = await _findProtocolManually(onTrace: onTrace);
+    }
+
+    if (!probe.success) {
+      onTrace?.call(
+        'لم نصل لرد OBD قياسي من ECU. '
+        'لو جهاز فحص احترافي يدخل على العربية في نفس اللحظة، '
+        'فقد يكون يستخدم تشخيص الشركة المصنعة وليس Generic OBD-II فقط.',
+      );
       return ObdSnapshotModel(
         ecuAvailable: false,
         adapterVoltage: voltage,
       );
     }
 
-    final rpm = _parseRpm(await _dataSource.sendCommand('010C'));
+    final protocol = await _command('ATDP', onTrace: onTrace);
+    final protocolNumber = await _command('ATDPN', onTrace: onTrace);
+    onTrace?.call(
+      'البروتوكول النشط: '
+      '${protocol.isEmpty ? 'غير معروف' : protocol}'
+      '${protocolNumber.isEmpty ? '' : ' ($protocolNumber)'}',
+    );
+
+    final rpm = _parseRpm(await _command('010C', onTrace: onTrace));
     final speed = _parseSingleBytePid(
-      await _dataSource.sendCommand('010D'),
+      await _command('010D', onTrace: onTrace),
       pid: 0x0D,
     );
-    final coolant = _parseCoolant(await _dataSource.sendCommand('0105'));
+    final coolant = _parseCoolant(
+      await _command('0105', onTrace: onTrace),
+    );
     final intakeAirTemperature = _parseTemperature(
-      await _dataSource.sendCommand('010F'),
+      await _command('010F', onTrace: onTrace),
       pid: 0x0F,
     );
     final engineLoad = _parsePercentage(
-      await _dataSource.sendCommand('0104'),
+      await _command('0104', onTrace: onTrace),
       pid: 0x04,
     );
     final throttlePosition = _parsePercentage(
-      await _dataSource.sendCommand('0111'),
+      await _command('0111', onTrace: onTrace),
       pid: 0x11,
     );
-    final dtcs = _parseTroubleCodes(await _dataSource.sendCommand('03'));
+    final dtcs = _parseTroubleCodes(
+      await _command('03', onTrace: onTrace),
+    );
 
     return ObdSnapshotModel(
       ecuAvailable: true,
@@ -103,26 +150,82 @@ class ObdRepository {
     );
   }
 
-  Future<void> _initializeAdapter() async {
-    await _dataSource.sendCommand('ATZ');
-    await _dataSource.sendCommand('ATE0');
-    await _dataSource.sendCommand('ATL0');
-    await _dataSource.sendCommand('ATS0');
-    await _dataSource.sendCommand('ATH0');
-    await _dataSource.sendCommand('ATSP0');
+  Future<void> _initializeAdapter({
+    void Function(String)? onTrace,
+  }) async {
+    await _command('ATZ', onTrace: onTrace);
+    await Future<void>.delayed(const Duration(milliseconds: 1000));
+
+    // Reset adapter options before configuring a clean diagnostic session.
+    await _command('ATD', onTrace: onTrace);
+    await _command('ATE0', onTrace: onTrace);
+    await _command('ATL0', onTrace: onTrace);
+    await _command('ATS1', onTrace: onTrace);
+    await _command('ATH0', onTrace: onTrace);
+    await _command('ATAL', onTrace: onTrace);
+    await _command('ATAT1', onTrace: onTrace);
+
+    // 0x64 * 4ms ~= 400ms ECU response window after protocol is known.
+    // K-line initialization itself may take longer; the Bluetooth read timeout
+    // in the data source is intentionally much longer.
+    await _command('ATST64', onTrace: onTrace);
+
+    // Do not assume this already found the protocol. The first OBD request
+    // triggers auto-search.
+    await _command('ATSP0', onTrace: onTrace);
   }
 
-  bool _hasEcuResponse(String response) {
-    final upper = response.toUpperCase();
-    if (upper.isEmpty ||
-        upper.contains('NO DATA') ||
-        upper.contains('UNABLE TO CONNECT') ||
-        upper.contains('ERROR') ||
-        upper.contains('STOPPED')) {
-      return false;
-    }
+  Future<ObdProtocolProbeResult> _findProtocolManually({
+    void Function(String)? onTrace,
+  }) {
+    final scanner = ObdProtocolProbe(
+      sendCommand: (command) => _command(
+        command,
+        onTrace: onTrace,
+      ),
+      onTrace: onTrace,
+    );
 
-    return _hexBytes(response).contains(0x41);
+    return scanner.scanAllProtocols();
+  }
+
+  Future<ObdProtocolProbeResult> _probeCurrentProtocol({
+    required String label,
+    void Function(String)? onTrace,
+  }) {
+    final scanner = ObdProtocolProbe(
+      sendCommand: (command) => _command(
+        command,
+        onTrace: onTrace,
+      ),
+      onTrace: onTrace,
+    );
+
+    return scanner.probeCurrentProtocol(label: label);
+  }
+
+  Future<String> _command(
+    String command, {
+    void Function(String)? onTrace,
+  }) async {
+    final stopwatch = Stopwatch()..start();
+
+    onTrace?.call('TX  $command');
+    final response = await _dataSource.sendCommand(command);
+
+    stopwatch.stop();
+    final elapsed = stopwatch.elapsedMilliseconds;
+
+    onTrace?.call(
+      'RX  ${response.isEmpty ? '(empty)' : response.replaceAll('\n', ' | ')}'
+      '  [${elapsed}ms]',
+    );
+
+    return response;
+  }
+
+  bool _isOk(String response) {
+    return response.toUpperCase().contains('OK');
   }
 
   int? _parseRpm(String response) {

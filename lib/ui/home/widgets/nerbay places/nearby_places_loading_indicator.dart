@@ -71,7 +71,10 @@ class NearbyPlacesLoadingIndicator extends StatelessWidget {
                         text: directoryMode
                             ? 'بنجهزلك دليل الورش'
                             : 'بنجيبلك أقرب الورش',
-                        fontSize: ResponsiveSize.width(context, AppSizes.fontLg),
+                        fontSize: ResponsiveSize.width(
+                          context,
+                          AppSizes.fontLg,
+                        ),
                         color: AppColors.primary,
                         isBold: true,
                       ),
@@ -92,7 +95,10 @@ class NearbyPlacesLoadingIndicator extends StatelessWidget {
                           key: ValueKey(_currentMessage),
                           child: customText(
                             text: _currentMessage,
-                            fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
+                            fontSize: ResponsiveSize.width(
+                              context,
+                              AppSizes.fontSm,
+                            ),
                             color: AppColors.progressBackground,
                           ),
                         ),
@@ -134,7 +140,8 @@ class _VisibleProgress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final locating = state.step.index <= NearbyLoadingStep.locatingUser.index;
-    final searching = state.step == NearbyLoadingStep.checkingInternet ||
+    final searching =
+        state.step == NearbyLoadingStep.checkingInternet ||
         state.step == NearbyLoadingStep.searchingWorkshops;
 
     return Column(
@@ -224,18 +231,18 @@ class _ProgressRow extends StatelessWidget {
                   size: ResponsiveSize.width(context, 3.8),
                 )
               : active
-                  ? Padding(
-                      padding: EdgeInsets.all(ResponsiveSize.width(context, 1.5)),
-                      child: const CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: AppColors.secondary,
-                      ),
-                    )
-                  : Icon(
-                      icon,
-                      color: AppColors.secondary,
-                      size: ResponsiveSize.width(context, 3.5),
-                    ),
+              ? Padding(
+                  padding: EdgeInsets.all(ResponsiveSize.width(context, 1.5)),
+                  child: const CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: AppColors.secondary,
+                  ),
+                )
+              : Icon(
+                  icon,
+                  color: AppColors.secondary,
+                  size: ResponsiveSize.width(context, 3.5),
+                ),
         ),
         SizedBox(width: ResponsiveSize.width(context, 2)),
         Expanded(
