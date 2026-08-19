@@ -1,23 +1,23 @@
-import 'package:moftah/data/dtc/dtc_catalog.dart';
+import 'package:moftah/data/dtc/dtc_asset_database.dart';
 import 'package:moftah/data/dtc/dtc_info.dart';
 
 class ObdDtcHelper {
-  static ObdDtcInfo info(String code) {
+  static Future<ObdDtcInfo> infoAsync(String code) async {
     final normalized = code.trim().toUpperCase();
-    final exact = DtcCatalog.find(normalized);
-    if (exact != null) return exact;
+    final databaseInfo = await DtcAssetDatabase.instance.find(normalized);
+    if (databaseInfo != null) return databaseInfo;
 
     if (isManufacturerSpecific(normalized)) {
       return ObdDtcInfo(
         title: 'كود خاص بالشركة المصنعة',
-        description: 'الكود ده معناه بيتغير حسب ماركة وموديل وسنة العربية. هنحتفظ بالكود ونبعته مع بيانات الفحص لتحليل الـ AI بدل ما نخمن معناه.',
+        description: 'الكود ده معناه بيتغير حسب ماركة وموديل وسنة العربية. هنحتفظ بالكود للتحليل بدل ما نخمن معناه.',
         system: systemName(normalized),
       );
     }
 
     return ObdDtcInfo(
       title: subsystemName(normalized),
-      description: 'العربية سجلت عطل في ${systemName(normalized)}. الكود قياسي، لكن الشرح التفصيلي لسه مش مضاف في القاموس المصري داخل التطبيق.',
+      description: 'العربية سجلت عطل في ${systemName(normalized)}، لكن مفيش شرح تفصيلي للكود ده في القاعدة الحالية.',
       system: systemName(normalized),
     );
   }

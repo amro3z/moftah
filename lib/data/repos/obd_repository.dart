@@ -144,7 +144,7 @@ class ObdRepository {
       await _command('0111', onTrace: onTrace),
       pid: 0x11,
     );
-    final dtcs = _parseTroubleCodes(
+    final dtcs = await _parseTroubleCodes(
       await _command('03', onTrace: onTrace),
     );
 
@@ -212,7 +212,7 @@ class ObdRepository {
     if (!_ecuReady) return false;
 
     final beforeResponse = await _command('03', onTrace: onTrace);
-    final beforeCodes = _parseTroubleCodes(beforeResponse);
+    final beforeCodes = await _parseTroubleCodes(beforeResponse);
 
     if (beforeCodes.isEmpty) {
       onTrace?.call('مفيش أعطال مخزنة محتاجة مسح دلوقتي.');
@@ -231,7 +231,7 @@ class ObdRepository {
     await Future<void>.delayed(const Duration(milliseconds: 1200));
 
     final afterResponse = await _command('03', onTrace: onTrace);
-    final afterCodes = _parseTroubleCodes(afterResponse);
+    final afterCodes = await _parseTroubleCodes(afterResponse);
 
     final responseUpper = afterResponse.toUpperCase();
     final validEmptyRead = afterCodes.isEmpty &&
@@ -389,7 +389,7 @@ class ObdRepository {
     return double.tryParse(match?.group(1) ?? '');
   }
 
-  List<ObdTroubleCodeModel> _parseTroubleCodes(String response) {
+  Future<List<ObdTroubleCodeModel>> _parseTroubleCodes(String response) async {
     final upper = response.toUpperCase();
     if (upper.contains('NO DATA') || upper.contains('UNABLE TO CONNECT')) {
       return const [];
@@ -406,7 +406,7 @@ class ObdRepository {
       if (a == 0 && b == 0) continue;
 
       final code = _decodeDtc(a, b);
-      final info = ObdDtcHelper.info(code);
+      final info = await ObdDtcHelper.infoAsync(code);
       result.add(
         ObdTroubleCodeModel(
           code: code,

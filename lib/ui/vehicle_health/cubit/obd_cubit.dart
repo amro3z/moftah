@@ -7,6 +7,7 @@ class ObdCubit extends Cubit<ObdState> {
   final ObdRepository repository;
   bool _liveReadRunning = false;
   bool _dtcReadRunning = false;
+  int _connectionAttempt = 0;
 
   ObdCubit({required this.repository}) : super(const ObdState());
 
@@ -51,6 +52,7 @@ class ObdCubit extends Cubit<ObdState> {
   }
 
   Future<void> connect(ObdDeviceModel device) async {
+    final attempt = ++_connectionAttempt;
     emit(state.copyWith(
       status: ObdStatus.connecting,
       connectionStage: ObdConnectionStage.connectingBluetooth,
@@ -60,6 +62,7 @@ class ObdCubit extends Cubit<ObdState> {
     ));
     try {
       final connected = await repository.connectBluetooth(device.address);
+      if (attempt != _connectionAttempt || isClosed) return;
       if (!connected) {
         emit(state.copyWith(
           status: ObdStatus.error,
@@ -77,7 +80,9 @@ class ObdCubit extends Cubit<ObdState> {
       ));
 
       await repository.initializeAdapter(onTrace: _trace);
+      if (attempt != _connectionAttempt || isClosed) return;
       final adapterName = await repository.readAdapterName(onTrace: _trace);
+      if (attempt != _connectionAttempt || isClosed) return;
       _trace('قطعة الفحص: $adapterName');
 
       emit(state.copyWith(
@@ -87,8 +92,10 @@ class ObdCubit extends Cubit<ObdState> {
         adapterName: adapterName,
       ));
 
+      if (attempt != _connectionAttempt || isClosed) return;
       await _firstVehicleScan();
     } catch (error) {
+      if (attempt != _connectionAttempt || isClosed) return;
       _trace('حصل خطأ أثناء الاتصال: $error');
       emit(state.copyWith(
         status: ObdStatus.error,
@@ -184,8 +191,10 @@ class ObdCubit extends Cubit<ObdState> {
   Future<void> refreshDiagnostics({bool showConnectionStage = false}) async {
     if (!state.isConnected) return;
     if (repository.ecuReady) {
+      _trace('تحديث يدوي: بنقرأ الداتا الجديدة من العربية على نفس السيشن والبروتوكول...');
       await refreshLiveData();
       await refreshTroubleCodes();
+      _trace('التحديث خلص من غير إعادة بحث عن البروتوكول.');
       return;
     }
     await _firstVehicleScan();
@@ -202,6 +211,26 @@ class ObdCubit extends Cubit<ObdState> {
     await refreshLiveData();
 
     return ok;
+  }
+
+  Future<void> cancelConnectionAttempt() async {
+    if (!state.isConnectionFlowRunning) return;
+    ++_connectionAttempt;
+    _trace('لغيت محاولة الاتصال.');
+    try {
+      await repository.disconnect();
+    } finally {
+      if (!isClosed) {
+        emit(state.copyWith(
+          status: ObdStatus.ready,
+          connectionStage: ObdConnectionStage.waitingForDeviceSelection,
+          clearConnectedDevice: true,
+          clearSnapshot: true,
+          adapterName: '',
+          message: 'اختار قطعة فحص تانية وجرب.',
+        ));
+      }
+    }
   }
 
   Future<void> disconnect() async {

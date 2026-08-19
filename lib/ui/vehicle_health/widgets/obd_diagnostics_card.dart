@@ -320,6 +320,24 @@ class _ObdDiagnosticsCardState extends State<ObdDiagnosticsCard>
               );
             }),
           ),
+          SizedBox(height: ResponsiveSize.height(context, 1.2)),
+          OutlinedButton.icon(
+            onPressed: () => context.read<ObdCubit>().cancelConnectionAttempt(),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: Colors.white,
+              side: BorderSide(color: Colors.white.withValues(alpha: .22)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppSizes.radiusSm),
+              ),
+            ),
+            icon: const Icon(Icons.close_rounded),
+            label: customText(
+              text: 'إلغاء محاولة الاتصال',
+              fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
+              color: Colors.white,
+              isBold: true,
+            ),
+          ),
         ],
       ),
     );
