@@ -5,24 +5,32 @@ import 'package:moftah/ui/vehicle_health/cubit/obd_state.dart';
 
 class ObdCubit extends Cubit<ObdState> {
   final ObdRepository repository;
+  bool _liveReadRunning = false;
+  bool _dtcReadRunning = false;
+
   ObdCubit({required this.repository}) : super(const ObdState());
 
   void _trace(String line) {
     if (isClosed) return;
     final next = [...state.trace, line];
-    emit(state.copyWith(trace: next.length > 80 ? next.sublist(next.length - 80) : next));
+    emit(state.copyWith(
+      trace: next.length > 100 ? next.sublist(next.length - 100) : next,
+    ));
   }
 
   Future<void> loadPairedDevices() async {
     emit(state.copyWith(
       status: ObdStatus.loadingDevices,
       connectionStage: ObdConnectionStage.checkingPairedDevices,
-      trace: const ['فحص صلاحيات Bluetooth...', 'قراءة الأجهزة المقترنة من Android...'],
+      trace: const [
+        'بنتأكد إن البلوتوث جاهز...',
+        'بندور على الأجهزة اللي معمولها اقتران...',
+      ],
       clearMessage: true,
     ));
     try {
       final devices = await repository.getPairedDevices();
-      _trace('تم العثور على ${devices.length} جهاز/أجهزة مقترنة.');
+      _trace('لقينا ${devices.length} جهاز معمول له اقتران.');
       emit(state.copyWith(
         status: ObdStatus.ready,
         connectionStage: devices.isEmpty
@@ -30,15 +38,14 @@ class ObdCubit extends Cubit<ObdState> {
             : ObdConnectionStage.waitingForDeviceSelection,
         devices: devices,
         message: devices.isEmpty
-            ? 'لا توجد أجهزة مقترنة. اعمل Pair للـ ELM327 من إعدادات Android ثم أعد الفحص.'
-            : 'اختار جهاز ELM327 بنفسك. لن نرسل أوامر لأي جهاز تلقائيًا.',
+            ? 'مفيش أجهزة مقترنة. اعمل اقتران للـ ELM327 من إعدادات الموبايل وجرب تاني.'
+            : 'اختار قطعة الفحص بتاعتك علشان نبدأ.',
       ));
-    } catch (error) {
-      _trace('خطأ قراءة الأجهزة: $error');
+    } catch (_) {
       emit(state.copyWith(
         status: ObdStatus.error,
         connectionStage: ObdConnectionStage.idle,
-        message: 'تعذر قراءة أجهزة البلوتوث المقترنة.',
+        message: 'مقدرناش نقرأ أجهزة البلوتوث المقترنة.',
       ));
     }
   }
@@ -47,83 +54,169 @@ class ObdCubit extends Cubit<ObdState> {
     emit(state.copyWith(
       status: ObdStatus.connecting,
       connectionStage: ObdConnectionStage.connectingBluetooth,
-      trace: ['الجهاز المختار: ${device.name}', 'فتح Bluetooth SPP/RFCOMM...'],
+      trace: ['اخترت: ${device.name}', 'بنفتح اتصال مباشر مع قطعة الفحص...'],
       clearMessage: true,
       clearSnapshot: true,
     ));
     try {
       final connected = await repository.connectBluetooth(device.address);
       if (!connected) {
-        _trace('فشل فتح قناة SPP مع الجهاز.');
-        emit(state.copyWith(status: ObdStatus.error, connectionStage: ObdConnectionStage.idle,
-          message: 'فشل اتصال SPP بـ ${device.name}. جرّب إغلاق أي تطبيق OBD آخر.'));
-        return;
-      }
-
-      _trace('تم فتح قناة Bluetooth SPP بنجاح.');
-      emit(state.copyWith(status: ObdStatus.connecting,
-        connectionStage: ObdConnectionStage.initializingAdapter, connectedDevice: device));
-
-      await repository.initializeAdapter(onTrace: _trace);
-      final adapterName = await repository.readAdapterName(onTrace: _trace);
-      _trace('هوية المحول: $adapterName');
-
-      emit(state.copyWith(status: ObdStatus.connecting,
-        connectionStage: ObdConnectionStage.detectingProtocol,
-        connectedDevice: device, adapterName: adapterName));
-      _trace('ATSP0 = اختيار بروتوكول السيارة تلقائيًا.');
-
-      emit(state.copyWith(status: ObdStatus.reading,
-        connectionStage: ObdConnectionStage.readingVehicle));
-      await refreshDiagnostics(showConnectionStage: true);
-    } catch (error) {
-      _trace('EXCEPTION: $error');
-      emit(state.copyWith(status: ObdStatus.error, connectionStage: ObdConnectionStage.idle,
-        message: 'الاتصال لم يكتمل. راجع سجل الفحص بالأسفل لمعرفة آخر أمر ورد.'));
-    }
-  }
-
-  Future<void> refreshDiagnostics({bool showConnectionStage = false}) async {
-    if (!state.isConnected) return;
-    emit(state.copyWith(status: ObdStatus.reading,
-      connectionStage: showConnectionStage ? ObdConnectionStage.readingVehicle : state.connectionStage,
-      clearMessage: true));
-    try {
-      _trace('اختبار اتصال ECU باستخدام PID 0100...');
-      final snapshot = await repository.readSnapshot(onTrace: _trace);
-      if (!snapshot.ecuAvailable) {
-        _trace('الـ ELM327 رد، لكن لم يصل رد OBD صالح من ECU (41 00...).');
-        final voltage = snapshot.adapterVoltage;
-        final lowVoltage = voltage != null && voltage < 11.5;
-
         emit(state.copyWith(
-          status: ObdStatus.connected,
-          connectionStage: ObdConnectionStage.ecuNotResponding,
-          snapshot: snapshot,
-          message: lowVoltage
-              ? 'Bluetooth متصل بالقطعة، لكن ECU لم يرد. جهد منفذ OBD منخفض (${voltage.toStringAsFixed(1)}V). افحص البطارية/التغذية وشغّل الكونتاكت ON ثم أعد الاختبار.'
-              : 'Bluetooth متصل بالقطعة، لكن ECU لم يرد. شغّل الكونتاكت على ON وتأكد أن القطعة مركبة في OBD-II ولا يوجد تطبيق آخر متصل بها.',
+          status: ObdStatus.error,
+          connectionStage: ObdConnectionStage.idle,
+          message: 'الاتصال بالقطعة فشل. اقفل أي تطبيق OBD تاني وجرب.',
         ));
         return;
       }
-      _trace('ECU استجاب. تم بدء قراءة PIDs والأعطال.');
-      emit(state.copyWith(status: ObdStatus.connected,
-        connectionStage: ObdConnectionStage.done, snapshot: snapshot,
-        message: null, clearMessage: true));
+
+      _trace('اتصلنا بقطعة الفحص بنجاح.');
+      emit(state.copyWith(
+        status: ObdStatus.connecting,
+        connectionStage: ObdConnectionStage.initializingAdapter,
+        connectedDevice: device,
+      ));
+
+      await repository.initializeAdapter(onTrace: _trace);
+      final adapterName = await repository.readAdapterName(onTrace: _trace);
+      _trace('قطعة الفحص: $adapterName');
+
+      emit(state.copyWith(
+        status: ObdStatus.reading,
+        connectionStage: ObdConnectionStage.detectingProtocol,
+        connectedDevice: device,
+        adapterName: adapterName,
+      ));
+
+      await _firstVehicleScan();
     } catch (error) {
-      _trace('فشل قراءة ECU: $error');
-      emit(state.copyWith(status: ObdStatus.connected,
-        connectionStage: ObdConnectionStage.ecuNotResponding,
-        message: 'القطعة متصلة Bluetooth لكن قراءة السيارة فشلت. راجع TX/RX في سجل الفحص.'));
+      _trace('حصل خطأ أثناء الاتصال: $error');
+      emit(state.copyWith(
+        status: ObdStatus.error,
+        connectionStage: ObdConnectionStage.idle,
+        message: 'الاتصال مكملش. شوف سجل الفحص تحت لمعرفة آخر خطوة.',
+      ));
     }
   }
 
+  Future<void> _firstVehicleScan() async {
+    _trace('أول مرة بس: بندور على بروتوكول العربية المناسب...');
+    final snapshot = await repository.readSnapshot(onTrace: _trace);
+    if (!snapshot.ecuAvailable) {
+      emit(state.copyWith(
+        status: ObdStatus.connected,
+        connectionStage: ObdConnectionStage.ecuNotResponding,
+        snapshot: snapshot,
+        message: 'القطعة متصلة، بس كمبيوتر العربية مردش. خلي الكونتاكت ON وجرب تاني.',
+      ));
+      return;
+    }
+
+    _trace('تمام، لقينا بروتوكول العربية. هنفضل على نفس السيشن ونحدث القراءات مباشرة.');
+    emit(state.copyWith(
+      status: ObdStatus.connected,
+      connectionStage: ObdConnectionStage.done,
+      snapshot: snapshot,
+      clearMessage: true,
+    ));
+  }
+
+  /// تحديث العدادات فقط - بدون Reset وبدون Protocol Search.
+  Future<void> refreshLiveData() async {
+    if (!state.isConnected || !repository.ecuReady || _liveReadRunning || _dtcReadRunning) return;
+    _liveReadRunning = true;
+    try {
+      final oldCodes = state.snapshot?.troubleCodes ?? const <ObdTroubleCodeModel>[];
+      final snapshot = await repository.readLiveSnapshot(
+        troubleCodes: oldCodes,
+      );
+      if (!isClosed) {
+        emit(state.copyWith(
+          status: ObdStatus.connected,
+          connectionStage: ObdConnectionStage.done,
+          snapshot: snapshot,
+          clearMessage: true,
+        ));
+      }
+    } catch (error) {
+      _trace('قراءة Live اتقطعت: $error');
+    } finally {
+      _liveReadRunning = false;
+    }
+  }
+
+  /// تحديث الأعطال أثناء نفس السيشن ومقارنة اللي ظهر واللي اختفى.
+  Future<void> refreshTroubleCodes() async {
+    if (!state.isConnected || !repository.ecuReady || _dtcReadRunning || _liveReadRunning) return;
+    _dtcReadRunning = true;
+    try {
+      final before = state.snapshot?.troubleCodes ?? const <ObdTroubleCodeModel>[];
+      final after = await repository.readTroubleCodes();
+      final beforeCodes = before.map((e) => e.code).toSet();
+      final afterCodes = after.map((e) => e.code).toSet();
+
+      for (final code in afterCodes.difference(beforeCodes)) {
+        _trace('عطل جديد ظهر أثناء السيشن: $code');
+      }
+      for (final code in beforeCodes.difference(afterCodes)) {
+        _trace('العطل $code مبقاش ظاهر في القراءة الحالية.');
+      }
+
+      final current = state.snapshot;
+      if (current != null && !isClosed) {
+        emit(state.copyWith(snapshot: ObdSnapshotModel(
+          ecuAvailable: current.ecuAvailable,
+          rpm: current.rpm,
+          speedKmh: current.speedKmh,
+          coolantTemperature: current.coolantTemperature,
+          intakeAirTemperature: current.intakeAirTemperature,
+          engineLoadPercent: current.engineLoadPercent,
+          throttlePositionPercent: current.throttlePositionPercent,
+          adapterVoltage: current.adapterVoltage,
+          troubleCodes: after,
+        )));
+      }
+    } finally {
+      _dtcReadRunning = false;
+    }
+  }
+
+  /// الزر اليدوي بقى تحديث سريع داخل نفس السيشن، مش فحص من البداية.
+  Future<void> refreshDiagnostics({bool showConnectionStage = false}) async {
+    if (!state.isConnected) return;
+    if (repository.ecuReady) {
+      await refreshLiveData();
+      await refreshTroubleCodes();
+      return;
+    }
+    await _firstVehicleScan();
+  }
+
+  Future<bool> clearTroubleCodes() async {
+    if (!state.isConnected || !repository.ecuReady) return false;
+    final ok = await repository.clearTroubleCodes(onTrace: _trace);
+
+    // نفس السيشن ونفس البروتوكول: مجرد إعادة قراءة، من غير ATZ
+    // ومن غير Protocol Search.
+    await Future<void>.delayed(const Duration(milliseconds: 250));
+    await refreshTroubleCodes();
+    await refreshLiveData();
+
+    return ok;
+  }
+
   Future<void> disconnect() async {
-    try { await repository.disconnect(); } finally {
-      emit(state.copyWith(status: ObdStatus.ready,
+    try {
+      await repository.disconnect();
+    } finally {
+      emit(state.copyWith(
+        status: ObdStatus.ready,
         connectionStage: ObdConnectionStage.waitingForDeviceSelection,
-        clearConnectedDevice: true, clearSnapshot: true, adapterName: '',
-        trace: const [], clearMessage: true));
+        clearConnectedDevice: true,
+        clearSnapshot: true,
+        adapterName: '',
+        trace: const [],
+        clearMessage: true,
+      ));
     }
   }
 

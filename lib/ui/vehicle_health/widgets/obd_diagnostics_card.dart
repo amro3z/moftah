@@ -23,34 +23,41 @@ class _ObdDiagnosticsCardState extends State<ObdDiagnosticsCard>
     with TickerProviderStateMixin {
   bool _expanded = false;
   Timer? _liveTimer;
+  Timer? _dtcTimer;
 
   @override
   void dispose() {
     _liveTimer?.cancel();
+    _dtcTimer?.cancel();
     super.dispose();
   }
 
   void _toggleExpanded(ObdState state) {
     setState(() => _expanded = !_expanded);
 
-    if (_expanded && state.isConnected) {
-      _startLiveUpdates();
-    } else {
-      _liveTimer?.cancel();
-    }
+    if (state.isConnected) _startLiveUpdates();
   }
 
   void _startLiveUpdates() {
-    _liveTimer?.cancel();
-    _liveTimer = Timer.periodic(const Duration(seconds: 3), (_) {
+    if (_liveTimer?.isActive == true) return;
+
+    // العدادات تتحدث بسرعة طول ما السيشن مفتوحة، حتى لو الكارد مقفولة.
+    _liveTimer = Timer.periodic(const Duration(milliseconds: 700), (_) {
       if (!mounted) return;
       final cubit = context.read<ObdCubit>();
-      final state = cubit.state;
-      if (_expanded &&
-          state.isConnected &&
-          state.status != ObdStatus.reading &&
-          state.status != ObdStatus.connecting) {
-        cubit.refreshDiagnostics();
+      if (cubit.state.isConnected &&
+          cubit.state.connectionStage == ObdConnectionStage.done) {
+        cubit.refreshLiveData();
+      }
+    });
+
+    // الأعطال أبطأ شوية علشان Mode 03 ما يعطلش RPM وباقي العدادات.
+    _dtcTimer = Timer.periodic(const Duration(seconds: 2), (_) {
+      if (!mounted) return;
+      final cubit = context.read<ObdCubit>();
+      if (cubit.state.isConnected &&
+          cubit.state.connectionStage == ObdConnectionStage.done) {
+        cubit.refreshTroubleCodes();
       }
     });
   }
@@ -61,7 +68,10 @@ class _ObdDiagnosticsCardState extends State<ObdDiagnosticsCard>
       listener: (context, state) {
         if (!state.isConnected) {
           _liveTimer?.cancel();
-        } else if (_expanded && _liveTimer?.isActive != true) {
+          _dtcTimer?.cancel();
+          _liveTimer = null;
+          _dtcTimer = null;
+        } else if (state.connectionStage == ObdConnectionStage.done) {
           _startLiveUpdates();
         }
       },
@@ -147,6 +157,8 @@ class _ObdDiagnosticsCardState extends State<ObdDiagnosticsCard>
                 SizedBox(height: ResponsiveSize.height(context, 1.2)),
                 ObdTracePanel(state: state),
               ],
+              SizedBox(height: ResponsiveSize.height(context, 1.2)),
+              _connectionTip(context),
               SizedBox(height: ResponsiveSize.height(context, 1.4)),
               _actions(context, state, busy),
             ],
@@ -510,7 +522,7 @@ class _ObdDiagnosticsCardState extends State<ObdDiagnosticsCard>
           ),
           SizedBox(width: ResponsiveSize.width(context, 1)),
           customText(
-            text: 'LIVE',
+            text: 'مباشر',
             fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
             color: AppColors.success,
             isBold: true,
@@ -666,7 +678,7 @@ class _ObdDiagnosticsCardState extends State<ObdDiagnosticsCard>
     if (snapshot.adapterVoltage != null) {
       metrics.add(_metric(
         context,
-        'الجهد',
+        'فولت البطارية',
         '${snapshot.adapterVoltage!.toStringAsFixed(1)} V',
         Icons.battery_charging_full_rounded,
         AppColors.success,
@@ -675,7 +687,7 @@ class _ObdDiagnosticsCardState extends State<ObdDiagnosticsCard>
     if (snapshot.engineLoadPercent != null) {
       metrics.add(_metric(
         context,
-        'حمل المحرك',
+        'حمل الموتور (LOAD)',
         '${snapshot.engineLoadPercent!.toStringAsFixed(0)}%',
         Icons.settings_suggest_rounded,
         AppColors.warning,
@@ -684,7 +696,7 @@ class _ObdDiagnosticsCardState extends State<ObdDiagnosticsCard>
     if (snapshot.throttlePositionPercent != null) {
       metrics.add(_metric(
         context,
-        'دعسة البنزين',
+        'دعسة البنزين (TPS)',
         '${snapshot.throttlePositionPercent!.toStringAsFixed(0)}%',
         Icons.compress_rounded,
         AppColors.info,
@@ -693,7 +705,7 @@ class _ObdDiagnosticsCardState extends State<ObdDiagnosticsCard>
     if (snapshot.intakeAirTemperature != null) {
       metrics.add(_metric(
         context,
-        'حرارة هواء السحب',
+        'حرارة الهوا الداخل (IAT)',
         '${snapshot.intakeAirTemperature}°C',
         Icons.air_rounded,
         AppColors.secondary,
@@ -855,42 +867,73 @@ class _ObdDiagnosticsCardState extends State<ObdDiagnosticsCard>
 
   Widget _dtcItem(BuildContext context, ObdTroubleCodeModel item) {
     return Container(
-      margin: EdgeInsets.only(bottom: ResponsiveSize.height(context, .7)),
+      margin: EdgeInsets.only(bottom: ResponsiveSize.height(context, .8)),
       padding: EdgeInsets.all(ResponsiveSize.width(context, 3)),
       decoration: BoxDecoration(
         color: AppColors.danger.withValues(alpha: .09),
         borderRadius: BorderRadius.circular(AppSizes.radiusSm),
         border: Border.all(color: AppColors.danger.withValues(alpha: .16)),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Icon(Icons.warning_amber_rounded, color: AppColors.danger),
-          SizedBox(width: ResponsiveSize.width(context, 2)),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Directionality(
-                  textDirection: TextDirection.ltr,
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: customText(
-                      text: item.code,
-                      fontSize: ResponsiveSize.width(context, AppSizes.fontMd),
-                      color: Colors.white,
-                      isBold: true,
-                    ),
-                  ),
+          Row(
+            children: [
+              const Icon(Icons.warning_amber_rounded, color: AppColors.danger),
+              SizedBox(width: ResponsiveSize.width(context, 2)),
+              Expanded(
+                child: customText(
+                  text: item.title,
+                  fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
+                  color: Colors.white,
+                  isBold: true,
                 ),
-                customText(
-                  text: item.system,
-                  fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
-                  color: Colors.white70,
+              ),
+              Directionality(
+                textDirection: TextDirection.ltr,
+                child: customText(
+                  text: item.code,
+                  fontSize: ResponsiveSize.width(context, AppSizes.fontMd),
+                  color: AppColors.danger,
+                  isBold: true,
                 ),
-              ],
-            ),
+              ),
+            ],
+          ),
+          SizedBox(height: ResponsiveSize.height(context, .6)),
+          customText(
+            text: item.description,
+            fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
+            color: Colors.white70,
+          ),
+          SizedBox(height: ResponsiveSize.height(context, .7)),
+          Wrap(
+            spacing: ResponsiveSize.width(context, 1.5),
+            runSpacing: ResponsiveSize.height(context, .4),
+            children: [
+              _dtcChip(context, 'النظام: ${item.system}'),
+              _dtcChip(context, item.codeType),
+            ],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _dtcChip(BuildContext context, String text) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: ResponsiveSize.width(context, 2),
+        vertical: ResponsiveSize.height(context, .3),
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: .07),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: customText(
+        text: text,
+        fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
+        color: Colors.white70,
       ),
     );
   }
@@ -922,6 +965,185 @@ class _ObdDiagnosticsCardState extends State<ObdDiagnosticsCard>
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _connectionTip(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(ResponsiveSize.width(context, 3)),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: .055),
+        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        border: Border.all(color: Colors.white.withValues(alpha: .07)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(Icons.tips_and_updates_outlined, color: AppColors.warning),
+          SizedBox(width: ResponsiveSize.width(context, 2)),
+          Expanded(
+            child: customText(
+              text: 'لو القطعة مش راضية تتصل: شيلها من كهربا العربية، اعمل عدم اقتران من البلوتوث، وبعدها وصلها واعمل اقتران من جديد.',
+              fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
+              color: Colors.white70,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _confirmClearCodes(BuildContext context) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      barrierColor: Colors.black.withValues(alpha: .55),
+      builder: (dialogContext) => Directionality(
+        textDirection: TextDirection.rtl,
+        child: Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: EdgeInsets.symmetric(
+            horizontal: ResponsiveSize.width(context, 6),
+          ),
+          child: Container(
+            padding: EdgeInsets.all(ResponsiveSize.width(context, 5)),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(AppSizes.radiusLg),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: .22),
+                  blurRadius: 24,
+                  offset: const Offset(0, 10),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: ResponsiveSize.width(context, 15),
+                  height: ResponsiveSize.width(context, 15),
+                  decoration: BoxDecoration(
+                    color: AppColors.warning.withValues(alpha: .10),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.delete_sweep_rounded,
+                    color: AppColors.warning,
+                    size: ResponsiveSize.width(context, 7),
+                  ),
+                ),
+                SizedBox(height: ResponsiveSize.height(context, 1.4)),
+                customText(
+                  text: 'مسح أعطال العربية',
+                  fontSize: ResponsiveSize.width(context, AppSizes.fontLg),
+                  color: AppColors.primary,
+                  isBold: true,
+                ),
+                SizedBox(height: ResponsiveSize.height(context, .8)),
+                Center(
+                  child: customText(
+                    text:
+                        'هنمسح أكواد الأعطال المخزنة وبيانات الفحص المرتبطة بيها. '
+                        'لو سبب المشكلة لسه موجود، العطل ممكن يظهر تاني.',
+                    fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
+                    color: AppColors.textMuted,
+                  ),
+                ),
+                SizedBox(height: ResponsiveSize.height(context, 1.2)),
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(ResponsiveSize.width(context, 3)),
+                  decoration: BoxDecoration(
+                    color: AppColors.warning.withValues(alpha: .07),
+                    borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+                  ),
+                  child: customText(
+                    text:
+                        'الأفضل تعمل المسح والكونتاكت ON والموتور مطفي. '
+                        'الأكواد الدائمة ممكن ما تتمسحش يدويًا.',
+                    fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
+                    color: AppColors.primary,
+                  ),
+                ),
+                SizedBox(height: ResponsiveSize.height(context, 1.6)),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () =>
+                            Navigator.pop(dialogContext, false),
+                        style: OutlinedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(
+                            vertical: ResponsiveSize.height(context, 1.1),
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(AppSizes.radiusMd),
+                          ),
+                        ),
+                        child: customText(
+                          text: 'رجوع',
+                          fontSize: ResponsiveSize.width(
+                            context,
+                            AppSizes.fontSm,
+                          ),
+                          color: AppColors.textMuted,
+                          isBold: true,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: ResponsiveSize.width(context, 2)),
+                    Expanded(
+                      child: FilledButton(
+                        onPressed: () =>
+                            Navigator.pop(dialogContext, true),
+                        style: FilledButton.styleFrom(
+                          backgroundColor: AppColors.warning,
+                          padding: EdgeInsets.symmetric(
+                            vertical: ResponsiveSize.height(context, 1.1),
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(AppSizes.radiusMd),
+                          ),
+                        ),
+                        child: customText(
+                          text: 'امسح الأعطال',
+                          fontSize: ResponsiveSize.width(
+                            context,
+                            AppSizes.fontSm,
+                          ),
+                          color: Colors.white,
+                          isBold: true,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    if (confirmed != true || !context.mounted) return;
+
+    final ok = await context.read<ObdCubit>().clearTroubleCodes();
+    if (!context.mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        content: customText(
+          text: ok
+              ? 'راجعنا العربية بعد المسح وحدّثنا الأعطال.'
+              : 'العطل لسه ظاهر. جرّب والكونتاكت ON والموتور مطفي.',
+          fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
+          color: Colors.white,
+        ),
       ),
     );
   }
@@ -984,12 +1206,25 @@ class _ObdDiagnosticsCardState extends State<ObdDiagnosticsCard>
                   )
                 : const Icon(Icons.refresh_rounded),
             label: customText(
-              text: 'تحديث الفحص',
+              text: 'تحديث دلوقتي',
               fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
               color: Colors.white,
               isBold: true,
             ),
           ),
+        ),
+        SizedBox(width: ResponsiveSize.width(context, 2)),
+        OutlinedButton(
+          onPressed: busy ? null : () => _confirmClearCodes(context),
+          style: OutlinedButton.styleFrom(
+            foregroundColor: AppColors.warning,
+            side: BorderSide(color: AppColors.warning.withValues(alpha: .45)),
+            padding: EdgeInsets.symmetric(
+              horizontal: ResponsiveSize.width(context, 3),
+              vertical: ResponsiveSize.height(context, 1.1),
+            ),
+          ),
+          child: const Icon(Icons.delete_sweep_rounded),
         ),
         SizedBox(width: ResponsiveSize.width(context, 2)),
         OutlinedButton(

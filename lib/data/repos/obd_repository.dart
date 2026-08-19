@@ -1,6 +1,7 @@
 
 import 'package:moftah/data/datasources/elm327_bluetooth_data_source.dart';
 import 'package:moftah/data/models/obd_models.dart';
+import 'package:moftah/utils/obd_dtc_helper.dart';
 import 'package:moftah/data/repos/obd_protocol_probe.dart';
 
 class ObdConnectionResult {
@@ -15,6 +16,11 @@ class ObdConnectionResult {
 
 class ObdRepository {
   final Elm327BluetoothDataSource _dataSource;
+  bool _ecuReady = false;
+  String? _activeProtocolNumber;
+
+  bool get ecuReady => _ecuReady;
+  String? get activeProtocolNumber => _activeProtocolNumber;
 
   ObdRepository({Elm327BluetoothDataSource? dataSource})
       : _dataSource = dataSource ?? Elm327BluetoothDataSource();
@@ -55,6 +61,8 @@ class ObdRepository {
   }
 
   Future<void> disconnect() {
+    _ecuReady = false;
+    _activeProtocolNumber = null;
     return _dataSource.disconnect();
   }
 
@@ -105,8 +113,11 @@ class ObdRepository {
       );
     }
 
+    _ecuReady = true;
+
     final protocol = await _command('ATDP', onTrace: onTrace);
     final protocolNumber = await _command('ATDPN', onTrace: onTrace);
+    _activeProtocolNumber = _normalizeProtocolNumber(protocolNumber);
     onTrace?.call(
       'البروتوكول النشط: '
       '${protocol.isEmpty ? 'غير معروف' : protocol}'
@@ -148,6 +159,114 @@ class ObdRepository {
       adapterVoltage: voltage,
       troubleCodes: dtcs,
     );
+  }
+
+  /// قراءة سريعة أثناء نفس السيشن. لا Reset ولا بحث بروتوكول من جديد.
+  Future<ObdSnapshotModel> readLiveSnapshot({
+    void Function(String)? onTrace,
+    List<ObdTroubleCodeModel>? troubleCodes,
+  }) async {
+    if (!_ecuReady) {
+      return readSnapshot(onTrace: onTrace);
+    }
+
+    final rpm = _parseRpm(await _command('010C', onTrace: onTrace));
+    final speed = _parseSingleBytePid(
+      await _command('010D', onTrace: onTrace), pid: 0x0D);
+    final throttle = _parsePercentage(
+      await _command('0111', onTrace: onTrace), pid: 0x11);
+    final load = _parsePercentage(
+      await _command('0104', onTrace: onTrace), pid: 0x04);
+    final coolant = _parseCoolant(await _command('0105', onTrace: onTrace));
+    final intake = _parseTemperature(
+      await _command('010F', onTrace: onTrace), pid: 0x0F);
+    final voltage = _parseVoltage(await _command('ATRV', onTrace: onTrace));
+
+    return ObdSnapshotModel(
+      ecuAvailable: true,
+      rpm: rpm,
+      speedKmh: speed,
+      coolantTemperature: coolant,
+      intakeAirTemperature: intake,
+      engineLoadPercent: load,
+      throttlePositionPercent: throttle,
+      adapterVoltage: voltage,
+      troubleCodes: troubleCodes ?? const [],
+    );
+  }
+
+  /// الأعطال تتقري بتردد أبطأ من العدادات علشان ما نعطلش الـ Live Data.
+  Future<List<ObdTroubleCodeModel>> readTroubleCodes({
+    void Function(String)? onTrace,
+  }) async {
+    if (!_ecuReady) return const [];
+    return _parseTroubleCodes(await _command('03', onTrace: onTrace));
+  }
+
+  /// Mode 04 يمسح الـ stored DTCs وبيانات التشخيص المرتبطة بيها.
+  ///
+  /// بعض نسخ ELM327 الرخيصة لا ترجع 44 بشكل ثابت، لذلك لا نعتمد
+  /// على رسالة التأكيد وحدها: نقرأ الأكواد قبل وبعد المسح ونعتبر
+  /// اختفاء الأكواد المخزنة تأكيدًا عمليًا إضافيًا.
+  Future<bool> clearTroubleCodes({void Function(String)? onTrace}) async {
+    if (!_ecuReady) return false;
+
+    final beforeResponse = await _command('03', onTrace: onTrace);
+    final beforeCodes = _parseTroubleCodes(beforeResponse);
+
+    if (beforeCodes.isEmpty) {
+      onTrace?.call('مفيش أعطال مخزنة محتاجة مسح دلوقتي.');
+      return true;
+    }
+
+    onTrace?.call(
+      'هنطلب من كمبيوتر العربية يمسح الأعطال المخزنة. '
+      'الأفضل الكونتاكت ON والموتور مطفي.',
+    );
+
+    final response = await _command('04', onTrace: onTrace);
+    final directConfirmation = _hexBytes(response).contains(0x44);
+
+    // ادّي الـ ECU فرصة يكمّل عملية المسح قبل إعادة القراءة.
+    await Future<void>.delayed(const Duration(milliseconds: 1200));
+
+    final afterResponse = await _command('03', onTrace: onTrace);
+    final afterCodes = _parseTroubleCodes(afterResponse);
+
+    final responseUpper = afterResponse.toUpperCase();
+    final validEmptyRead = afterCodes.isEmpty &&
+        !responseUpper.contains('UNABLE TO CONNECT') &&
+        !responseUpper.contains('BUS ERROR') &&
+        !responseUpper.contains('CAN ERROR') &&
+        !responseUpper.contains('STOPPED');
+
+    final disappeared = beforeCodes.isNotEmpty && validEmptyRead;
+    final ok = directConfirmation || disappeared;
+
+    if (directConfirmation) {
+      onTrace?.call('كمبيوتر العربية أكد أمر المسح (44).');
+    } else if (disappeared) {
+      onTrace?.call(
+        'القطعة ما رجعتش تأكيد 44، بس لما راجعنا الأعطال بعدها '
+        'الأكواد المخزنة اختفت، فالمسح تم.',
+      );
+    } else {
+      onTrace?.call(
+        'الأعطال لسه موجودة بعد أمر المسح. جرّب الكونتاكت ON '
+        'والموتور مطفي. ولو سبب العطل لسه موجود ممكن الكود يرجع.',
+      );
+    }
+
+    return ok;
+  }
+
+  String? _normalizeProtocolNumber(String raw) {
+    final cleaned = raw.toUpperCase().replaceAll(RegExp(r'[^0-9A-F]'), '');
+    if (cleaned.isEmpty) return null;
+    // ATDPN may return A6 when protocol 6 was auto-selected.
+    return cleaned.startsWith('A') && cleaned.length > 1
+        ? cleaned.substring(1)
+        : cleaned;
   }
 
   Future<void> _initializeAdapter({
@@ -287,10 +406,14 @@ class ObdRepository {
       if (a == 0 && b == 0) continue;
 
       final code = _decodeDtc(a, b);
+      final info = ObdDtcHelper.info(code);
       result.add(
         ObdTroubleCodeModel(
           code: code,
-          system: _systemName(code),
+          system: info.system,
+          title: info.title,
+          description: info.description,
+          codeType: ObdDtcHelper.codeType(code),
         ),
       );
     }
@@ -329,14 +452,4 @@ class ObdRepository {
         '${digit4.toRadixString(16).toUpperCase()}';
   }
 
-  String _systemName(String code) {
-    if (code.isEmpty) return 'نظام غير معروف';
-    return switch (code[0]) {
-      'P' => 'المحرك ونظام نقل الحركة',
-      'C' => 'الشاسيه',
-      'B' => 'هيكل السيارة',
-      'U' => 'شبكة الاتصال بين الوحدات',
-      _ => 'نظام غير معروف',
-    };
-  }
 }

@@ -12,25 +12,83 @@ class ObdTracePanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (state.trace.isEmpty) return const SizedBox.shrink();
+
     return Container(
       padding: EdgeInsets.all(ResponsiveSize.width(context, 3)),
-      decoration: BoxDecoration(color: Colors.black.withValues(alpha: .22), borderRadius: BorderRadius.circular(AppSizes.radiusMd), border: Border.all(color: Colors.white.withValues(alpha: .07))),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        Row(children: [
-          const Icon(Icons.terminal_rounded, color: AppColors.info, size: 19),
-          const SizedBox(width: 8),
-          Expanded(child: customText(text: 'سجل الفحص الفعلي TX / RX', fontSize: ResponsiveSize.width(context, AppSizes.fontSm), color: Colors.white, isBold: true)),
-        ]),
-        const SizedBox(height: 8),
-        customText(text: 'TX = الأمر المرسل للـ ELM327، و RX = الرد الحقيقي. لو Bluetooth اتصل لكن 0100 رجع NO DATA أو UNABLE TO CONNECT فالمشكلة بين القطعة و ECU وليست الاقتران.', fontSize: ResponsiveSize.width(context, AppSizes.fontXs), color: Colors.white60),
-        const SizedBox(height: 10),
-        Container(
-          constraints: const BoxConstraints(maxHeight: 190),
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(color: Colors.black.withValues(alpha: .28), borderRadius: BorderRadius.circular(10)),
-          child: SingleChildScrollView(reverse: true, child: Directionality(textDirection: TextDirection.ltr, child: SelectableText(state.trace.join('\n'), style: const TextStyle(fontFamily: 'monospace', fontSize: 11, height: 1.45, color: Colors.white70)))),
-        ),
-      ]),
+      decoration: BoxDecoration(
+        color: Colors.black.withValues(alpha: .22),
+        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        border: Border.all(color: Colors.white.withValues(alpha: .07)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.car_repair_rounded, color: AppColors.info, size: 19),
+              const SizedBox(width: 8),
+              Expanded(
+                child: customText(
+                  text: 'تفاصيل فحص العربية',
+                  fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
+                  color: Colors.white,
+                  isBold: true,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          customText(
+            text: 'هنا بنعرضلك اللي بيحصل أثناء الفحص خطوة بخطوة. التفاصيل التقنية موجودة علشان نعرف سبب أي مشكلة في الاتصال.',
+            fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
+            color: Colors.white60,
+          ),
+          const SizedBox(height: 10),
+          Container(
+            constraints: const BoxConstraints(maxHeight: 220),
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.black.withValues(alpha: .28),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: SingleChildScrollView(
+              reverse: true,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: state.trace.map((line) => Padding(
+                  padding: const EdgeInsets.only(bottom: 5),
+                  child: customText(
+                    text: _friendlyLine(line),
+                    fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
+                    color: Colors.white70,
+                  ),
+                )).toList(),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
+  }
+
+  String _friendlyLine(String line) {
+    if (line.startsWith('TX  ')) {
+      return 'بنطلب من جهاز الفحص: ${line.substring(4)}';
+    }
+    if (line.startsWith('RX  ')) {
+      return 'رد جهاز الفحص: ${line.substring(4)}'
+          .replaceAll('UNABLE TO CONNECT', 'مش قادر يتواصل مع كمبيوتر العربية')
+          .replaceAll('NO DATA', 'مفيش بيانات راجعة')
+          .replaceAll('(empty)', 'مفيش رد')
+          .replaceAll('SEARCHING', 'بيدور على بروتوكول العربية');
+    }
+
+    return line
+        .replaceAll('ECU', 'كمبيوتر العربية ECU')
+        .replaceAll('Generic OBD-II', 'نظام OBD-II القياسي')
+        .replaceAll('Generic OBD', 'نظام OBD القياسي')
+        .replaceAll('Bluetooth', 'البلوتوث')
+        .replaceAll('SPP/RFCOMM', 'قناة الاتصال بالبلوتوث')
+        .replaceAll('PID', 'طلب بيانات PID');
   }
 }

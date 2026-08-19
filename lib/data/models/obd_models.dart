@@ -2,19 +2,22 @@ class ObdDeviceModel {
   final String name;
   final String address;
 
-  const ObdDeviceModel({
-    required this.name,
-    required this.address,
-  });
+  const ObdDeviceModel({required this.name, required this.address});
 }
 
 class ObdTroubleCodeModel {
   final String code;
   final String system;
+  final String title;
+  final String description;
+  final String codeType;
 
   const ObdTroubleCodeModel({
     required this.code,
     required this.system,
+    required this.title,
+    required this.description,
+    required this.codeType,
   });
 }
 
