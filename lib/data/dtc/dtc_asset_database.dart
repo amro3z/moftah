@@ -8,7 +8,7 @@ class DtcAssetDatabase {
   DtcAssetDatabase._();
   static final DtcAssetDatabase instance = DtcAssetDatabase._();
 
-  static const _assetPath = 'lib/assets/dtc/generic_dtc.json.gz';
+  static const _assetPath = 'assets/dtc/generic_dtc.json.gz';
   Map<String, dynamic>? _codes;
   Future<void>? _loading;
 
