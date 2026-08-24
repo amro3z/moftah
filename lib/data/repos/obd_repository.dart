@@ -1,18 +1,9 @@
 
 import 'package:moftah/data/datasources/elm327_bluetooth_data_source.dart';
 import 'package:moftah/data/models/obd_models.dart';
-import 'package:moftah/utils/obd_dtc_helper.dart';
+import 'package:moftah/ui/core/helper/obd_dtc_helper.dart';
 import 'package:moftah/data/repos/obd_protocol_probe.dart';
 
-class ObdConnectionResult {
-  final bool connected;
-  final String adapterName;
-
-  const ObdConnectionResult({
-    required this.connected,
-    required this.adapterName,
-  });
-}
 
 class ObdRepository {
   final Elm327BluetoothDataSource _dataSource;
@@ -161,7 +152,6 @@ class ObdRepository {
     );
   }
 
-  /// قراءة سريعة أثناء نفس السيشن. لا Reset ولا بحث بروتوكول من جديد.
   Future<ObdSnapshotModel> readLiveSnapshot({
     void Function(String)? onTrace,
     List<ObdTroubleCodeModel>? troubleCodes,
@@ -195,7 +185,6 @@ class ObdRepository {
     );
   }
 
-  /// الأعطال تتقري بتردد أبطأ من العدادات علشان ما نعطلش الـ Live Data.
   Future<List<ObdTroubleCodeModel>> readTroubleCodes({
     void Function(String)? onTrace,
   }) async {
@@ -203,11 +192,6 @@ class ObdRepository {
     return _parseTroubleCodes(await _command('03', onTrace: onTrace));
   }
 
-  /// Mode 04 يمسح الـ stored DTCs وبيانات التشخيص المرتبطة بيها.
-  ///
-  /// بعض نسخ ELM327 الرخيصة لا ترجع 44 بشكل ثابت، لذلك لا نعتمد
-  /// على رسالة التأكيد وحدها: نقرأ الأكواد قبل وبعد المسح ونعتبر
-  /// اختفاء الأكواد المخزنة تأكيدًا عمليًا إضافيًا.
   Future<bool> clearTroubleCodes({void Function(String)? onTrace}) async {
     if (!_ecuReady) return false;
 
@@ -227,7 +211,6 @@ class ObdRepository {
     final response = await _command('04', onTrace: onTrace);
     final directConfirmation = _hexBytes(response).contains(0x44);
 
-    // ادّي الـ ECU فرصة يكمّل عملية المسح قبل إعادة القراءة.
     await Future<void>.delayed(const Duration(milliseconds: 1200));
 
     final afterResponse = await _command('03', onTrace: onTrace);
@@ -263,7 +246,6 @@ class ObdRepository {
   String? _normalizeProtocolNumber(String raw) {
     final cleaned = raw.toUpperCase().replaceAll(RegExp(r'[^0-9A-F]'), '');
     if (cleaned.isEmpty) return null;
-    // ATDPN may return A6 when protocol 6 was auto-selected.
     return cleaned.startsWith('A') && cleaned.length > 1
         ? cleaned.substring(1)
         : cleaned;
@@ -275,7 +257,6 @@ class ObdRepository {
     await _command('ATZ', onTrace: onTrace);
     await Future<void>.delayed(const Duration(milliseconds: 1000));
 
-    // Reset adapter options before configuring a clean diagnostic session.
     await _command('ATD', onTrace: onTrace);
     await _command('ATE0', onTrace: onTrace);
     await _command('ATL0', onTrace: onTrace);
@@ -284,13 +265,8 @@ class ObdRepository {
     await _command('ATAL', onTrace: onTrace);
     await _command('ATAT1', onTrace: onTrace);
 
-    // 0x64 * 4ms ~= 400ms ECU response window after protocol is known.
-    // K-line initialization itself may take longer; the Bluetooth read timeout
-    // in the data source is intentionally much longer.
     await _command('ATST64', onTrace: onTrace);
 
-    // Do not assume this already found the protocol. The first OBD request
-    // triggers auto-search.
     await _command('ATSP0', onTrace: onTrace);
   }
 
@@ -341,10 +317,6 @@ class ObdRepository {
     );
 
     return response;
-  }
-
-  bool _isOk(String response) {
-    return response.toUpperCase().contains('OK');
   }
 
   int? _parseRpm(String response) {

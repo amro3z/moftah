@@ -127,7 +127,6 @@ class ObdCubit extends Cubit<ObdState> {
     ));
   }
 
-  /// تحديث العدادات فقط - بدون Reset وبدون Protocol Search.
   Future<void> refreshLiveData() async {
     if (!state.isConnected || !repository.ecuReady || _liveReadRunning || _dtcReadRunning) return;
     _liveReadRunning = true;

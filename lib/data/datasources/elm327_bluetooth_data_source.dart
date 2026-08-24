@@ -4,9 +4,6 @@ import 'package:moftah/data/models/obd_models.dart';
 class Elm327BluetoothDataSource {
   static const String _sppUuid =
       '00001101-0000-1000-8000-00805F9B34FB';
-
-  // This plugin uses connect(timeoutMs) as the socket/read timeout too.
-  // 10s gives auto-detection and slow K-line initialization enough room.
   static const int _readTimeoutMs = 10000;
 
   Future<bool> ensurePermissions() {
@@ -46,7 +43,6 @@ class Elm327BluetoothDataSource {
 
     await FlutterBluetoothSerial.write('$normalized\r');
 
-    // ELM327 finishes a command with the '>' prompt, not a newline.
     final response = await FlutterBluetoothSerial.readLine('>');
 
     return _cleanResponse(

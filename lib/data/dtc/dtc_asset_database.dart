@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
-import 'package:moftah/data/dtc/dtc_info.dart';
+import 'package:moftah/data/models/dtc_info.dart';
 
 class DtcAssetDatabase {
   DtcAssetDatabase._();

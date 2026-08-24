@@ -1,14 +1,4 @@
-class ObdProtocolProbeResult {
-  final bool success;
-  final bool busInitialized;
-  final String response;
-
-  const ObdProtocolProbeResult({
-    this.success = false,
-    this.busInitialized = false,
-    this.response = '',
-  });
-}
+import 'package:moftah/data/models/obd_models.dart';
 
 class ObdProtocolProbe {
   final Future<String> Function(String command) sendCommand;

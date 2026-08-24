@@ -44,3 +44,26 @@ class ObdSnapshotModel {
     this.troubleCodes = const [],
   });
 }
+
+class ObdConnectionResult {
+  final bool connected;
+  final String adapterName;
+
+  const ObdConnectionResult({
+    required this.connected,
+    required this.adapterName,
+  });
+}
+
+
+class ObdProtocolProbeResult {
+  final bool success;
+  final bool busInitialized;
+  final String response;
+
+  const ObdProtocolProbeResult({
+    this.success = false,
+    this.busInitialized = false,
+    this.response = '',
+  });
+}
