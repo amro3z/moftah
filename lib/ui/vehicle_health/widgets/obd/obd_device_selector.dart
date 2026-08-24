@@ -39,7 +39,7 @@ class ObdDeviceSelector extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.bluetooth_searching_rounded,
                 color: AppColors.info,
               ),
@@ -59,7 +59,7 @@ class ObdDeviceSelector extends StatelessWidget {
                 onPressed: state.status == ObdStatus.loadingDevices
                     ? null
                     : context.read<ObdCubit>().loadPairedDevices,
-                icon: const Icon(Icons.refresh_rounded),
+                icon: Icon(Icons.refresh_rounded),
                 color: Colors.white70,
               ),
             ],
@@ -99,7 +99,7 @@ class ObdDeviceSelector extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.expand_more_rounded,
                     color: Colors.white70,
                   ),
@@ -152,11 +152,11 @@ class ObdDeviceSelector extends StatelessWidget {
             child: Column(
               children: [
                 Container(
-                  width: 42,
-                  height: 4,
+                  width: ResponsiveSize.width(context, 10.77),
+                  height: ResponsiveSize.height(context, 0.47),
                   decoration: BoxDecoration(
                     color: Colors.white24,
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(AppSizes.radiusLg),
                   ),
                 ),
                 SizedBox(
@@ -164,7 +164,7 @@ class ObdDeviceSelector extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.devices_rounded,
                       color: AppColors.info,
                     ),
@@ -246,8 +246,8 @@ class ObdDeviceSelector extends StatelessWidget {
             child: Row(
               children: [
                 Container(
-                  width: 38,
-                  height: 38,
+                  width: ResponsiveSize.width(context, 9.74),
+                  height: ResponsiveSize.height(context, 4.5),
                   decoration: BoxDecoration(
                     color: (likelyObd
                             ? AppColors.success
@@ -284,7 +284,7 @@ class ObdDeviceSelector extends StatelessWidget {
                     ),
                     decoration: BoxDecoration(
                       color: AppColors.success.withValues(alpha: .12),
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(AppSizes.radiusLg),
                     ),
                     child: customText(
                       text: 'OBD محتمل',
@@ -298,7 +298,7 @@ class ObdDeviceSelector extends StatelessWidget {
                   ),
                   SizedBox(width: ResponsiveSize.width(context, 1)),
                 ],
-                const Icon(
+                Icon(
                   Icons.arrow_forward_rounded,
                   color: Colors.white70,
                 ),

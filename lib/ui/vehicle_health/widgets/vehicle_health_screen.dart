@@ -129,7 +129,7 @@ class VehicleHealthScreen extends StatelessWidget {
             children: [
               Material(
                 color: Colors.white.withValues(alpha: .1),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppSizes.radiusSm),
                 child: IconButton(
                   onPressed: () => Navigator.pop(context),
                   icon: const Icon(
@@ -207,7 +207,7 @@ class VehicleHealthScreen extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: AppColors.secondary.withValues(alpha: .09),
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(AppSizes.radiusXl),
         ),
         child: customText(
           text: 'دقة التقييم $value%',

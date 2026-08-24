@@ -54,7 +54,7 @@ class ObdGauge extends StatelessWidget {
                     SizedBox.expand(
                       child: CircularProgressIndicator(
                         value: animatedValue,
-                        strokeWidth: 6,
+                        strokeWidth: ResponsiveSize.width(context, 1.54),
                         strokeCap: StrokeCap.round,
                         backgroundColor:
                             AppColors.progressBackground.withValues(alpha: .7),

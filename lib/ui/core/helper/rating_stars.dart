@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moftah/utils/responsive.dart';
+import 'package:moftah/ui/core/themes/colors.dart';
 
 Widget ratingStars({required BuildContext context, required double numberOfStars}) {
   final fullStars = numberOfStars.floor();
@@ -15,7 +16,7 @@ Widget ratingStars({required BuildContext context, required double numberOfStars
           fullStars,
           (index) => Icon(
             Icons.star,
-            color: Colors.amberAccent,
+            color: AppColors.warning,
             size: ResponsiveSize.width(context, 2.5),
           ),
         ),
@@ -23,7 +24,7 @@ Widget ratingStars({required BuildContext context, required double numberOfStars
         if (hasHalfStar)
           Icon(
             Icons.star_half,
-            color: Colors.amberAccent,
+            color: AppColors.warning,
             size: ResponsiveSize.width(context, 2.5),
           ),
 
@@ -31,7 +32,7 @@ Widget ratingStars({required BuildContext context, required double numberOfStars
           emptyStars,
           (index) => Icon(
             Icons.star_border,
-            color: Colors.amberAccent,
+            color: AppColors.warning,
             size: ResponsiveSize.width(context, 2.5),
           ),
         ),

@@ -70,7 +70,7 @@ class ObdConnectionHeader extends StatelessWidget {
           decoration: BoxDecoration(
             color: (connected ? AppColors.success : AppColors.textMuted)
                 .withValues(alpha: .12),
-            borderRadius: BorderRadius.circular(30),
+            borderRadius: BorderRadius.circular(AppSizes.radiusXl),
           ),
           child: customText(
             text: connecting ? 'جاري الاتصال' : connected ? 'متصل' : 'غير متصل',

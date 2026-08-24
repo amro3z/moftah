@@ -67,7 +67,7 @@ class _ReportTechniciansScreenState extends State<ReportTechniciansScreen> {
             children: [
               IconButton(
                 onPressed: () => Navigator.pop(context),
-                icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                icon: Icon(Icons.arrow_back_ios_new_rounded),
                 color: AppColors.primary,
               ),
               Expanded(
@@ -109,11 +109,11 @@ class _ReportTechniciansScreenState extends State<ReportTechniciansScreen> {
               ),
               onPressed: _submittingAll ? null : _sendAndWait,
               icon: _submittingAll
-                  ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                  : const Icon(Icons.campaign_rounded),
+                  ? SizedBox(width: ResponsiveSize.width(context, 4.62), height: ResponsiveSize.height(context, 2.13), child: CircularProgressIndicator(strokeWidth: ResponsiveSize.width(context, 0.51), color: Colors.white))
+                  : Icon(Icons.campaign_rounded),
               label: Text(
                 _submittingAll ? 'جاري إرسال الطلب...' : 'إرسال الطلب وانتظار العروض',
-                style: const TextStyle(fontFamily: 'Cairo', fontWeight: FontWeight.bold),
+                style: TextStyle(fontFamily: 'Cairo', fontWeight: FontWeight.bold),
               ),
             ),
           ),
@@ -145,7 +145,7 @@ class _ReportTechniciansScreenState extends State<ReportTechniciansScreen> {
                 CircleAvatar(
                   radius: ResponsiveSize.width(context, 7),
                   backgroundColor: AppColors.secondary.withValues(alpha: .1),
-                  child: const Icon(Icons.engineering_rounded, color: AppColors.secondary),
+                  child: Icon(Icons.engineering_rounded, color: AppColors.secondary),
                 ),
                 SizedBox(width: ResponsiveSize.width(context, 3)),
                 Expanded(
@@ -166,7 +166,7 @@ class _ReportTechniciansScreenState extends State<ReportTechniciansScreen> {
                       SizedBox(height: ResponsiveSize.height(context, .4)),
                       Row(
                         children: [
-                          const Icon(Icons.star_rounded, color: AppColors.warning, size: 17),
+                          Icon(Icons.star_rounded, color: AppColors.warning, size: ResponsiveSize.width(context, 4.36)),
                           customText(
                             text: technician.rating.toStringAsFixed(1),
                             fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
@@ -174,7 +174,7 @@ class _ReportTechniciansScreenState extends State<ReportTechniciansScreen> {
                             isBold: true,
                           ),
                           SizedBox(width: ResponsiveSize.width(context, 2)),
-                          const Icon(Icons.location_on_rounded, color: AppColors.danger, size: 16),
+                          Icon(Icons.location_on_rounded, color: AppColors.danger, size: ResponsiveSize.width(context, 4.1)),
                           customText(
                             text: '${technician.distanceKm.toStringAsFixed(1)} كم',
                             fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
@@ -189,7 +189,7 @@ class _ReportTechniciansScreenState extends State<ReportTechniciansScreen> {
                   padding: EdgeInsets.symmetric(horizontal: ResponsiveSize.width(context, 2), vertical: ResponsiveSize.height(context, .35)),
                   decoration: BoxDecoration(
                     color: technician.availableNow ? AppColors.success.withValues(alpha: .09) : AppColors.warning.withValues(alpha: .1),
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(AppSizes.radiusXl),
                   ),
                   child: customText(
                     text: technician.availableNow ? 'متاح الآن' : 'متاح لاحقًا',
@@ -207,7 +207,7 @@ class _ReportTechniciansScreenState extends State<ReportTechniciansScreen> {
               child: Row(
                 children: [
                   Expanded(child: _smallInfo(context, 'رسوم الفحص', '${technician.inspectionFee} جنيه')),
-                  Container(width: 1, height: 34, color: AppColors.border.withValues(alpha: .3)),
+                  Container(width: ResponsiveSize.width(context, 0.26), height: ResponsiveSize.height(context, 4.03), color: AppColors.border.withValues(alpha: .3)),
                   Expanded(child: _smallInfo(context, 'خبرة مع', technician.vehicleBrands.join(' • '))),
                 ],
               ),
@@ -218,7 +218,7 @@ class _ReportTechniciansScreenState extends State<ReportTechniciansScreen> {
               child: OutlinedButton.icon(
                 onPressed: sent ? null : () => setState(() => _sentTo.add(technician.id)),
                 icon: Icon(sent ? Icons.check_circle_rounded : Icons.send_rounded),
-                label: Text(sent ? 'تم إرسال البلاغ للفني' : 'إرسال البلاغ للفني', style: const TextStyle(fontFamily: 'Cairo', fontWeight: FontWeight.bold)),
+                label: Text(sent ? 'تم إرسال البلاغ للفني' : 'إرسال البلاغ للفني', style: TextStyle(fontFamily: 'Cairo', fontWeight: FontWeight.bold)),
               ),
             ),
           ],

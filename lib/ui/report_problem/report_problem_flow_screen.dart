@@ -114,7 +114,7 @@ class _ReportProblemFlowScreenState extends State<ReportProblemFlowScreen> {
         children: [
           IconButton(
             onPressed: _back,
-            icon: const Icon(Icons.arrow_back_ios_new_rounded),
+            icon: Icon(Icons.arrow_back_ios_new_rounded),
             color: AppColors.primary,
           ),
           Expanded(
@@ -138,7 +138,7 @@ class _ReportProblemFlowScreenState extends State<ReportProblemFlowScreen> {
               return Expanded(
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 280),
-                  height: 4,
+                  height: ResponsiveSize.height(context, 0.47),
                   margin: EdgeInsets.only(
                     left: index == 4 ? 0 : ResponsiveSize.width(context, 1),
                   ),
@@ -146,7 +146,7 @@ class _ReportProblemFlowScreenState extends State<ReportProblemFlowScreen> {
                     color: index <= _page
                         ? AppColors.secondary
                         : AppColors.border.withValues(alpha: .18),
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(AppSizes.radiusLg),
                   ),
                 ),
               );
@@ -192,7 +192,7 @@ class _ReportProblemFlowScreenState extends State<ReportProblemFlowScreen> {
                 Center(
                   child: Text(
                     isLast ? 'تحليل المشكلة بالذكاء الاصطناعي' : 'التالي',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'Cairo',
                       fontWeight: FontWeight.bold,
                     ),

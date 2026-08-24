@@ -54,8 +54,8 @@ class NearbyPlacesLoadingIndicator extends StatelessWidget {
                   ),
                   child: Padding(
                     padding: EdgeInsets.all(ResponsiveSize.width(context, 2.7)),
-                    child: const CircularProgressIndicator(
-                      strokeWidth: 2.8,
+                    child: CircularProgressIndicator(
+                      strokeWidth: ResponsiveSize.width(context, 0.72),
                       strokeCap: StrokeCap.round,
                       color: AppColors.secondary,
                       backgroundColor: Color(0xFFE8F0FA),
@@ -158,7 +158,7 @@ class _VisibleProgress extends StatelessWidget {
           width: double.infinity,
           height: ResponsiveSize.height(context, 1.6),
           child: Container(
-            width: 1.5,
+            width: ResponsiveSize.width(context, 0.38),
             height: double.infinity,
             color: !locating
                 ? AppColors.success.withValues(alpha: .35)
@@ -233,8 +233,8 @@ class _ProgressRow extends StatelessWidget {
               : active
               ? Padding(
                   padding: EdgeInsets.all(ResponsiveSize.width(context, 1.5)),
-                  child: const CircularProgressIndicator(
-                    strokeWidth: 2,
+                  child: CircularProgressIndicator(
+                    strokeWidth: ResponsiveSize.width(context, 0.51),
                     color: AppColors.secondary,
                   ),
                 )

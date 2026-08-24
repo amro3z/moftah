@@ -85,8 +85,8 @@ class HealthItemCard extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Container(
-                            width: 7,
-                            height: 7,
+                            width: ResponsiveSize.width(context, 1.79),
+                            height: ResponsiveSize.height(context, 0.83),
                             decoration: const BoxDecoration(
                               color: AppColors.success,
                               shape: BoxShape.circle,
@@ -286,7 +286,7 @@ class HealthItemCard extends StatelessWidget {
             Expanded(child: values[index]),
             if (index != values.length - 1)
               Container(
-                width: 1,
+                width: ResponsiveSize.width(context, 0.26),
                 height: ResponsiveSize.height(context, 4),
                 color: AppColors.border.withValues(alpha: .20),
               ),
@@ -326,7 +326,7 @@ class HealthItemCard extends StatelessWidget {
             ),
           ),
           Container(
-            width: 1,
+            width: ResponsiveSize.width(context, 0.26),
             height: ResponsiveSize.height(context, 4),
             color: AppColors.border.withValues(alpha: .20),
           ),
@@ -339,7 +339,7 @@ class HealthItemCard extends StatelessWidget {
             ),
           ),
           Container(
-            width: 1,
+            width: ResponsiveSize.width(context, 0.26),
             height: ResponsiveSize.height(context, 4),
             color: AppColors.border.withValues(alpha: .20),
           ),
@@ -401,7 +401,7 @@ class HealthItemCard extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: color.withValues(alpha: .1),
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(AppSizes.radiusXl),
         ),
         child: customText(
           text: effectiveItem.score == null
@@ -425,7 +425,7 @@ class HealthItemCard extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: color.withValues(alpha: .08),
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(AppSizes.radiusXl),
         ),
         child: customText(
           text: text,

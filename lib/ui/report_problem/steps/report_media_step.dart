@@ -105,8 +105,8 @@ class _ReportMediaStepState extends State<ReportMediaStep> {
         ),
         TextButton.icon(
           onPressed: () => widget.onChanged(const []),
-          icon: const Icon(Icons.delete_outline_rounded, size: 18),
-          label: const Text(
+          icon: Icon(Icons.delete_outline_rounded, size: ResponsiveSize.width(context, 4.62)),
+          label: Text(
             'مسح الكل',
             style: TextStyle(fontFamily: 'Cairo'),
           ),
@@ -183,11 +183,11 @@ class _ReportMediaStepState extends State<ReportMediaStep> {
             color: AppColors.primary,
             child: attachment.type == ProblemAttachmentType.image
                 ? Image.file(File(attachment.path), fit: BoxFit.cover)
-                : const Center(
+                : Center(
                     child: Icon(
                       Icons.play_circle_fill_rounded,
                       color: Colors.white,
-                      size: 42,
+                      size: ResponsiveSize.width(context, 10.77),
                     ),
                   ),
           ),
@@ -197,10 +197,10 @@ class _ReportMediaStepState extends State<ReportMediaStep> {
           left: 6,
           child: InkWell(
             onTap: () => _removeAttachment(index),
-            child: const CircleAvatar(
-              radius: 12,
+            child: CircleAvatar(
+              radius: ResponsiveSize.width(context, 3.08),
               backgroundColor: Colors.black54,
-              child: Icon(Icons.close_rounded, color: Colors.white, size: 15),
+              child: Icon(Icons.close_rounded, color: Colors.white, size: ResponsiveSize.width(context, 3.85)),
             ),
           ),
         ),
@@ -224,7 +224,7 @@ class _ReportMediaStepState extends State<ReportMediaStep> {
       ),
       child: Row(
         children: [
-          const Icon(Icons.info_outline_rounded, color: AppColors.secondary),
+          Icon(Icons.info_outline_rounded, color: AppColors.secondary),
           SizedBox(width: ResponsiveSize.width(context, 2)),
           Expanded(
             child: customText(
@@ -315,8 +315,8 @@ class _ReportMediaStepState extends State<ReportMediaStep> {
             ),
             SizedBox(height: ResponsiveSize.height(context, 1.5)),
             ListTile(
-              leading: const Icon(Icons.image_rounded, color: AppColors.secondary),
-              title: const Text(
+              leading: Icon(Icons.image_rounded, color: AppColors.secondary),
+              title: Text(
                 'صورة',
                 style: TextStyle(
                   fontFamily: 'Cairo',
@@ -326,11 +326,11 @@ class _ReportMediaStepState extends State<ReportMediaStep> {
               onTap: () => Navigator.pop(context, ProblemAttachmentType.image),
             ),
             ListTile(
-              leading: const Icon(
+              leading: Icon(
                 Icons.videocam_rounded,
                 color: AppColors.secondary,
               ),
-              title: const Text(
+              title: Text(
                 'فيديو حتى 30 ثانية',
                 style: TextStyle(
                   fontFamily: 'Cairo',

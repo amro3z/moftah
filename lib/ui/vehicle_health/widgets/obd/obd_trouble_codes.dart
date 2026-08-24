@@ -38,7 +38,7 @@ class ObdTroubleCodes extends StatelessWidget {
                         ? AppColors.success
                         : AppColors.danger)
                     .withValues(alpha: .12),
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(AppSizes.radiusLg),
               ),
               child: customText(
                 text: '${snapshot.troubleCodes.length}',
@@ -162,7 +162,7 @@ class _DtcChip extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: .07),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppSizes.radiusLg),
       ),
       child: customText(
         text: text,

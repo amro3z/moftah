@@ -81,7 +81,7 @@ class VehicleCard extends StatelessWidget {
                   SizedBox(height: ResponsiveSize.height(context, .8)),
                   InkWell(
                     onTap: onSwitchTap,
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(AppSizes.radiusXl),
                     child: Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: ResponsiveSize.width(context, 2.2),
@@ -89,7 +89,7 @@ class VehicleCard extends StatelessWidget {
                       ),
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: .06),
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(AppSizes.radiusXl),
                         border: Border.all(
                           color: Colors.white.withValues(alpha: .08),
                         ),
@@ -104,7 +104,7 @@ class VehicleCard extends StatelessWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.textMuted, size: 20),
+                          Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.textMuted, size: ResponsiveSize.width(context, 5.13)),
                           SizedBox(width: ResponsiveSize.width(context, .6)),
                           Text(
                             'تغيير السيارة',

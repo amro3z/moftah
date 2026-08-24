@@ -88,6 +88,11 @@ class HomeOptionItem extends StatelessWidget {
       return;
     }
 
+    if (item.path == '/spare-parts') {
+      Navigator.pushNamed(context, item.path);
+      return;
+    }
+
     if (item.path == '/nearby-workshops') {
       final state = context.read<NearbyPlacesCubit>().state;
 

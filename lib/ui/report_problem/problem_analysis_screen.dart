@@ -100,10 +100,10 @@ class _ProblemAnalysisScreenState extends State<ProblemAnalysisScreen> {
                   ),
                 ],
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.smart_toy_rounded,
                 color: Colors.white,
-                size: 36,
+                size: ResponsiveSize.width(context, 9.23),
               ),
             ),
           ),
@@ -128,10 +128,10 @@ class _ProblemAnalysisScreenState extends State<ProblemAnalysisScreen> {
           ),
           SizedBox(height: ResponsiveSize.height(context, 3)),
           ClipRRect(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(AppSizes.radiusLg),
             child: LinearProgressIndicator(
               value: _progress,
-              minHeight: 6,
+              minHeight: ResponsiveSize.height(context, 0.71),
               backgroundColor: Colors.white12,
               valueColor: const AlwaysStoppedAnimation(Color(0xff25C7E8)),
             ),
@@ -288,7 +288,7 @@ class _ProblemAnalysisScreenState extends State<ProblemAnalysisScreen> {
             color: AppColors.secondary.withValues(alpha: .1),
             borderRadius: BorderRadius.circular(AppSizes.radiusSm),
           ),
-          child: const Icon(
+          child: Icon(
             Icons.psychology_alt_rounded,
             color: AppColors.secondary,
           ),
@@ -362,10 +362,10 @@ class _ProblemAnalysisScreenState extends State<ProblemAnalysisScreen> {
           SizedBox(height: ResponsiveSize.height(context, 1.1)),
           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.handyman_rounded,
                 color: Color(0xff4FD5FF),
-                size: 18,
+                size: ResponsiveSize.width(context, 4.62),
               ),
               SizedBox(width: ResponsiveSize.width(context, 1.5)),
               Expanded(
@@ -475,10 +475,10 @@ class _ProblemAnalysisScreenState extends State<ProblemAnalysisScreen> {
             ),
             SizedBox(height: ResponsiveSize.height(context, .65)),
             ClipRRect(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(AppSizes.radiusLg),
               child: LinearProgressIndicator(
                 value: cause.probability / 100,
-                minHeight: 5,
+                minHeight: ResponsiveSize.height(context, 0.59),
                 backgroundColor: AppColors.border.withValues(alpha: .13),
                 valueColor: AlwaysStoppedAnimation(cause.color),
               ),
@@ -532,10 +532,10 @@ class _ProblemAnalysisScreenState extends State<ProblemAnalysisScreen> {
                     color: AppColors.secondary.withValues(alpha: .08),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.check_rounded,
                     color: AppColors.secondary,
-                    size: 16,
+                    size: ResponsiveSize.width(context, 4.1),
                   ),
                 ),
                 SizedBox(width: ResponsiveSize.width(context, 2)),
@@ -572,7 +572,7 @@ class _ProblemAnalysisScreenState extends State<ProblemAnalysisScreen> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.info_outline_rounded, color: AppColors.warning),
+          Icon(Icons.info_outline_rounded, color: AppColors.warning),
           SizedBox(width: ResponsiveSize.width(context, 2)),
           Expanded(
             child: customText(
@@ -642,7 +642,7 @@ class _ProblemAnalysisScreenState extends State<ProblemAnalysisScreen> {
                     ),
                     decoration: BoxDecoration(
                       color: AppColors.success.withValues(alpha: .08),
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(AppSizes.radiusLg),
                     ),
                     child: customText(
                       text: badge,
@@ -657,10 +657,10 @@ class _ProblemAnalysisScreenState extends State<ProblemAnalysisScreen> {
                 ],
               ),
             ),
-            const Icon(
+            Icon(
               Icons.arrow_forward_rounded,
               color: AppColors.secondary,
-              size: 20,
+              size: ResponsiveSize.width(context, 5.13),
             ),
           ],
         ),
@@ -692,7 +692,7 @@ class _ProblemAnalysisScreenState extends State<ProblemAnalysisScreen> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(AppSizes.radiusSm),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.campaign_rounded,
                   color: AppColors.secondary,
                 ),
@@ -729,8 +729,8 @@ class _ProblemAnalysisScreenState extends State<ProblemAnalysisScreen> {
                 ),
               ),
               onPressed: _submitAndGoHome,
-              icon: const Icon(Icons.send_rounded),
-              label: const Text(
+              icon: Icon(Icons.send_rounded),
+              label: Text(
                 'إرسال البلاغ وانتظار العروض',
                 style: TextStyle(
                   fontFamily: 'Cairo',
@@ -776,9 +776,9 @@ class _ProblemAnalysisScreenState extends State<ProblemAnalysisScreen> {
             height: ResponsiveSize.width(context, 8),
             decoration: BoxDecoration(
               color: AppColors.secondary.withValues(alpha: .07),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(AppSizes.radiusSm),
             ),
-            child: Icon(icon, color: AppColors.secondary, size: 18),
+            child: Icon(icon, color: AppColors.secondary, size: ResponsiveSize.width(context, 4.62)),
           ),
           SizedBox(width: ResponsiveSize.width(context, 2)),
           SizedBox(
@@ -814,7 +814,7 @@ class _ProblemAnalysisScreenState extends State<ProblemAnalysisScreen> {
       ),
       decoration: BoxDecoration(
         color: color.withValues(alpha: .15),
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(AppSizes.radiusXl),
       ),
       child: customText(
         text: text,

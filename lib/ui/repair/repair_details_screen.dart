@@ -40,7 +40,7 @@ class RepairDetailsScreen extends StatelessWidget {
           ),
           leading: IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back_ios_rounded),
+            icon: Icon(Icons.arrow_back_ios_rounded),
             color: AppColors.primary,
           ),
         ),
@@ -110,7 +110,7 @@ class RepairDetailsScreen extends StatelessWidget {
                           arguments: data,
                         );
                       },
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.chat_bubble_outline_rounded,
                         color: Colors.white,
                       ),
@@ -264,7 +264,7 @@ class RepairDetailsScreen extends StatelessWidget {
                     ),
                     if (!isLast)
                       Container(
-                        width: 2,
+                        width: ResponsiveSize.width(context, 0.51),
                         height: ResponsiveSize.height(context, 5.2),
                         color: done
                             ? AppColors.success
@@ -316,7 +316,7 @@ class RepairDetailsScreen extends StatelessWidget {
                         OutlinedButton(
                           style: OutlinedButton.styleFrom(
                             foregroundColor: AppColors.warning,
-                            side: const BorderSide(color: AppColors.warning),
+                            side: BorderSide(color: AppColors.warning),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(
                                 AppSizes.radiusSm,

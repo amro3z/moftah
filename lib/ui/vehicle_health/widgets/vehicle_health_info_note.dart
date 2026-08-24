@@ -27,7 +27,7 @@ class VehicleHealthInfoNote extends StatelessWidget {
                 'هي نسبة ثقتنا في نتيجة الحالة. كل ما يكون عندنا بيانات أحدث من OBD أو سجل صيانة أو فحص فني، النسبة بتزيد.',
           ),
           SizedBox(height: ResponsiveSize.height(context, 1.2)),
-          Container(height: 1, color: AppColors.border.withValues(alpha: .14)),
+          Container(height: ResponsiveSize.height(context, 0.12), color: AppColors.border.withValues(alpha: .14)),
           SizedBox(height: ResponsiveSize.height(context, 1.2)),
           _item(
             context,

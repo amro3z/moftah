@@ -138,9 +138,9 @@ class HomeScreen extends StatelessWidget {
               children: [
                 Center(
                   child: Container(
-                    width: 42,
-                    height: 4,
-                    decoration: BoxDecoration(color: AppColors.border, borderRadius: BorderRadius.circular(20)),
+                    width: ResponsiveSize.width(context, 10.77),
+                    height: ResponsiveSize.height(context, 0.47),
+                    decoration: BoxDecoration(color: AppColors.border, borderRadius: BorderRadius.circular(AppSizes.radiusLg)),
                   ),
                 ),
                 SizedBox(height: ResponsiveSize.height(context, 1.8)),
@@ -200,7 +200,7 @@ class HomeScreen extends StatelessWidget {
                           color: AppColors.textMuted,
                         ),
                         trailing: selected
-                            ? const Icon(
+                            ? Icon(
                                 Icons.check_circle_rounded,
                                 color: AppColors.secondary,
                               )

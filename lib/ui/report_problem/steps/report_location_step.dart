@@ -163,8 +163,8 @@ class _ReportLocationStepState extends State<ReportLocationStep> {
     return [
       Marker(
         point: LatLng(_latitude!, _longitude!),
-        width: 46,
-        height: 46,
+        width: ResponsiveSize.width(context, 11.79),
+        height: ResponsiveSize.height(context, 5.45),
         alignment: Alignment.topCenter,
         child: Container(
           decoration: BoxDecoration(
@@ -172,7 +172,7 @@ class _ReportLocationStepState extends State<ReportLocationStep> {
             shape: BoxShape.circle,
             border: Border.all(
               color: Colors.white,
-              width: 3,
+              width: ResponsiveSize.width(context, 0.77),
             ),
             boxShadow: [
               BoxShadow(
@@ -182,10 +182,10 @@ class _ReportLocationStepState extends State<ReportLocationStep> {
               ),
             ],
           ),
-          child: const Icon(
+          child: Icon(
             Icons.directions_car_rounded,
             color: Colors.white,
-            size: 23,
+            size: ResponsiveSize.width(context, 5.9),
           ),
         ),
       ),
@@ -264,7 +264,7 @@ class _ReportLocationStepState extends State<ReportLocationStep> {
               SizedBox(
                 width: ResponsiveSize.width(context, 5),
                 height: ResponsiveSize.width(context, 5),
-                child: const CircularProgressIndicator(strokeWidth: 2.4),
+                child: CircularProgressIndicator(strokeWidth: ResponsiveSize.width(context, 0.62)),
               )
             else
               Icon(
@@ -448,7 +448,7 @@ class _ReportLocationStepState extends State<ReportLocationStep> {
   }) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: const Text(
+        content: Text(
           'محتاجين صلاحية الموقع وتشغيل GPS لتحديد مكان العربية.',
         ),
         action: SnackBarAction(

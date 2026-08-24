@@ -34,7 +34,7 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
             children: [
               IconButton(
                 onPressed: () => Navigator.pop(context),
-                icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                icon: Icon(Icons.arrow_back_ios_new_rounded),
               ),
               Expanded(
                 child: customText(
@@ -65,8 +65,8 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                     child: FilledButton.icon(
                       style: FilledButton.styleFrom(backgroundColor: AppColors.success, padding: EdgeInsets.symmetric(vertical: ResponsiveSize.height(context, 1.45))),
                       onPressed: _processing ? null : _accept,
-                      icon: const Icon(Icons.check_circle_outline_rounded),
-                      label: const Text('قبول', style: TextStyle(fontFamily: 'Cairo', fontWeight: FontWeight.bold)),
+                      icon: Icon(Icons.check_circle_outline_rounded),
+                      label: Text('قبول', style: TextStyle(fontFamily: 'Cairo', fontWeight: FontWeight.bold)),
                     ),
                   ),
                   SizedBox(width: ResponsiveSize.width(context, 2)),
@@ -79,8 +79,8 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                               ServiceRequestStore.instance.rejectOffer(widget.offer);
                               Navigator.pop(context);
                             },
-                      icon: const Icon(Icons.close_rounded),
-                      label: const Text('رفض', style: TextStyle(fontFamily: 'Cairo', fontWeight: FontWeight.bold)),
+                      icon: Icon(Icons.close_rounded),
+                      label: Text('رفض', style: TextStyle(fontFamily: 'Cairo', fontWeight: FontWeight.bold)),
                     ),
                   ),
                 ],
@@ -90,8 +90,8 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                 width: double.infinity,
                 child: OutlinedButton.icon(
                   onPressed: () => Navigator.pushNamed(context, '/repair-chat', arguments: _repairFromOffer()),
-                  icon: const Icon(Icons.chat_bubble_outline_rounded),
-                  label: const Text('محادثة الفني', style: TextStyle(fontFamily: 'Cairo', fontWeight: FontWeight.bold)),
+                  icon: Icon(Icons.chat_bubble_outline_rounded),
+                  label: Text('محادثة الفني', style: TextStyle(fontFamily: 'Cairo', fontWeight: FontWeight.bold)),
                 ),
               ),
             ],
@@ -127,10 +127,10 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                 SizedBox(height: ResponsiveSize.height(context, .4)),
                 Row(
                   children: [
-                    const Icon(Icons.star_rounded, color: AppColors.warning, size: 18),
+                    Icon(Icons.star_rounded, color: AppColors.warning, size: ResponsiveSize.width(context, 4.62)),
                     customText(text: widget.offer.rating.toStringAsFixed(1), fontSize: ResponsiveSize.width(context, AppSizes.fontSm), color: AppColors.primary, isBold: true),
                     SizedBox(width: ResponsiveSize.width(context, 2)),
-                    const Icon(Icons.location_on_rounded, color: AppColors.danger, size: 16),
+                    Icon(Icons.location_on_rounded, color: AppColors.danger, size: ResponsiveSize.width(context, 4.1)),
                     customText(text: '${widget.offer.distanceKm.toStringAsFixed(1)} كم', fontSize: ResponsiveSize.width(context, AppSizes.fontSm), color: AppColors.textMuted),
                   ],
                 ),

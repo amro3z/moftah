@@ -23,7 +23,7 @@ class HomeOptionsList extends StatelessWidget {
           ResponsiveSize.width(context, 5),
           ResponsiveSize.height(context, 2.1),
         ),
-        separatorBuilder: (_, __) =>
+        separatorBuilder: (_, _) =>
             SizedBox(width: ResponsiveSize.width(context, 2.3)),
         itemBuilder: (context, index) {
           return HomeOptionItem(item: options[index]);

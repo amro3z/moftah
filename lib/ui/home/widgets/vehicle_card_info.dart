@@ -95,7 +95,7 @@ class VehicleCardInfo extends StatelessWidget {
 
   Widget _divider(BuildContext context) {
     return Container(
-      width: 1,
+      width: ResponsiveSize.width(context, 0.26),
       height: ResponsiveSize.height(context, 3.5),
       color: AppColors.divider,
     );

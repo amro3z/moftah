@@ -38,8 +38,8 @@ class ObdActions extends StatelessWidget {
             ? SizedBox(
                 width: ResponsiveSize.width(context, 4),
                 height: ResponsiveSize.width(context, 4),
-                child: const CircularProgressIndicator(
-                  strokeWidth: 2,
+                child: CircularProgressIndicator(
+                  strokeWidth: ResponsiveSize.width(context, 0.51),
                   color: Colors.white,
                 ),
               )
@@ -70,8 +70,8 @@ class ObdActions extends StatelessWidget {
                 ? SizedBox(
                     width: ResponsiveSize.width(context, 4),
                     height: ResponsiveSize.width(context, 4),
-                    child: const CircularProgressIndicator(
-                      strokeWidth: 2,
+                    child: CircularProgressIndicator(
+                      strokeWidth: ResponsiveSize.width(context, 0.51),
                       color: Colors.white,
                     ),
                   )

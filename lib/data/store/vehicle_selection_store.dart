@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:moftah/data/models/app_vehicle_model.dart';
 import 'package:moftah/data/models/vehicle_card.dart';
 import 'package:moftah/data/models/vehicle_health_model.dart';
+import 'package:moftah/data/models/user_vehicle_model.dart';
 import 'package:moftah/domain/vehicle_health/vehicle_health_calculator.dart';
 
 class VehicleSelectionStore extends ChangeNotifier {
@@ -108,6 +109,22 @@ class VehicleSelectionStore extends ChangeNotifier {
   List<AppVehicleModel> get vehicles => List.unmodifiable(_vehicles);
   int get selectedIndex => _selectedIndex;
   AppVehicleModel get selectedVehicle => _vehicles[_selectedIndex];
+
+  List<UserVehicleModel> get userVehicles => _vehicles
+      .map(
+        (vehicle) => UserVehicleModel(
+          id: vehicle.id,
+          brand: vehicle.card.brand,
+          model: vehicle.card.carName.replaceFirst('${vehicle.card.brand} ', ''),
+          year: vehicle.card.year,
+          imageUrl: vehicle.card.brandLogoUrl,
+        ),
+      )
+      .toList(growable: false);
+
+  UserVehicleModel get selectedUserVehicle => userVehicles[_selectedIndex];
+
+  void selectUserVehicleById(String id) => selectById(id);
 
   void selectIndex(int index) {
     if (index < 0 || index >= _vehicles.length || index == _selectedIndex) return;

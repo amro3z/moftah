@@ -26,8 +26,15 @@ import 'package:moftah/ui/report_problem/report_technicians_screen.dart';
 import 'package:moftah/ui/report_problem/offer_details_screen.dart';
 import 'package:moftah/data/models/service_offer_model.dart';
 import 'package:moftah/ui/notifications/notifications_screen.dart';
+import 'package:moftah/ui/spare_parts/cubit/spare_parts_cubit.dart';
+import 'package:moftah/ui/spare_parts/spare_parts_screen.dart';
+import 'package:moftah/ui/spare_parts/spare_part_details_screen.dart';
+import 'package:moftah/ui/spare_parts/spare_parts_cart_screen.dart';
+import 'package:moftah/ui/spare_parts/spare_parts_favorites_screen.dart';
 
 class AppRoute {
+  final SparePartsCubit _sparePartsCubit = SparePartsCubit();
+
   Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case '/home':
@@ -117,6 +124,47 @@ class AppRoute {
         }
         return _animatedRoute(ReportTechniciansScreen(report: arguments));
 
+
+
+      case '/spare-parts':
+        return _animatedRoute(
+          BlocProvider.value(
+            value: _sparePartsCubit..syncVehiclesFromAccount(),
+            child: const SparePartsScreen(),
+          ),
+        );
+
+      case '/spare-part-details':
+        final arguments = settings.arguments;
+        if (arguments is! String) {
+          return MaterialPageRoute(
+            builder: (_) => const Scaffold(
+              body: Center(child: Text('Spare part id is required')),
+            ),
+          );
+        }
+        return _animatedRoute(
+          BlocProvider.value(
+            value: _sparePartsCubit,
+            child: SparePartDetailsScreen(productId: arguments),
+          ),
+        );
+
+      case '/spare-parts-cart':
+        return _animatedRoute(
+          BlocProvider.value(
+            value: _sparePartsCubit,
+            child: const SparePartsCartScreen(),
+          ),
+        );
+
+      case '/spare-parts-favorites':
+        return _animatedRoute(
+          BlocProvider.value(
+            value: _sparePartsCubit,
+            child: const SparePartsFavoritesScreen(),
+          ),
+        );
 
       case '/notifications':
         return _animatedRoute(const NotificationsScreen());

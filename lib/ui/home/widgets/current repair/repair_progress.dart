@@ -42,7 +42,7 @@ class RepairProgress extends StatelessWidget {
           child: Column(
             children: [
               Container(
-                height: 4,
+                height: ResponsiveSize.height(context, 0.47),
                 margin: EdgeInsets.symmetric(
                   horizontal: ResponsiveSize.width(context, 0.5),
                 ),
@@ -50,7 +50,7 @@ class RepairProgress extends StatelessWidget {
                   color: isActive
                       ? AppColors.secondary
                       : AppColors.border.withValues(alpha: 0.25),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(AppSizes.radiusLg),
                 ),
               ),
 

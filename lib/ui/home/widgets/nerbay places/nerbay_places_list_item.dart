@@ -4,7 +4,7 @@ import 'package:moftah/routing/map_route_arguments.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
 import 'package:moftah/ui/core/ui/custom_text.dart';
-import 'package:moftah/ui/home/helper/nerbay_places_stars.dart';
+import 'package:moftah/ui/core/helper/rating_stars.dart';
 import 'package:moftah/utils/opening_hours_helper.dart';
 import 'package:moftah/ui/home/widgets/nerbay%20places/workshop_phone_button.dart';
 import 'package:moftah/utils/responsive.dart';

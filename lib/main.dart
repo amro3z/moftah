@@ -7,11 +7,14 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
+  static final AppRoute _appRoute = AppRoute();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      onGenerateRoute: AppRoute().onGenerateRoute,
+      onGenerateRoute: _appRoute.onGenerateRoute,
       initialRoute: '/home',
     );
   }

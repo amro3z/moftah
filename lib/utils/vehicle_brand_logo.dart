@@ -59,8 +59,14 @@ class VehicleBrandLogo extends StatelessWidget {
       return SvgPicture.network(
         url,
         fit: BoxFit.contain,
-        placeholderBuilder: (_) => const Center(
-          child: SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2)),
+        placeholderBuilder: (context) => Center(
+          child: SizedBox(
+            width: ResponsiveSize.width(context, 4.62),
+            height: ResponsiveSize.height(context, 2.13),
+            child: CircularProgressIndicator(
+              strokeWidth: ResponsiveSize.width(context, .51),
+            ),
+          ),
         ),
       );
     }

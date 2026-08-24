@@ -38,7 +38,7 @@ class ReportWorkshopsScreen extends StatelessWidget {
             children: [
               IconButton(
                 onPressed: () => Navigator.pop(context),
-                icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                icon: Icon(Icons.arrow_back_ios_new_rounded),
                 color: AppColors.primary,
               ),
               Expanded(
@@ -80,7 +80,7 @@ class ReportWorkshopsScreen extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.cloud_off_rounded, size: 46, color: AppColors.textMuted),
+                      Icon(Icons.cloud_off_rounded, size: ResponsiveSize.width(context, 11.79), color: AppColors.textMuted),
                       SizedBox(height: ResponsiveSize.height(context, 1)),
                       customText(
                         text: state.message,
@@ -95,7 +95,7 @@ class ReportWorkshopsScreen extends StatelessWidget {
                               userLongitude: userLongitude,
                               maxPlaces: 50,
                             ),
-                        child: const Text('حاول مرة أخرى', style: TextStyle(fontFamily: 'Cairo')),
+                        child: Text('حاول مرة أخرى', style: TextStyle(fontFamily: 'Cairo')),
                       ),
                     ],
                   ),
@@ -136,7 +136,7 @@ class ReportWorkshopsScreen extends StatelessWidget {
                         SizedBox(
                           width: ResponsiveSize.width(context, 5),
                           height: ResponsiveSize.width(context, 5),
-                          child: const CircularProgressIndicator(strokeWidth: 2.5),
+                          child: CircularProgressIndicator(strokeWidth: ResponsiveSize.width(context, 0.64)),
                         ),
                         SizedBox(width: ResponsiveSize.width(context, 2.5)),
                         Expanded(
@@ -197,8 +197,8 @@ class ReportWorkshopsScreen extends StatelessWidget {
                                   (_) => false,
                                 );
                               },
-                        icon: const Icon(Icons.campaign_rounded),
-                        label: const Text(
+                        icon: Icon(Icons.campaign_rounded),
+                        label: Text(
                           'إرسال البلاغ وانتظار العروض',
                           style: TextStyle(fontFamily: 'Cairo', fontWeight: FontWeight.bold),
                         ),

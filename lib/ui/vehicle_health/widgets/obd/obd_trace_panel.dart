@@ -25,8 +25,8 @@ class ObdTracePanel extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.car_repair_rounded, color: AppColors.info, size: 19),
-              const SizedBox(width: 8),
+              Icon(Icons.car_repair_rounded, color: AppColors.info, size: ResponsiveSize.width(context, 4.87)),
+              SizedBox(width: ResponsiveSize.width(context, 2.05)),
               Expanded(
                 child: customText(
                   text: 'تفاصيل فحص العربية',
@@ -37,26 +37,26 @@ class ObdTracePanel extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 6),
+          SizedBox(height: ResponsiveSize.height(context, 0.71)),
           customText(
             text: 'هنا بنعرضلك اللي بيحصل أثناء الفحص خطوة بخطوة. التفاصيل التقنية موجودة علشان نعرف سبب أي مشكلة في الاتصال.',
             fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
             color: Colors.white60,
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: ResponsiveSize.height(context, 1.18)),
           Container(
-            constraints: const BoxConstraints(maxHeight: 220),
-            padding: const EdgeInsets.all(10),
+            constraints: BoxConstraints(maxHeight: ResponsiveSize.height(context, 26.07)),
+            padding: EdgeInsets.all(ResponsiveSize.width(context, 2.56)),
             decoration: BoxDecoration(
               color: Colors.black.withValues(alpha: .28),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(AppSizes.radiusSm),
             ),
             child: SingleChildScrollView(
               reverse: true,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: state.trace.map((line) => Padding(
-                  padding: const EdgeInsets.only(bottom: 5),
+                  padding: EdgeInsets.only(bottom: ResponsiveSize.height(context, 0.59)),
                   child: customText(
                     text: _friendlyLine(line),
                     fontSize: ResponsiveSize.width(context, AppSizes.fontXs),

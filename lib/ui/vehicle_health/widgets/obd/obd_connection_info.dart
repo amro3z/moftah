@@ -42,8 +42,8 @@ class ObdConnectionInfo extends StatelessWidget {
             SizedBox(
               width: ResponsiveSize.width(context, 4),
               height: ResponsiveSize.width(context, 4),
-              child: const CircularProgressIndicator(
-                strokeWidth: 2,
+              child: CircularProgressIndicator(
+                strokeWidth: ResponsiveSize.width(context, 0.51),
                 color: AppColors.info,
               ),
             ),
@@ -67,8 +67,8 @@ class ObdWaitingForData extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const CircularProgressIndicator(
-            strokeWidth: 2.5,
+          CircularProgressIndicator(
+            strokeWidth: ResponsiveSize.width(context, 0.64),
             color: AppColors.info,
           ),
           SizedBox(width: ResponsiveSize.width(context, 3)),

@@ -65,14 +65,14 @@ class _LiveBadge extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         color: AppColors.success.withValues(alpha: .12),
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(AppSizes.radiusXl),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 7,
-            height: 7,
+            width: ResponsiveSize.width(context, 1.79),
+            height: ResponsiveSize.height(context, 0.83),
             decoration: const BoxDecoration(
               color: AppColors.success,
               shape: BoxShape.circle,

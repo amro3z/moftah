@@ -98,7 +98,7 @@ class _RepairChatScreenState extends State<RepairChatScreen> {
         children: [
           IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back_ios_rounded),
+            icon: Icon(Icons.arrow_back_ios_rounded),
             color: AppColors.primary,
           ),
           CircleAvatar(
@@ -132,7 +132,7 @@ class _RepairChatScreenState extends State<RepairChatScreen> {
             ),
           ),
           PopupMenuButton<String>(
-            icon: const Icon(
+            icon: Icon(
               Icons.more_horiz_rounded,
               color: AppColors.primary,
             ),
@@ -147,7 +147,7 @@ class _RepairChatScreenState extends State<RepairChatScreen> {
                 value: 'report',
                 child: Row(
                   children: [
-                    const Icon(Icons.flag_outlined, color: AppColors.danger),
+                    Icon(Icons.flag_outlined, color: AppColors.danger),
                     SizedBox(width: ResponsiveSize.width(context, 2)),
                     customText(
                       text: 'إبلاغ عن مشكلة',
@@ -204,10 +204,10 @@ class _RepairChatScreenState extends State<RepairChatScreen> {
                     children: [
                       Row(
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.work_outline_rounded,
                             color: AppColors.info,
-                            size: 17,
+                            size: ResponsiveSize.width(context, 4.36),
                           ),
                           SizedBox(width: ResponsiveSize.width(context, 1.2)),
                           customText(
@@ -366,17 +366,17 @@ class _RepairChatScreenState extends State<RepairChatScreen> {
                   ),
                 );
               },
-              icon: const Icon(Icons.attach_file_rounded),
+              icon: Icon(Icons.attach_file_rounded),
               color: AppColors.primary,
             ),
             Expanded(
               child: TextField(
                 controller: _controller,
                 textDirection: TextDirection.rtl,
-                style: const TextStyle(fontFamily: 'Cairo'),
+                style: TextStyle(fontFamily: 'Cairo'),
                 decoration: InputDecoration(
                   hintText: 'اكتب رسالة...',
-                  hintStyle: const TextStyle(fontFamily: 'Cairo'),
+                  hintStyle: TextStyle(fontFamily: 'Cairo'),
                   filled: true,
                   fillColor: AppColors.background,
                   contentPadding: EdgeInsets.symmetric(
@@ -384,7 +384,7 @@ class _RepairChatScreenState extends State<RepairChatScreen> {
                     vertical: ResponsiveSize.height(context, 1),
                   ),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(AppSizes.radiusXl),
                     borderSide: BorderSide.none,
                   ),
                 ),
@@ -400,7 +400,7 @@ class _RepairChatScreenState extends State<RepairChatScreen> {
                 onTap: _sendMessage,
                 child: Padding(
                   padding: EdgeInsets.all(ResponsiveSize.width(context, 3.2)),
-                  child: const Icon(Icons.send_rounded, color: Colors.white),
+                  child: Icon(Icons.send_rounded, color: Colors.white),
                 ),
               ),
             ),
@@ -469,11 +469,11 @@ class _RepairChatScreenState extends State<RepairChatScreen> {
                     children: [
                       Center(
                         child: Container(
-                          width: 44,
-                          height: 4,
+                          width: ResponsiveSize.width(context, 11.28),
+                          height: ResponsiveSize.height(context, 0.47),
                           decoration: BoxDecoration(
                             color: AppColors.border.withValues(alpha: .28),
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(AppSizes.radiusLg),
                           ),
                         ),
                       ),
@@ -495,7 +495,7 @@ class _RepairChatScreenState extends State<RepairChatScreen> {
                                 color: AppColors.danger.withValues(alpha: .10),
                                 shape: BoxShape.circle,
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.shield_outlined,
                                 color: AppColors.danger,
                               ),
@@ -559,7 +559,7 @@ class _RepairChatScreenState extends State<RepairChatScreen> {
                                   Icon(
                                     item.$2,
                                     color: selected ? AppColors.danger : AppColors.textMuted,
-                                    size: 21,
+                                    size: ResponsiveSize.width(context, 5.38),
                                   ),
                                   SizedBox(width: ResponsiveSize.width(context, 2.5)),
                                   Expanded(
@@ -572,8 +572,8 @@ class _RepairChatScreenState extends State<RepairChatScreen> {
                                   ),
                                   AnimatedContainer(
                                     duration: const Duration(milliseconds: 180),
-                                    width: 20,
-                                    height: 20,
+                                    width: ResponsiveSize.width(context, 5.13),
+                                    height: ResponsiveSize.height(context, 2.37),
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       color: selected ? AppColors.danger : Colors.transparent,
@@ -582,7 +582,7 @@ class _RepairChatScreenState extends State<RepairChatScreen> {
                                       ),
                                     ),
                                     child: selected
-                                        ? const Icon(Icons.check_rounded, color: Colors.white, size: 14)
+                                        ? Icon(Icons.check_rounded, color: Colors.white, size: ResponsiveSize.width(context, 3.59))
                                         : null,
                                   ),
                                 ],
@@ -596,10 +596,10 @@ class _RepairChatScreenState extends State<RepairChatScreen> {
                         controller: reportController,
                         maxLines: 4,
                         textDirection: TextDirection.rtl,
-                        style: const TextStyle(fontFamily: 'Cairo'),
+                        style: TextStyle(fontFamily: 'Cairo'),
                         decoration: InputDecoration(
                           hintText: 'اكتب تفاصيل إضافية لو محتاج...',
-                          hintStyle: const TextStyle(fontFamily: 'Cairo'),
+                          hintStyle: TextStyle(fontFamily: 'Cairo'),
                           filled: true,
                           fillColor: AppColors.background,
                           border: OutlineInputBorder(
@@ -627,8 +627,8 @@ class _RepairChatScreenState extends State<RepairChatScreen> {
                               ),
                             );
                           },
-                          icon: const Icon(Icons.flag_rounded),
-                          label: const Text(
+                          icon: Icon(Icons.flag_rounded),
+                          label: Text(
                             'إرسال البلاغ',
                             style: TextStyle(fontFamily: 'Cairo', fontWeight: FontWeight.bold),
                           ),

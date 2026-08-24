@@ -29,7 +29,7 @@ class ReceivedOffersScreen extends StatelessWidget {
                 children: [
                   IconButton(
                     onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                    icon: Icon(Icons.arrow_back_ios_new_rounded),
                     color: AppColors.primary,
                   ),
                   Expanded(
@@ -127,7 +127,7 @@ class ReceivedOffersScreen extends StatelessWidget {
               color: Colors.white.withValues(alpha: .10),
               borderRadius: BorderRadius.circular(AppSizes.radiusMd),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.local_offer_rounded,
               color: Colors.white,
             ),
@@ -180,14 +180,14 @@ class ReceivedOffersScreen extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               child: waiting
-                  ? const Padding(
-                      padding: EdgeInsets.all(22),
-                      child: CircularProgressIndicator(strokeWidth: 3),
+                  ? Padding(
+                      padding: EdgeInsets.all(ResponsiveSize.width(context, 5.64)),
+                      child: CircularProgressIndicator(strokeWidth: ResponsiveSize.width(context, 0.77)),
                     )
-                  : const Icon(
+                  : Icon(
                       Icons.inbox_outlined,
                       color: AppColors.secondary,
-                      size: 34,
+                      size: ResponsiveSize.width(context, 8.72),
                     ),
             ),
             SizedBox(height: ResponsiveSize.height(context, 2)),
@@ -292,10 +292,10 @@ class ReceivedOffersScreen extends StatelessWidget {
                           SizedBox(height: ResponsiveSize.height(context, .4)),
                           Row(
                             children: [
-                              const Icon(
+                              Icon(
                                 Icons.star_rounded,
                                 color: AppColors.warning,
-                                size: 17,
+                                size: ResponsiveSize.width(context, 4.36),
                               ),
                               customText(
                                 text: offer.rating.toStringAsFixed(1),
@@ -307,10 +307,10 @@ class ReceivedOffersScreen extends StatelessWidget {
                                 isBold: true,
                               ),
                               SizedBox(width: ResponsiveSize.width(context, 2)),
-                              const Icon(
+                              Icon(
                                 Icons.location_on_rounded,
                                 color: AppColors.danger,
-                                size: 16,
+                                size: ResponsiveSize.width(context, 4.1),
                               ),
                               customText(
                                 text:
@@ -333,7 +333,7 @@ class ReceivedOffersScreen extends StatelessWidget {
                       ),
                       decoration: BoxDecoration(
                         color: AppColors.success.withValues(alpha: .09),
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(AppSizes.radiusXl),
                       ),
                       child: customText(
                         text: offer.availability,
@@ -363,7 +363,7 @@ class ReceivedOffersScreen extends StatelessWidget {
                           '${offer.inspectionFee} جنيه',
                         ),
                       ),
-                      _divider(),
+                      _divider(context  ),
                       Expanded(
                         child: _metric(
                           context,
@@ -371,7 +371,7 @@ class ReceivedOffersScreen extends StatelessWidget {
                           '${offer.minEstimatedCost}–${offer.maxEstimatedCost}',
                         ),
                       ),
-                      _divider(),
+                      _divider(context),
                       Expanded(
                         child: _metric(
                           context,
@@ -392,7 +392,7 @@ class ReceivedOffersScreen extends StatelessWidget {
                           '/offer-details',
                           arguments: offer,
                         ),
-                        child: const Text(
+                        child: Text(
                           'التفاصيل',
                           style: TextStyle(
                             fontFamily: 'Cairo',
@@ -412,7 +412,7 @@ class ReceivedOffersScreen extends StatelessWidget {
                           '/offer-details',
                           arguments: offer,
                         ),
-                        child: const Text(
+                        child: Text(
                           'مراجعة العرض',
                           style: TextStyle(
                             fontFamily: 'Cairo',
@@ -453,9 +453,9 @@ class ReceivedOffersScreen extends StatelessWidget {
     );
   }
 
-  Widget _divider() => Container(
-        width: 1,
-        height: 38,
+  Widget _divider(BuildContext context) => Container(
+        width: ResponsiveSize.width(context, 0.26),
+        height: ResponsiveSize.height(context, 4.5),
         color: AppColors.border.withValues(alpha: .20),
       );
 

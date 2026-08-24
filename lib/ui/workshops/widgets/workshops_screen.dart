@@ -56,10 +56,10 @@ class WorkshopsScreen extends StatelessWidget {
                         ),
                         child: Row(
                           children: [
-                            const SizedBox(
-                              width: 18,
-                              height: 18,
-                              child: CircularProgressIndicator(strokeWidth: 2.2),
+                            SizedBox(
+                              width: ResponsiveSize.width(context, 4.62),
+                              height: ResponsiveSize.height(context, 2.13),
+                              child: CircularProgressIndicator(strokeWidth: ResponsiveSize.width(context, 0.56)),
                             ),
                             SizedBox(width: ResponsiveSize.width(context, 2)),
                             Expanded(
@@ -103,7 +103,7 @@ class WorkshopsScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(AppSizes.radiusSm),
                 child: IconButton(
                   onPressed: () => Navigator.pop(context),
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.arrow_back_rounded,
                     color: AppColors.primary,
                   ),
@@ -156,10 +156,10 @@ class WorkshopsScreen extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.map_rounded,
                         color: Colors.white,
-                        size: 20,
+                        size: ResponsiveSize.width(context, 5.13),
                       ),
                       SizedBox(width: ResponsiveSize.width(context, 1)),
                       customText(

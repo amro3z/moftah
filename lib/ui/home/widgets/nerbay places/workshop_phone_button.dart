@@ -58,7 +58,7 @@ class WorkshopPhoneButton extends StatelessWidget {
                 ),
                 decoration: BoxDecoration(
                   color: AppColors.success.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(AppSizes.radiusLg),
                 ),
                 child: customText(
                   text: '${phones.length}',
@@ -130,11 +130,11 @@ class WorkshopPhoneButton extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    width: 42,
-                    height: 4,
+                    width: ResponsiveSize.width(context, 10.77),
+                    height: ResponsiveSize.height(context, 0.47),
                     decoration: BoxDecoration(
                       color: AppColors.border,
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(AppSizes.radiusLg),
                     ),
                   ),
 

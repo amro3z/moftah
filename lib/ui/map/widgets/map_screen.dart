@@ -638,15 +638,15 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
         .map((place) {
       return Marker(
         point: LatLng(place.latitude, place.longitude),
-        width: 44,
-        height: 44,
+        width: ResponsiveSize.width(context, 11.28),
+        height: ResponsiveSize.height(context, 5.21),
         child: GestureDetector(
           onTap: () => _selectPlace(place),
           child: Container(
             decoration: BoxDecoration(
               color: AppColors.primary,
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 3),
+              border: Border.all(color: Colors.white, width: ResponsiveSize.width(context, 0.77)),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.18),
@@ -655,10 +655,10 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
                 ),
               ],
             ),
-            child: const Icon(
+            child: Icon(
               Icons.car_repair_rounded,
               color: Colors.white,
-              size: 22,
+              size: ResponsiveSize.width(context, 5.64),
             ),
           ),
         ),
@@ -680,7 +680,7 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
           decoration: BoxDecoration(
             color: AppColors.danger,
             shape: BoxShape.circle,
-            border: Border.all(color: Colors.white, width: 3),
+            border: Border.all(color: Colors.white, width: ResponsiveSize.width(context, 0.77)),
             boxShadow: [
               BoxShadow(
                 color: AppColors.danger.withValues(alpha: 0.28),
@@ -689,10 +689,10 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
               ),
             ],
           ),
-          child: const Icon(
+          child: Icon(
             Icons.flag_rounded,
             color: Colors.white,
-            size: 28,
+            size: ResponsiveSize.width(context, 7.18),
           ),
         ),
       ),
@@ -707,14 +707,14 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
       return [
         Marker(
           point: currentLocation,
-          width: 56,
-          height: 56,
+          width: ResponsiveSize.width(context, 14.36),
+          height: ResponsiveSize.height(context, 6.64),
           rotate: true,
           child: Container(
             decoration: BoxDecoration(
               color: AppColors.secondary,
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 3),
+              border: Border.all(color: Colors.white, width: ResponsiveSize.width(context, 0.77)),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.22),
@@ -723,10 +723,10 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
                 ),
               ],
             ),
-            child: const Icon(
+            child: Icon(
               Icons.directions_car_rounded,
               color: Colors.white,
-              size: 30,
+              size: ResponsiveSize.width(context, 7.69),
             ),
           ),
         ),
@@ -736,13 +736,13 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
     return [
       Marker(
         point: currentLocation,
-        width: 30,
-        height: 30,
+        width: ResponsiveSize.width(context, 7.69),
+        height: ResponsiveSize.height(context, 3.55),
         child: Container(
           decoration: BoxDecoration(
             color: AppColors.secondary,
             shape: BoxShape.circle,
-            border: Border.all(color: Colors.white, width: 4),
+            border: Border.all(color: Colors.white, width: ResponsiveSize.width(context, 1.03)),
             boxShadow: [
               BoxShadow(
                 color: AppColors.secondary.withValues(alpha: 0.25),
@@ -770,7 +770,7 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
             )
             .toList(),
         color: AppColors.secondary,
-        strokeWidth: 5,
+        strokeWidth: ResponsiveSize.width(context, 1.28),
         borderColor: Colors.white,
         borderStrokeWidth: 2,
       ),
@@ -852,13 +852,13 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
           if (!_isNavigationMode) _backButton(context),
           if (_isNavigationMode) _navigationInstructionCard(context),
           if (_isLoadingLocation)
-            const Center(
+            Center(
               child: AppLoadingIndicator(
                 message: 'بنحدد موقعك...',
               ),
             ),
           if (_isSearchingPlaces)
-            const Center(
+            Center(
               child: AppLoadingIndicator(
                 message: 'بندور على أقرب الورش ليك...',
               ),
@@ -907,8 +907,8 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
               SizedBox(
                 width: ResponsiveSize.width(context, 4),
                 height: ResponsiveSize.width(context, 4),
-                child: const CircularProgressIndicator(
-                  strokeWidth: 2.3,
+                child: CircularProgressIndicator(
+                  strokeWidth: ResponsiveSize.width(context, 0.59),
                   color: AppColors.secondary,
                 ),
               ),
@@ -971,7 +971,7 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
             borderRadius: BorderRadius.circular(AppSizes.radiusSm),
             child: IconButton(
               onPressed: () => Navigator.pop(context),
-              icon: const Icon(
+              icon: Icon(
                 Icons.arrow_back_rounded,
                 color: AppColors.primary,
               ),
@@ -1133,8 +1133,8 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
           SizedBox(
             width: ResponsiveSize.width(context, 4),
             height: ResponsiveSize.width(context, 4),
-            child: const CircularProgressIndicator(
-              strokeWidth: 2,
+            child: CircularProgressIndicator(
+              strokeWidth: ResponsiveSize.width(context, 0.51),
               color: AppColors.secondary,
             ),
           ),
@@ -1380,12 +1380,12 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
                 onPressed: _stopNavigation,
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppColors.danger,
-                  side: const BorderSide(color: AppColors.danger),
+                  side: BorderSide(color: AppColors.danger),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(AppSizes.radiusMd),
                   ),
                 ),
-                icon: const Icon(Icons.close_rounded),
+                icon: Icon(Icons.close_rounded),
                 label: customText(
                   text: 'إنهاء',
                   fontSize: ResponsiveSize.width(context, AppSizes.fontSm),

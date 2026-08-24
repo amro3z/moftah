@@ -56,8 +56,8 @@ class ObdConnectionProgress extends StatelessWidget {
                 SizedBox(
                   width: ResponsiveSize.width(context, 5),
                   height: ResponsiveSize.width(context, 5),
-                  child: const CircularProgressIndicator(
-                    strokeWidth: 2.4,
+                  child: CircularProgressIndicator(
+                    strokeWidth: ResponsiveSize.width(context, 0.62),
                     color: AppColors.info,
                   ),
                 ),
@@ -82,7 +82,7 @@ class ObdConnectionProgress extends StatelessWidget {
               return Expanded(
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
-                  height: 4,
+                  height: ResponsiveSize.height(context, 0.47),
                   margin: EdgeInsets.symmetric(
                     horizontal: ResponsiveSize.width(context, .35),
                   ),
@@ -92,7 +92,7 @@ class ObdConnectionProgress extends StatelessWidget {
                         : current
                             ? AppColors.info
                             : Colors.white.withValues(alpha: .12),
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(AppSizes.radiusLg),
                   ),
                 ),
               );
@@ -108,7 +108,7 @@ class ObdConnectionProgress extends StatelessWidget {
                 borderRadius: BorderRadius.circular(AppSizes.radiusSm),
               ),
             ),
-            icon: const Icon(Icons.close_rounded),
+            icon: Icon(Icons.close_rounded),
             label: customText(
               text: 'إلغاء محاولة الاتصال',
               fontSize: ResponsiveSize.width(context, AppSizes.fontXs),

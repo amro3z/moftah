@@ -19,7 +19,7 @@ class HealthScoreRing extends StatelessWidget {
           SizedBox.expand(
             child: CircularProgressIndicator(
               value: score / 100,
-              strokeWidth: 8,
+              strokeWidth: ResponsiveSize.width(context, 2.05),
               strokeCap: StrokeCap.round,
               backgroundColor: Colors.white.withValues(alpha: .12),
               valueColor: const AlwaysStoppedAnimation(AppColors.success),

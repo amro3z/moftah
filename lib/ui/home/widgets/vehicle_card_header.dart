@@ -86,7 +86,7 @@ class VehicleCardHeader extends StatelessWidget {
             height: ResponsiveSize.width(context, 18),
             child: CircularProgressIndicator(
               value: data.healthScore / 100,
-              strokeWidth: 6,
+              strokeWidth: ResponsiveSize.width(context, 1.54),
               strokeCap: StrokeCap.round,
               backgroundColor: AppColors.progressBackground,
               valueColor: const AlwaysStoppedAnimation(AppColors.success),
@@ -123,7 +123,7 @@ class VehicleCardHeader extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         color: data.backgroundColor,
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(AppSizes.radiusXl),
       ),
       child: customText(
         text: data.text,

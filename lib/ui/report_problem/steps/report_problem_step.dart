@@ -103,10 +103,10 @@ class ReportProblemStep extends StatelessWidget {
             controller: descriptionController,
             maxLines: 5,
             textDirection: TextDirection.rtl,
-            style: const TextStyle(fontFamily: 'Cairo'),
+            style: TextStyle(fontFamily: 'Cairo'),
             decoration: InputDecoration(
               hintText: 'مثلاً: الرعشة بتظهر بعد سرعة 60 كم/س...',
-              hintStyle: const TextStyle(fontFamily: 'Cairo'),
+              hintStyle: TextStyle(fontFamily: 'Cairo'),
               filled: true,
               fillColor: Colors.white,
               border: OutlineInputBorder(
@@ -201,10 +201,10 @@ class _ProblemCard extends StatelessWidget {
               ),
             ),
             if (selected)
-              const Icon(
+              Icon(
                 Icons.check_circle_rounded,
                 color: AppColors.secondary,
-                size: 18,
+                size: ResponsiveSize.width(context, 4.62),
               ),
           ],
         ),

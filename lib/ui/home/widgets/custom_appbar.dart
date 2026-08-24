@@ -120,8 +120,8 @@ PreferredSizeWidget customAppBar(
                                   ),
                                   decoration: BoxDecoration(
                                     color: AppColors.danger,
-                                    borderRadius: BorderRadius.circular(30),
-                                    border: Border.all(color: AppColors.primary, width: 1.5),
+                                    borderRadius: BorderRadius.circular(AppSizes.radiusXl),
+                                    border: Border.all(color: AppColors.primary, width: ResponsiveSize.width(context, 0.38)),
                                     boxShadow: [
                                       BoxShadow(
                                         color: Colors.black.withValues(alpha: .22),
