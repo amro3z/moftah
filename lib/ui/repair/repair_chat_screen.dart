@@ -94,6 +94,8 @@ class _RepairChatScreenState extends State<RepairChatScreen> {
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return AppBar(
+      scrolledUnderElevation: 0,
+      shadowColor: Colors.transparent,
       backgroundColor: Colors.white,
       elevation: 0,
       automaticallyImplyLeading: false,

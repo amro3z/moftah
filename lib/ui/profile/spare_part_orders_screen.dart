@@ -145,6 +145,8 @@ class _StatusChip extends StatelessWidget {
 
 PreferredSizeWidget _historyAppBar(BuildContext context, String title) {
   return AppBar(
+      scrolledUnderElevation: 0,
+      shadowColor: Colors.transparent,
     backgroundColor: AppColors.primary,
     automaticallyImplyLeading: false,
     elevation: 0,

@@ -24,10 +24,13 @@ class VehicleHealthScreen extends StatelessWidget {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         backgroundColor: AppColors.background,
-        body: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(child: _header(context)),
-            SliverPadding(
+        body: Column(
+          children: [
+            _header(context),
+            Expanded(
+              child: CustomScrollView(
+                slivers: [
+                  SliverPadding(
               padding: EdgeInsets.fromLTRB(
                 ResponsiveSize.width(context, 5),
                 ResponsiveSize.height(context, 2),
@@ -103,6 +106,9 @@ class VehicleHealthScreen extends StatelessWidget {
                     ),
                   ),
                 ]),
+              ),
+            ),
+                ],
               ),
             ),
           ],

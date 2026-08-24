@@ -7,6 +7,7 @@ import 'package:moftah/ui/home/widgets/vehicle_card.dart';
 import 'package:moftah/utils/responsive.dart';
 
 PreferredSizeWidget customAppBar(
+
   BuildContext context, {
   required VehicleCardModel data,
   required String userName,
@@ -19,7 +20,11 @@ PreferredSizeWidget customAppBar(
 }) {
   return PreferredSize(
     preferredSize: Size.fromHeight(ResponsiveSize.height(context, 47)),
+    
     child: AppBar(
+      
+      scrolledUnderElevation: 0,
+      shadowColor: Colors.transparent,
       automaticallyImplyLeading: false,
       elevation: 0,
       backgroundColor: AppColors.primary,

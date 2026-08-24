@@ -41,6 +41,7 @@ class HomeScreen extends StatelessWidget {
               child: Column(
                 children: [
                   customAppBar(
+    
                     context,
                     userName: 'عمرو محمد',
                     data: selectedVehicle.card,

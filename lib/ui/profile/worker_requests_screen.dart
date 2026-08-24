@@ -17,6 +17,8 @@ class WorkerRequestsScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: AppColors.background,
         appBar: AppBar(
+      scrolledUnderElevation: 0,
+      shadowColor: Colors.transparent,
           backgroundColor: AppColors.primary,
           automaticallyImplyLeading: false,
           elevation: 0,

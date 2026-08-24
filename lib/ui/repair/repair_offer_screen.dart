@@ -26,6 +26,8 @@ class _RepairOfferScreenState extends State<RepairOfferScreen> {
       child: Scaffold(
         backgroundColor: AppColors.background,
         appBar: AppBar(
+      scrolledUnderElevation: 0,
+      shadowColor: Colors.transparent,
           backgroundColor: Colors.white,
           elevation: 0,
           centerTitle: true,

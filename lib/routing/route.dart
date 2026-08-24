@@ -47,20 +47,17 @@ class AppRoute {
   Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case '/home':
-        return MaterialPageRoute(
-          builder: (_) => BlocProvider(
+        return _animatedRoute(BlocProvider(
             create: (_) => _createNearbyPlacesCubit()..loadNearestWorkshops(),
             child: const HomeScreen(),
-          ),
-        );
+          ));
 
       case '/nearby-workshops':
         final arguments = settings.arguments;
         final workshopArguments =
             arguments is WorkshopsRouteArguments ? arguments : null;
 
-        return MaterialPageRoute(
-          builder: (_) => BlocProvider(
+        return _animatedRoute(BlocProvider(
             create: (_) {
               final cubit = _createNearbyPlacesCubit();
 
@@ -79,8 +76,7 @@ class AppRoute {
               userLatitude: workshopArguments?.userLatitude,
               userLongitude: workshopArguments?.userLongitude,
             ),
-          ),
-        );
+          ));
 
 
 
@@ -90,13 +86,11 @@ class AppRoute {
       case '/chat':
         final arguments = settings.arguments;
         if (arguments is! ChatScreenModel) {
-          return MaterialPageRoute(
-            builder: (_) => const Scaffold(
+          return _animatedRoute(const Scaffold(
               body: Center(
                 child: Text('Chat data is required'),
               ),
-            ),
-          );
+            ));
         }
         return _animatedRoute(
           RepairChatScreen(data: arguments),
@@ -111,13 +105,11 @@ class AppRoute {
       case '/profile/spare-order-details':
         final arguments = settings.arguments;
         if (arguments is! SparePartOrderModel) {
-          return MaterialPageRoute(
-            builder: (_) => const Scaffold(
+          return _animatedRoute(const Scaffold(
               body: Center(
                 child: Text('Spare part order data is required'),
               ),
-            ),
-          );
+            ));
         }
         return _animatedRoute(
           SparePartOrderDetailsScreen(order: arguments),
@@ -129,13 +121,11 @@ class AppRoute {
       case '/profile/worker-request-details':
         final arguments = settings.arguments;
         if (arguments is! WorkerRequestHistoryModel) {
-          return MaterialPageRoute(
-            builder: (_) => const Scaffold(
+          return _animatedRoute(const Scaffold(
               body: Center(
                 child: Text('Worker request data is required'),
               ),
-            ),
-          );
+            ));
         }
         return _animatedRoute(
           WorkerRequestDetailsScreen(request: arguments),
@@ -150,22 +140,18 @@ class AppRoute {
       case '/problem-analysis':
         final arguments = settings.arguments;
         if (arguments is! ProblemReportModel) {
-          return MaterialPageRoute(
-            builder: (_) => const Scaffold(
+          return _animatedRoute(const Scaffold(
               body: Center(child: Text('Problem report data is required')),
-            ),
-          );
+            ));
         }
         return _animatedRoute(ProblemAnalysisScreen(report: arguments));
 
       case '/report-workshops':
         final arguments = settings.arguments;
         if (arguments is! ReportWorkshopsRouteArguments) {
-          return MaterialPageRoute(
-            builder: (_) => const Scaffold(
+          return _animatedRoute(const Scaffold(
               body: Center(child: Text('Report workshop data is required')),
-            ),
-          );
+            ));
         }
         return _animatedRoute(
           BlocProvider(
@@ -186,11 +172,9 @@ class AppRoute {
       case '/report-technicians':
         final arguments = settings.arguments;
         if (arguments is! ProblemReportModel) {
-          return MaterialPageRoute(
-            builder: (_) => const Scaffold(
+          return _animatedRoute(const Scaffold(
               body: Center(child: Text('Problem report data is required')),
-            ),
-          );
+            ));
         }
         return _animatedRoute(ReportTechniciansScreen(report: arguments));
 
@@ -207,11 +191,9 @@ class AppRoute {
       case '/spare-part-details':
         final arguments = settings.arguments;
         if (arguments is! String) {
-          return MaterialPageRoute(
-            builder: (_) => const Scaffold(
+          return _animatedRoute(const Scaffold(
               body: Center(child: Text('Spare part id is required')),
-            ),
-          );
+            ));
         }
         return _animatedRoute(
           BlocProvider.value(
@@ -245,31 +227,25 @@ class AppRoute {
       case '/offer-details':
         final arguments = settings.arguments;
         if (arguments is! ServiceOfferModel) {
-          return MaterialPageRoute(
-            builder: (_) => const Scaffold(
+          return _animatedRoute(const Scaffold(
               body: Center(child: Text('Offer data is required')),
-            ),
-          );
+            ));
         }
         return _animatedRoute(OfferDetailsScreen(offer: arguments));
 
       case '/vehicle-health':
         final arguments = settings.arguments;
         if (arguments is! VehicleHealthModel) {
-          return MaterialPageRoute(
-            builder: (_) => const Scaffold(
+          return _animatedRoute(const Scaffold(
               body: Center(child: Text('Vehicle health data is required')),
-            ),
-          );
+            ));
         }
-        return MaterialPageRoute(
-          builder: (_) => BlocProvider(
+        return _animatedRoute(BlocProvider(
             create: (_) => ObdCubit(
               repository: ObdRepository(),
             )..loadPairedDevices(),
             child: VehicleHealthScreen(data: arguments),
-          ),
-        );
+          ));
 
 
       case '/repair-details':
@@ -282,37 +258,27 @@ class AppRoute {
                 location: 'مدينة نصر',
                 currentStage: RepairStage.approval,
               );
-        return MaterialPageRoute(
-          builder: (_) => RepairDetailsScreen(data: repair),
-        );
+        return _animatedRoute(RepairDetailsScreen(data: repair));
 
       case '/repair-chat':
         final arguments = settings.arguments;
         if (arguments is! CurrentRepairModel) {
-          return MaterialPageRoute(
-            builder: (_) => const Scaffold(
+          return _animatedRoute(const Scaffold(
               body: Center(child: Text('Repair data is required')),
-            ),
-          );
+            ));
         }
-        return MaterialPageRoute(
-          builder: (_) => RepairChatScreen(
+        return _animatedRoute(RepairChatScreen(
             data: ChatScreenModel.fromRepair(arguments),
-          ),
-        );
+          ));
 
       case '/repair-offer':
         final arguments = settings.arguments;
         if (arguments is! CurrentRepairModel) {
-          return MaterialPageRoute(
-            builder: (_) => const Scaffold(
+          return _animatedRoute(const Scaffold(
               body: Center(child: Text('Repair offer data is required')),
-            ),
-          );
+            ));
         }
-        return MaterialPageRoute(
-          builder: (_) => RepairOfferScreen(data: arguments),
-        );
+        return _animatedRoute(RepairOfferScreen(data: arguments));
 
       case '/map':
         HomeNearbyPlacesModel? selectedPlace;
@@ -328,21 +294,17 @@ class AppRoute {
           nearbyPlaces = [arguments];
         }
 
-        return MaterialPageRoute(
-          builder: (_) => MapScreen(
+        return _animatedRoute(MapScreen(
             selectedPlace: selectedPlace,
             initialNearbyPlaces: nearbyPlaces,
-          ),
-        );
+          ));
 
       default:
-        return MaterialPageRoute(
-          builder: (_) => Scaffold(
+        return _animatedRoute(Scaffold(
             body: Center(
               child: Text('No route defined for ${settings.name}'),
             ),
-          ),
-        );
+          ));
     }
   }
 

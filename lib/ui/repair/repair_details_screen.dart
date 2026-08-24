@@ -28,6 +28,8 @@ class RepairDetailsScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: AppColors.background,
         appBar: AppBar(
+      scrolledUnderElevation: 0,
+      shadowColor: Colors.transparent,
           backgroundColor: Colors.white,
           elevation: 0,
           centerTitle: true,

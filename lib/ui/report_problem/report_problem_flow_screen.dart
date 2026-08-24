@@ -107,6 +107,8 @@ class _ReportProblemFlowScreenState extends State<ReportProblemFlowScreen> {
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return AppBar(
+      scrolledUnderElevation: 0,
+      shadowColor: Colors.transparent,
       backgroundColor: Colors.white,
       elevation: 0,
       automaticallyImplyLeading: false,
@@ -161,54 +163,39 @@ class _ReportProblemFlowScreenState extends State<ReportProblemFlowScreen> {
     final isLast = _page == 4;
     return SafeArea(
       top: false,
-      child: Container(
-        padding: EdgeInsets.all(ResponsiveSize.width(context, 4)),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border(
-            top: BorderSide(color: AppColors.border.withValues(alpha: .12)),
+      minimum: EdgeInsets.fromLTRB(
+        ResponsiveSize.width(context, 4), 0,
+        ResponsiveSize.width(context, 4),
+        ResponsiveSize.height(context, 2),
+      ),
+      child: SizedBox(
+        height: ResponsiveSize.height(context, 6.2),
+        child: FilledButton(
+          style: FilledButton.styleFrom(
+            backgroundColor: AppColors.secondary,
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+            ),
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: .18),
-              blurRadius: 18,
-              offset: const Offset(0, -5),
-            ),
-          ],
-        ),
-        child: SizedBox(
-          height: ResponsiveSize.height(context, 6.2),
-          child: FilledButton(
-            style: FilledButton.styleFrom(
-              backgroundColor: AppColors.secondary,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+          onPressed: _next,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Center(child: customText(
+                text: isLast ? 'تحليل المشكلة بالذكاء الاصطناعي' : 'التالي',
+                fontSize: ResponsiveSize.width(context, AppSizes.fontMd),
+                color: Colors.white, isBold: true,
+              )),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Icon(
+                  isLast ? Icons.smart_toy_rounded : Icons.arrow_forward_rounded,
+                  color: Colors.white,
+                  size: ResponsiveSize.width(context, 5),
+                ),
               ),
-            ),
-            onPressed: _next,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Center(
-                  child: Text(
-                    isLast ? 'تحليل المشكلة بالذكاء الاصطناعي' : 'التالي',
-                    style: TextStyle(
-                      fontFamily: 'Cairo',
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Icon(
-                    isLast
-                        ? Icons.smart_toy_rounded
-                        : Icons.arrow_forward_rounded,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
+            ],
           ),
         ),
       ),

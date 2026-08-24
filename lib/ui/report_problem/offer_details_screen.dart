@@ -27,6 +27,8 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
       child: Scaffold(
         backgroundColor: AppColors.background,
         appBar: AppBar(
+      scrolledUnderElevation: 0,
+      shadowColor: Colors.transparent,
           backgroundColor: Colors.white,
           elevation: 0,
           automaticallyImplyLeading: false,

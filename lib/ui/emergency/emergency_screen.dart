@@ -19,6 +19,8 @@ class EmergencyScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: AppColors.background,
         appBar: AppBar(
+      scrolledUnderElevation: 0,
+      shadowColor: Colors.transparent,
           backgroundColor: AppColors.primary,
           automaticallyImplyLeading: false,
           elevation: 0,
@@ -68,8 +70,19 @@ class EmergencyScreen extends StatelessWidget {
                     width: ResponsiveSize.width(context, 11),
                     height: ResponsiveSize.width(context, 11),
                     decoration: BoxDecoration(
-                      color: AppColors.secondary.withValues(alpha: .12),
-                      shape: BoxShape.circle,
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(AppSizes.radiusLg),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: .16),
+                          blurRadius: 14,
+                          spreadRadius: 0,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
+                      border: Border.all(
+                        color: AppColors.border.withValues(alpha: .10),
+                      ),
                     ),
                     child: Icon(
                       Icons.info_outline_rounded,
@@ -126,15 +139,17 @@ class _TowProviderCard extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.all(ResponsiveSize.width(context, 4)),
           decoration: BoxDecoration(
+            color: Colors.white,
             borderRadius: BorderRadius.circular(AppSizes.radiusLg),
-            border: Border.all(color: AppColors.border.withValues(alpha: .10)),
             boxShadow: [
               BoxShadow(
-                color: AppColors.primary.withValues(alpha: .05),
-                blurRadius: ResponsiveSize.width(context, 3),
-                offset: Offset(0, ResponsiveSize.height(context, .5)),
+                color: Colors.black.withValues(alpha: .16),
+                blurRadius: 14,
+                spreadRadius: 0,
+                offset: const Offset(0, 5),
               ),
             ],
+            border: Border.all(color: AppColors.border.withValues(alpha: .10)),
           ),
           child: Column(
             children: [

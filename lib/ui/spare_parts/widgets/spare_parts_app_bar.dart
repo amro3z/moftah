@@ -25,6 +25,9 @@ class SparePartsAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      
+      scrolledUnderElevation: 0,
+      shadowColor: Colors.transparent,
       automaticallyImplyLeading: false,
       toolbarHeight: ResponsiveSize.height(context, 7.82),
       elevation: 0,
