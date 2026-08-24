@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moftah/data/models/app_vehicle_model.dart';
 import 'package:moftah/data/models/vehicle_card.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
@@ -7,22 +8,19 @@ import 'package:moftah/ui/home/widgets/vehicle_card.dart';
 import 'package:moftah/utils/responsive.dart';
 
 PreferredSizeWidget customAppBar(
-
   BuildContext context, {
   required VehicleCardModel data,
   required String userName,
   VoidCallback? onChatTap,
   VoidCallback? onVehicleTap,
   VoidCallback? onVehicleSwitchTap,
+  required AppVehicleModel selectedVehicle,
   int notificationCount = 0,
-  VoidCallback? onNotificationTap,
-  VoidCallback? onProfileTap,
 }) {
   return PreferredSize(
     preferredSize: Size.fromHeight(ResponsiveSize.height(context, 47)),
-    
+
     child: AppBar(
-      
       scrolledUnderElevation: 0,
       shadowColor: Colors.transparent,
       automaticallyImplyLeading: false,
@@ -95,14 +93,13 @@ PreferredSizeWidget customAppBar(
                       children: [
                         _HeaderActionButton(
                           icon: Icons.person_outline_rounded,
-                          onTap: onProfileTap,
+                          onTap: () => Navigator.pushNamed(context, '/profile'),
                         ),
-                        SizedBox(
-                          width: ResponsiveSize.width(context, 2),
-                        ),
+                        SizedBox(width: ResponsiveSize.width(context, 2)),
                         _HeaderActionButton(
                           icon: Icons.notifications_none_rounded,
-                          onTap: onNotificationTap ?? onChatTap,
+                          onTap: () =>
+                              Navigator.pushNamed(context, '/notifications'),
                           badgeCount: notificationCount,
                         ),
                       ],
@@ -115,7 +112,13 @@ PreferredSizeWidget customAppBar(
 
               VehicleCard(
                 data: data,
-                onTap: onVehicleTap,
+                onTap: (){
+                   Navigator.pushNamed(
+                      context,
+                      '/vehicle-health',
+                      arguments: selectedVehicle.health,
+                    );
+                },
                 onSwitchTap: onVehicleSwitchTap,
               ),
               SizedBox(height: ResponsiveSize.height(context, 1)),
@@ -126,7 +129,6 @@ PreferredSizeWidget customAppBar(
     ),
   );
 }
-
 
 class _HeaderActionButton extends StatelessWidget {
   final IconData icon;
@@ -183,10 +185,7 @@ class _HeaderActionButton extends StatelessWidget {
                   alignment: Alignment.center,
                   child: customText(
                     text: badgeCount > 99 ? '99+' : '$badgeCount',
-                    fontSize: ResponsiveSize.width(
-                      context,
-                      AppSizes.fontXs,
-                    ),
+                    fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
                     color: Colors.white,
                     isBold: true,
                   ),

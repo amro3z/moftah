@@ -37,73 +37,82 @@ class HomeScreen extends StatelessWidget {
 
           return Scaffold(
             backgroundColor: AppColors.background,
-            body: SingleChildScrollView(
-              child: Column(
-                children: [
-                  customAppBar(
-    
-                    context,
-                    userName: 'عمرو محمد',
-                    data: selectedVehicle.card,
-                    onChatTap: () {},
-                    notificationCount: serviceStore.shouldShowOffersBanner
-                        ? serviceStore.offers.length
-                        : 0,
-                    onNotificationTap: () => Navigator.pushNamed(
+            body: Column(
+              children: [
+                customAppBar(
+                  context,
+                  userName: 'عمرو محمد',
+                  selectedVehicle: selectedVehicle,
+                  data: selectedVehicle.card,
+                  onChatTap: () {},
+                  notificationCount: serviceStore.shouldShowOffersBanner
+                      ? serviceStore.offers.length
+                      : 0,
+                  onVehicleSwitchTap: () => _showVehicleSwitcher(context),
+                  onVehicleTap: () {
+                    Navigator.pushNamed(
                       context,
-                      '/notifications',
-                    ),
-                    onProfileTap: () => Navigator.pushNamed(
-                      context,
-                      '/profile',
-                    ),
-                    onVehicleSwitchTap: () => _showVehicleSwitcher(context),
-                    onVehicleTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        '/vehicle-health',
-                        arguments: selectedVehicle.health,
-                      );
-                    },
-                  ),
-                  SizedBox(height: ResponsiveSize.height(context, 1.2)),
-                  HomeOptionsList(options: HomeOptionsInfo.options),
-                  SizedBox(height: ResponsiveSize.height(context, 1.5)),
-                  const SectionTitle(title: 'الإصلاح الحالي'),
-                  SizedBox(height: ResponsiveSize.height(context, 1)),
-                  CurrentRepairCard(
-                    data: CurrentRepairModel(
-                      title: 'تغيير زيت المحرك + فلتر',
-                      workshopName: 'Auto Pro Center',
-                      location: 'مدينة نصر',
-                      currentStage: RepairStage.approval,
-                      vehicleName: '${selectedVehicle.card.carName} ${selectedVehicle.card.year}',
-                      technicianName: 'محمد أحمد',
-                      expectedFinish: '3:00 م',
-                      estimatedCost: 1250,
-                    ),
-                    onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        '/repair-details',
-                        arguments: CurrentRepairModel(
-                          title: 'تغيير زيت المحرك + فلتر',
-                          workshopName: 'Auto Pro Center',
-                          location: 'مدينة نصر',
-                          currentStage: RepairStage.approval,
-                          vehicleName: '${selectedVehicle.card.carName} ${selectedVehicle.card.year}',
-                          technicianName: 'محمد أحمد',
-                          expectedFinish: '3:00 م',
-                          estimatedCost: 1250,
+                      '/vehicle-health',
+                      arguments: selectedVehicle.health,
+                    );
+                  },
+                ),
+
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        SizedBox(height: ResponsiveSize.height(context, 1.2)),
+
+                        HomeOptionsList(options: HomeOptionsInfo.options),
+
+                        SizedBox(height: ResponsiveSize.height(context, 1.5)),
+
+                        const SectionTitle(title: 'الإصلاح الحالي'),
+
+                        SizedBox(height: ResponsiveSize.height(context, 1)),
+
+                        CurrentRepairCard(
+                          data: CurrentRepairModel(
+                            title: 'تغيير زيت المحرك + فلتر',
+                            workshopName: 'Auto Pro Center',
+                            location: 'مدينة نصر',
+                            currentStage: RepairStage.approval,
+                            vehicleName:
+                                '${selectedVehicle.card.carName} ${selectedVehicle.card.year}',
+                            technicianName: 'محمد أحمد',
+                            expectedFinish: '3:00 م',
+                            estimatedCost: 1250,
+                          ),
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              '/repair-details',
+                              arguments: CurrentRepairModel(
+                                title: 'تغيير زيت المحرك + فلتر',
+                                workshopName: 'Auto Pro Center',
+                                location: 'مدينة نصر',
+                                currentStage: RepairStage.approval,
+                                vehicleName:
+                                    '${selectedVehicle.card.carName} ${selectedVehicle.card.year}',
+                                technicianName: 'محمد أحمد',
+                                expectedFinish: '3:00 م',
+                                estimatedCost: 1250,
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
+
+                        SizedBox(height: ResponsiveSize.height(context, 1.5)),
+
+                        _buildNearbyPlacesSection(context),
+
+                        SizedBox(height: ResponsiveSize.height(context, 10.5)),
+                      ],
+                    ),
                   ),
-                  SizedBox(height: ResponsiveSize.height(context, 1.5)),
-                  _buildNearbyPlacesSection(context),
-                  SizedBox(height: ResponsiveSize.height(context, 10.5)),
-                ],
-              ),
+                ),
+              ],
             ),
           );
         },
@@ -128,7 +137,9 @@ class HomeScreen extends StatelessWidget {
             ),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(26)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(26),
+              ),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: .22),
@@ -145,7 +156,10 @@ class HomeScreen extends StatelessWidget {
                   child: Container(
                     width: ResponsiveSize.width(context, 10.77),
                     height: ResponsiveSize.height(context, 0.47),
-                    decoration: BoxDecoration(color: AppColors.border, borderRadius: BorderRadius.circular(AppSizes.radiusLg)),
+                    decoration: BoxDecoration(
+                      color: AppColors.border,
+                      borderRadius: BorderRadius.circular(AppSizes.radiusLg),
+                    ),
                   ),
                 ),
                 SizedBox(height: ResponsiveSize.height(context, 1.8)),
@@ -160,7 +174,9 @@ class HomeScreen extends StatelessWidget {
                   final vehicle = store.vehicles[index];
                   final selected = store.selectedIndex == index;
                   return Padding(
-                    padding: EdgeInsets.only(bottom: ResponsiveSize.height(context, .8)),
+                    padding: EdgeInsets.only(
+                      bottom: ResponsiveSize.height(context, .8),
+                    ),
                     child: Container(
                       decoration: BoxDecoration(
                         color: selected
@@ -186,7 +202,9 @@ class HomeScreen extends StatelessWidget {
                           Navigator.pop(sheetContext);
                         },
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+                          borderRadius: BorderRadius.circular(
+                            AppSizes.radiusMd,
+                          ),
                         ),
                         leading: VehicleBrandLogo(
                           brand: vehicle.card.brand,
@@ -195,13 +213,20 @@ class HomeScreen extends StatelessWidget {
                         ),
                         title: customText(
                           text: vehicle.card.carName,
-                          fontSize: ResponsiveSize.width(context, AppSizes.fontMd),
+                          fontSize: ResponsiveSize.width(
+                            context,
+                            AppSizes.fontMd,
+                          ),
                           color: AppColors.primary,
                           isBold: true,
                         ),
                         subtitle: customText(
-                          text: '${vehicle.card.year} • ${vehicle.card.mileage} كم',
-                          fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
+                          text:
+                              '${vehicle.card.year} • ${vehicle.card.mileage} كم',
+                          fontSize: ResponsiveSize.width(
+                            context,
+                            AppSizes.fontSm,
+                          ),
                           color: AppColors.textMuted,
                         ),
                         trailing: selected
@@ -245,7 +270,9 @@ class HomeScreen extends StatelessWidget {
             SizedBox(height: ResponsiveSize.height(context, 1)),
             if (state is NearbyPlacesInitial)
               NearbyPlacesLoadingIndicator(
-                state: const NearbyPlacesLoading(step: NearbyLoadingStep.checkingPermission),
+                state: const NearbyPlacesLoading(
+                  step: NearbyLoadingStep.checkingPermission,
+                ),
               )
             else if (state is NearbyPlacesLoading)
               NearbyPlacesLoadingIndicator(state: state)
