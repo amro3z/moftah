@@ -9,6 +9,7 @@ import 'package:moftah/ui/spare_parts/cubit/spare_parts_state.dart';
 import 'package:moftah/ui/spare_parts/widgets/spare_part_image.dart';
 import 'package:moftah/ui/spare_parts/widgets/spare_parts_app_bar.dart';
 import 'package:moftah/ui/spare_parts/widgets/spare_parts_checkout_dialog.dart';
+import 'package:moftah/data/store/profile_history_store.dart';
 
 class SparePartsCartScreen extends StatelessWidget {
   const SparePartsCartScreen({super.key});
@@ -149,10 +150,27 @@ class SparePartsCartScreen extends StatelessWidget {
   }
 
   Future<void> _checkout(BuildContext context, double total) async {
-    final confirmed = await showSparePartsCheckoutDialog(context: context, total: total);
+    final confirmed = await showSparePartsCheckoutDialog(
+      context: context,
+      total: total,
+    );
+
     if (confirmed != true || !context.mounted) return;
 
-    context.read<SparePartsCubit>().clearCart();
+    final cubit = context.read<SparePartsCubit>();
+    final products = cubit.state.cartProducts;
+    final quantities = Map<String, int>.from(
+      cubit.state.cartQuantities,
+    );
+
+    ProfileHistoryStore.instance.addSparePartOrder(
+      products: products,
+      quantities: quantities,
+      total: total,
+    );
+
+    cubit.clearCart();
+
     if (!context.mounted) return;
     await showSparePartsOrderSuccessDialog(context);
   }

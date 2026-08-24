@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moftah/data/models/current_repair_model.dart';
+import 'package:moftah/data/models/chat_screen_model.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
 import 'package:moftah/ui/core/ui/custom_text.dart';
@@ -7,7 +8,7 @@ import 'package:moftah/ui/repair/widgets/animated_entrance.dart';
 import 'package:moftah/utils/responsive.dart';
 
 class RepairChatScreen extends StatefulWidget {
-  final CurrentRepairModel data;
+  final ChatScreenModel data;
 
   const RepairChatScreen({super.key, required this.data});
 
@@ -18,34 +19,37 @@ class RepairChatScreen extends StatefulWidget {
 class _RepairChatScreenState extends State<RepairChatScreen> {
   final _controller = TextEditingController();
   final _scrollController = ScrollController();
-  final List<_ChatMessage> _messages = [
-    const _ChatMessage(
-      text: 'مرحبًا، تم استلام السيارة وبدأت الفحص.',
-      isMine: false,
-      time: '10:30',
-    ),
-    const _ChatMessage(
-      text: 'شكرًا، متى تتوقع الانتهاء؟',
-      isMine: true,
-      time: '10:32',
-    ),
-    const _ChatMessage(
-      text: 'إن شاء الله خلال 2-3 ساعات. سأبلغك بأي شيء إضافي.',
-      isMine: false,
-      time: '10:33',
-    ),
-    const _ChatMessage.offer(time: '12:30'),
-    const _ChatMessage(
-      text: 'تمام، سأراجع العرض الآن.',
-      isMine: true,
-      time: '12:35',
-    ),
-    const _ChatMessage(
-      text: 'تمام، شكرًا. سأكمل معك فور تأكيد الموافقة.',
-      isMine: false,
-      time: '12:37',
-    ),
-  ];
+  late final List<_ChatMessage> _messages;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.data.initialMessages.isNotEmpty) {
+      _messages = widget.data.initialMessages
+          .map(
+            (message) => _ChatMessage(
+              text: message.text,
+              isMine: message.isMine,
+              time: message.time,
+            ),
+          )
+          .toList();
+
+      if (widget.data.repairData != null) {
+        _messages.add(const _ChatMessage.offer(time: '12:30'));
+      }
+      return;
+    }
+
+    _messages = [
+      const _ChatMessage(
+        text: 'مرحبًا، كيف أقدر أساعدك؟',
+        isMine: false,
+        time: 'الآن',
+      ),
+    ];
+  }
 
   @override
   void dispose() {
@@ -117,13 +121,13 @@ class _RepairChatScreenState extends State<RepairChatScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 customText(
-                  text: widget.data.technicianName,
+                  text: widget.data.participantName,
                   fontSize: ResponsiveSize.width(context, AppSizes.fontMd),
                   color: AppColors.primary,
                   isBold: true,
                 ),
                 customText(
-                  text: 'متصل الآن',
+                  text: widget.data.subtitle,
                   fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
                   color: AppColors.success,
                   isBold: true,
@@ -166,6 +170,10 @@ class _RepairChatScreenState extends State<RepairChatScreen> {
   }
 
   Widget _messageItem(BuildContext context, _ChatMessage message) {
+    if (message.isOffer && widget.data.repairData == null) {
+      return const SizedBox.shrink();
+    }
+
     if (message.isOffer) {
       return Align(
         alignment: Alignment.centerLeft,
@@ -178,7 +186,7 @@ class _RepairChatScreenState extends State<RepairChatScreen> {
                 onTap: () => Navigator.pushNamed(
                   context,
                   '/repair-offer',
-                  arguments: widget.data,
+                  arguments: widget.data.repairData,
                 ),
                 child: Container(
                   width: ResponsiveSize.width(context, 56),
@@ -223,7 +231,7 @@ class _RepairChatScreenState extends State<RepairChatScreen> {
                       ),
                       SizedBox(height: ResponsiveSize.height(context, .7)),
                       customText(
-                        text: 'عرض ${widget.data.offeredPartName}',
+                        text: 'عرض ${widget.data.repairData!.offeredPartName}',
                         fontSize: ResponsiveSize.width(
                           context,
                           AppSizes.fontMd,
@@ -234,7 +242,7 @@ class _RepairChatScreenState extends State<RepairChatScreen> {
                       SizedBox(height: ResponsiveSize.height(context, .5)),
                       customText(
                         text:
-                            '${widget.data.offerTotal.toStringAsFixed(0)} جنيه',
+                            '${widget.data.repairData!.offerTotal.toStringAsFixed(0)} جنيه',
                         fontSize: ResponsiveSize.width(
                           context,
                           AppSizes.fontXl,

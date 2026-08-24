@@ -52,6 +52,10 @@ class HomeScreen extends StatelessWidget {
                       context,
                       '/notifications',
                     ),
+                    onProfileTap: () => Navigator.pushNamed(
+                      context,
+                      '/profile',
+                    ),
                     onVehicleSwitchTap: () => _showVehicleSwitcher(context),
                     onVehicleTap: () {
                       Navigator.pushNamed(

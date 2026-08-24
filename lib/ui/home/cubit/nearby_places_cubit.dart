@@ -25,6 +25,7 @@ class NearbyPlacesCubit extends Cubit<NearbyPlacesState> {
     if (cache.hasLocation && cache.hasNearest) {
       final latitude = cache.userLatitude!;
       final longitude = cache.userLongitude!;
+
       emit(
         NearbyPlacesSuccess(
           cache.nearestPlaces,
@@ -32,6 +33,7 @@ class NearbyPlacesCubit extends Cubit<NearbyPlacesState> {
           userLongitude: longitude,
         ),
       );
+
       unawaited(
         preloadWorkshopDirectoryFromPosition(
           userLatitude: latitude,
@@ -39,10 +41,16 @@ class NearbyPlacesCubit extends Cubit<NearbyPlacesState> {
           maxPlaces: 50,
         ),
       );
+
+      // لا نطلب GPS كل مرة. نراجع الموقع فقط لو آخر فحص قديم.
+      if (cache.shouldRefreshLocation) {
+        unawaited(_refreshSharedLocationIfNeeded());
+      }
+
       return;
     }
 
-    if (cache.hasLocation) {
+    if (cache.hasLocation && !cache.shouldRefreshLocation) {
       return _loadNearestFromCoordinates(
         userLatitude: cache.userLatitude!,
         userLongitude: cache.userLongitude!,
@@ -375,7 +383,17 @@ class NearbyPlacesCubit extends Cubit<NearbyPlacesState> {
       return null;
     }
 
-    cache.saveLocation(position.latitude, position.longitude);
+    final moved = cache.saveLocationIfChanged(
+      position.latitude,
+      position.longitude,
+    );
+
+    if (moved) {
+      // لو المستخدم اتحرك أكتر من الحد المحدد، بيانات الورش القديمة
+      // ما ينفعش نعتبرها قريبة من الموقع الجديد.
+      cache.clearPlaces();
+      cache.saveLocation(position.latitude, position.longitude);
+    }
 
     emit(
       const NearbyPlacesLoading(
@@ -395,6 +413,29 @@ class NearbyPlacesCubit extends Cubit<NearbyPlacesState> {
     }
 
     return position;
+  }
+
+  Future<void> _refreshSharedLocationIfNeeded() async {
+    if (!cache.shouldRefreshLocation) return;
+
+    final position = await LocationService.getCurrentPosition(
+      forceRefresh: true,
+    );
+
+    if (position == null || isClosed) return;
+
+    final moved = cache.saveLocationIfChanged(
+      position.latitude,
+      position.longitude,
+    );
+
+    if (!moved) return;
+
+    // اتحركنا فعلًا لمسافة معتبرة، فنحدّث الورش مرة واحدة بالموقع الجديد.
+    await _loadNearestFromCoordinates(
+      userLatitude: position.latitude,
+      userLongitude: position.longitude,
+    );
   }
 
   Future<void> handleErrorAction(NearbyPlacesError error) async {

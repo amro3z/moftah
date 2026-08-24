@@ -31,6 +31,15 @@ import 'package:moftah/ui/spare_parts/spare_parts_screen.dart';
 import 'package:moftah/ui/spare_parts/spare_part_details_screen.dart';
 import 'package:moftah/ui/spare_parts/spare_parts_cart_screen.dart';
 import 'package:moftah/ui/spare_parts/spare_parts_favorites_screen.dart';
+import 'package:moftah/data/models/chat_screen_model.dart';
+import 'package:moftah/ui/emergency/emergency_screen.dart';
+import 'package:moftah/data/models/profile_history_models.dart';
+import 'package:moftah/ui/profile/profile_screen.dart';
+import 'package:moftah/ui/profile/spare_part_orders_screen.dart';
+import 'package:moftah/ui/profile/spare_part_order_details_screen.dart';
+import 'package:moftah/ui/profile/worker_requests_screen.dart';
+import 'package:moftah/ui/profile/worker_request_details_screen.dart';
+import 'package:moftah/ui/profile/chat_history_screen.dart';
 
 class AppRoute {
   final SparePartsCubit _sparePartsCubit = SparePartsCubit();
@@ -73,6 +82,67 @@ class AppRoute {
           ),
         );
 
+
+
+      case '/emergency':
+        return _animatedRoute(const EmergencyScreen());
+
+      case '/chat':
+        final arguments = settings.arguments;
+        if (arguments is! ChatScreenModel) {
+          return MaterialPageRoute(
+            builder: (_) => const Scaffold(
+              body: Center(
+                child: Text('Chat data is required'),
+              ),
+            ),
+          );
+        }
+        return _animatedRoute(
+          RepairChatScreen(data: arguments),
+        );
+
+      case '/profile':
+        return _animatedRoute(const ProfileScreen());
+
+      case '/profile/spare-orders':
+        return _animatedRoute(const SparePartOrdersScreen());
+
+      case '/profile/spare-order-details':
+        final arguments = settings.arguments;
+        if (arguments is! SparePartOrderModel) {
+          return MaterialPageRoute(
+            builder: (_) => const Scaffold(
+              body: Center(
+                child: Text('Spare part order data is required'),
+              ),
+            ),
+          );
+        }
+        return _animatedRoute(
+          SparePartOrderDetailsScreen(order: arguments),
+        );
+
+      case '/profile/worker-requests':
+        return _animatedRoute(const WorkerRequestsScreen());
+
+      case '/profile/worker-request-details':
+        final arguments = settings.arguments;
+        if (arguments is! WorkerRequestHistoryModel) {
+          return MaterialPageRoute(
+            builder: (_) => const Scaffold(
+              body: Center(
+                child: Text('Worker request data is required'),
+              ),
+            ),
+          );
+        }
+        return _animatedRoute(
+          WorkerRequestDetailsScreen(request: arguments),
+        );
+
+      case '/profile/chats':
+        return _animatedRoute(const ChatHistoryScreen());
 
       case '/report-problem':
         return _animatedRoute(const ReportProblemFlowScreen());
@@ -226,7 +296,9 @@ class AppRoute {
           );
         }
         return MaterialPageRoute(
-          builder: (_) => RepairChatScreen(data: arguments),
+          builder: (_) => RepairChatScreen(
+            data: ChatScreenModel.fromRepair(arguments),
+          ),
         );
 
       case '/repair-offer':

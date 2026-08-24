@@ -77,18 +77,23 @@ class HomeOptionItem extends StatelessWidget {
     );
   }
 
-  void _handleTap(BuildContext context) {
+void _handleTap(BuildContext context) {
     if (item.path == '/report-problem') {
-      Navigator.pushNamed(context, '/report-problem');
+      Navigator.pushNamed(context, item.path);
       return;
     }
 
     if (item.path == '/received-offers') {
-      Navigator.pushNamed(context, '/received-offers');
+      Navigator.pushNamed(context, item.path);
       return;
     }
 
     if (item.path == '/spare-parts') {
+      Navigator.pushNamed(context, item.path);
+      return;
+    }
+
+    if (item.path == '/emergency') {
       Navigator.pushNamed(context, item.path);
       return;
     }
@@ -113,6 +118,7 @@ class HomeOptionItem extends StatelessWidget {
           userLongitude: state.userLongitude,
         ),
       );
+
       return;
     }
 

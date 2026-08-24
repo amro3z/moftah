@@ -15,6 +15,7 @@ PreferredSizeWidget customAppBar(
   VoidCallback? onVehicleSwitchTap,
   int notificationCount = 0,
   VoidCallback? onNotificationTap,
+  VoidCallback? onProfileTap,
 }) {
   return PreferredSize(
     preferredSize: Size.fromHeight(ResponsiveSize.height(context, 47)),
@@ -84,64 +85,22 @@ PreferredSizeWidget customAppBar(
                       ],
                     ),
 
-                    InkWell(
-                      onTap: onNotificationTap ?? onChatTap,
-                      borderRadius: BorderRadius.circular(AppSizes.radiusSm),
-                      child: Container(
-                        width: ResponsiveSize.width(context, 10),
-                        height: ResponsiveSize.width(context, 10),
-                        decoration: BoxDecoration(
-                          color: AppColors.surfaceDark,
-                          borderRadius: BorderRadius.circular(
-                            AppSizes.radiusSm,
-                          ),
-                          border: Border.all(color: AppColors.border),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _HeaderActionButton(
+                          icon: Icons.person_outline_rounded,
+                          onTap: onProfileTap,
                         ),
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Icon(
-                              Icons.notifications_none_rounded,
-                              color: AppColors.textSecondary,
-                              size: ResponsiveSize.width(context, 5),
-                            ),
-
-                            if (notificationCount > 0)
-                              Positioned(
-                                top: ResponsiveSize.width(context, .7),
-                                right: ResponsiveSize.width(context, .7),
-                                child: Container(
-                                  constraints: BoxConstraints(
-                                    minWidth: ResponsiveSize.width(context, 5),
-                                    minHeight: ResponsiveSize.width(context, 5),
-                                  ),
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: ResponsiveSize.width(context, 1.1),
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.danger,
-                                    borderRadius: BorderRadius.circular(AppSizes.radiusXl),
-                                    border: Border.all(color: AppColors.primary, width: ResponsiveSize.width(context, 0.38)),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withValues(alpha: .22),
-                                        blurRadius: 6,
-                                        offset: const Offset(0, 2),
-                                      ),
-                                    ],
-                                  ),
-                                  alignment: Alignment.center,
-                                  child: customText(
-                                    text: notificationCount > 99 ? '99+' : '$notificationCount',
-                                    fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
-                                    color: Colors.white,
-                                    isBold: true,
-                                  ),
-                                ),
-                              ),
-                          ],
+                        SizedBox(
+                          width: ResponsiveSize.width(context, 2),
                         ),
-                      ),
+                        _HeaderActionButton(
+                          icon: Icons.notifications_none_rounded,
+                          onTap: onNotificationTap ?? onChatTap,
+                          badgeCount: notificationCount,
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -161,4 +120,76 @@ PreferredSizeWidget customAppBar(
       ),
     ),
   );
+}
+
+
+class _HeaderActionButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback? onTap;
+  final int badgeCount;
+
+  const _HeaderActionButton({
+    required this.icon,
+    this.onTap,
+    this.badgeCount = 0,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(AppSizes.radiusSm),
+      child: Container(
+        width: ResponsiveSize.width(context, 10),
+        height: ResponsiveSize.width(context, 10),
+        decoration: BoxDecoration(
+          color: AppColors.surfaceDark,
+          borderRadius: BorderRadius.circular(AppSizes.radiusSm),
+          border: Border.all(color: AppColors.border),
+        ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Icon(
+              icon,
+              color: AppColors.textSecondary,
+              size: ResponsiveSize.width(context, 5),
+            ),
+            if (badgeCount > 0)
+              Positioned(
+                top: ResponsiveSize.width(context, .7),
+                right: ResponsiveSize.width(context, .7),
+                child: Container(
+                  constraints: BoxConstraints(
+                    minWidth: ResponsiveSize.width(context, 5),
+                    minHeight: ResponsiveSize.width(context, 5),
+                  ),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: ResponsiveSize.width(context, 1.1),
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.danger,
+                    borderRadius: BorderRadius.circular(AppSizes.radiusXl),
+                    border: Border.all(
+                      color: AppColors.primary,
+                      width: ResponsiveSize.width(context, .38),
+                    ),
+                  ),
+                  alignment: Alignment.center,
+                  child: customText(
+                    text: badgeCount > 99 ? '99+' : '$badgeCount',
+                    fontSize: ResponsiveSize.width(
+                      context,
+                      AppSizes.fontXs,
+                    ),
+                    color: Colors.white,
+                    isBold: true,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
 }
