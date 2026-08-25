@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moftah/data/models/current_repair_model.dart';
 import 'package:moftah/data/models/nerbay_places_model.dart';
-import 'package:moftah/data/store/vehicle_selection_store.dart';
 import 'package:moftah/data/store/service_request_store.dart';
+import 'package:moftah/data/store/vehicle_selection_store.dart';
+import 'package:moftah/data/update/app_update_download_service.dart';
+import 'package:moftah/data/update/app_update_repository.dart';
 import 'package:moftah/routing/map_route_arguments.dart';
 import 'package:moftah/ui/core/constant/home_options.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
@@ -18,16 +20,189 @@ import 'package:moftah/ui/home/widgets/custom_appbar.dart';
 import 'package:moftah/ui/home/widgets/home%20options/home_options_list.dart';
 import 'package:moftah/ui/home/widgets/nerbay%20places/nearby_places_loading_indicator.dart';
 import 'package:moftah/ui/home/widgets/nerbay%20places/nerbay_places.dart';
+import 'package:moftah/ui/update/app_update_dialog.dart';
+import 'package:moftah/ui/update/update_download_dialog.dart';
 import 'package:moftah/utils/responsive.dart';
 import 'package:moftah/utils/vehicle_brand_logo.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final AppUpdateRepository _updateRepository = AppUpdateRepository();
+
+  final AppUpdateDownloadService _downloadService = AppUpdateDownloadService();
+
+  bool _checkingForUpdate = false;
+  bool _downloadingUpdate = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkForUpdate();
+    });
+  }
+
+  Future<void> _checkForUpdate() async {
+    if (_checkingForUpdate || _downloadingUpdate) return;
+
+    _checkingForUpdate = true;
+
+    try {
+      final result = await _updateRepository.checkForUpdate();
+
+      if (!mounted) return;
+
+      debugPrint('Current Version: ${result.currentVersion}');
+      debugPrint('Latest Version: ${result.latestVersion}');
+      debugPrint('Update Available: ${result.updateAvailable}');
+      debugPrint('APK URL: ${result.apkUrl}');
+      debugPrint('Update Error: ${result.error}');
+
+      if (result.error != null) {
+        debugPrint('Update check failed: ${result.error}');
+        return;
+      }
+
+      if (!result.updateAvailable) return;
+
+      final apkUrl = result.apkUrl;
+
+      if (apkUrl == null || apkUrl.trim().isEmpty) {
+        debugPrint('Update exists but APK URL is missing.');
+        return;
+      }
+
+      final updateNow = await showAppUpdateDialog(
+        context: context,
+        update: result,
+      );
+
+      if (!mounted) return;
+
+      if (updateNow != true) return;
+
+      await _downloadAndInstallUpdate(
+        url: apkUrl,
+        version: result.latestVersion ?? 'latest',
+      );
+    } catch (error) {
+      debugPrint('Unexpected update check error: $error');
+    } finally {
+      _checkingForUpdate = false;
+    }
+  }
+
+  Future<void> _downloadAndInstallUpdate({
+    required String url,
+    required String version,
+  }) async {
+    if (_downloadingUpdate) return;
+
+    _downloadingUpdate = true;
+
+    final progressNotifier = ValueNotifier<double>(0);
+
+    var dialogIsOpen = false;
+
+    try {
+      if (!mounted) return;
+
+      dialogIsOpen = true;
+
+      showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) {
+          return ValueListenableBuilder<double>(
+            valueListenable: progressNotifier,
+            builder: (_, progress, __) {
+              return UpdateDownloadDialog(progress: progress);
+            },
+          );
+        },
+      );
+
+      final apk = await _downloadService.downloadApk(
+        url: url,
+        version: version,
+        onProgress: (progress) {
+          if (!progressNotifier.hasListeners) {
+            return;
+          }
+
+          progressNotifier.value = progress.clamp(0.0, 1.0);
+        },
+      );
+
+      if (!mounted) return;
+
+      progressNotifier.value = 1;
+
+      if (dialogIsOpen) {
+        Navigator.of(context, rootNavigator: true).pop();
+
+        dialogIsOpen = false;
+      }
+
+      final installResult = await _downloadService.installApk(apk);
+
+      debugPrint(
+        'APK installer result: '
+        '${installResult.type} - '
+        '${installResult.message}',
+      );
+    } catch (error, stackTrace) {
+      debugPrint('Update download/install error: $error');
+
+      debugPrint('Update stack trace: $stackTrace');
+
+      if (!mounted) return;
+
+      if (dialogIsOpen) {
+        Navigator.of(context, rootNavigator: true).pop();
+
+        dialogIsOpen = false;
+      }
+
+      _showUpdateError();
+    } finally {
+      _downloadingUpdate = false;
+      progressNotifier.dispose();
+    }
+  }
+
+  void _showUpdateError() {
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          backgroundColor: AppColors.danger,
+          behavior: SnackBarBehavior.floating,
+          content: customText(
+            text: 'تعذر تحميل أو فتح التحديث. حاول مرة أخرى.',
+            fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
+            color: AppColors.textSecondary,
+            isBold: true,
+          ),
+        ),
+      );
+  }
 
   @override
   Widget build(BuildContext context) {
     final vehicleStore = VehicleSelectionStore.instance;
+
     final serviceStore = ServiceRequestStore.instance;
+
     return Directionality(
       textDirection: TextDirection.rtl,
       child: AnimatedBuilder(
@@ -79,7 +254,8 @@ class HomeScreen extends StatelessWidget {
                             location: 'مدينة نصر',
                             currentStage: RepairStage.approval,
                             vehicleName:
-                                '${selectedVehicle.card.carName} ${selectedVehicle.card.year}',
+                                '${selectedVehicle.card.carName} '
+                                '${selectedVehicle.card.year}',
                             technicianName: 'محمد أحمد',
                             expectedFinish: '3:00 م',
                             estimatedCost: 1250,
@@ -94,7 +270,8 @@ class HomeScreen extends StatelessWidget {
                                 location: 'مدينة نصر',
                                 currentStage: RepairStage.approval,
                                 vehicleName:
-                                    '${selectedVehicle.card.carName} ${selectedVehicle.card.year}',
+                                    '${selectedVehicle.card.carName} '
+                                    '${selectedVehicle.card.year}',
                                 technicianName: 'محمد أحمد',
                                 expectedFinish: '3:00 م',
                                 estimatedCost: 1250,
@@ -122,6 +299,7 @@ class HomeScreen extends StatelessWidget {
 
   void _showVehicleSwitcher(BuildContext context) {
     final store = VehicleSelectionStore.instance;
+
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.transparent,
@@ -155,24 +333,30 @@ class HomeScreen extends StatelessWidget {
                 Center(
                   child: Container(
                     width: ResponsiveSize.width(context, 10.77),
-                    height: ResponsiveSize.height(context, 0.47),
+                    height: ResponsiveSize.height(context, .47),
                     decoration: BoxDecoration(
                       color: AppColors.border,
                       borderRadius: BorderRadius.circular(AppSizes.radiusLg),
                     ),
                   ),
                 ),
+
                 SizedBox(height: ResponsiveSize.height(context, 1.8)),
+
                 customText(
                   text: 'اختار العربية',
                   fontSize: ResponsiveSize.width(context, AppSizes.fontLg),
                   color: AppColors.primary,
                   isBold: true,
                 ),
+
                 SizedBox(height: ResponsiveSize.height(context, 1)),
+
                 ...List.generate(store.vehicles.length, (index) {
                   final vehicle = store.vehicles[index];
+
                   final selected = store.selectedIndex == index;
+
                   return Padding(
                     padding: EdgeInsets.only(
                       bottom: ResponsiveSize.height(context, .8),
@@ -199,6 +383,7 @@ class HomeScreen extends StatelessWidget {
                       child: ListTile(
                         onTap: () {
                           store.selectIndex(index);
+
                           Navigator.pop(sheetContext);
                         },
                         shape: RoundedRectangleBorder(
@@ -222,7 +407,8 @@ class HomeScreen extends StatelessWidget {
                         ),
                         subtitle: customText(
                           text:
-                              '${vehicle.card.year} • ${vehicle.card.mileage} كم',
+                              '${vehicle.card.year} • '
+                              '${vehicle.card.mileage} كم',
                           fontSize: ResponsiveSize.width(
                             context,
                             AppSizes.fontSm,
@@ -230,7 +416,7 @@ class HomeScreen extends StatelessWidget {
                           color: AppColors.textMuted,
                         ),
                         trailing: selected
-                            ? Icon(
+                            ? const Icon(
                                 Icons.check_circle_rounded,
                                 color: AppColors.secondary,
                               )
@@ -246,6 +432,7 @@ class HomeScreen extends StatelessWidget {
       },
     );
   }
+
 
   Widget _buildNearbyPlacesSection(BuildContext context) {
     return BlocBuilder<NearbyPlacesCubit, NearbyPlacesState>(
@@ -267,7 +454,9 @@ class HomeScreen extends StatelessWidget {
                 );
               },
             ),
+
             SizedBox(height: ResponsiveSize.height(context, 1)),
+
             if (state is NearbyPlacesInitial)
               NearbyPlacesLoadingIndicator(
                 state: const NearbyPlacesLoading(
@@ -286,7 +475,9 @@ class HomeScreen extends StatelessWidget {
                   message: state.message,
                   onRetry: () async {
                     final cubit = context.read<NearbyPlacesCubit>();
+
                     await cubit.handleErrorAction(state);
+
                     await cubit.loadNearestWorkshops();
                   },
                 ),

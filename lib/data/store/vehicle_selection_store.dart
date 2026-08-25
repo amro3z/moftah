@@ -14,7 +14,7 @@ class VehicleSelectionStore extends ChangeNotifier {
     AppVehicleModel(
       id: 'toyota-corolla-2020',
       card: VehicleCardModel(
-        carName: 'Toyota Corolla',
+        carName: 'Toyota El Gamal',
         year: 2020,
         mileage: 100008,
         healthScore: 85,
@@ -22,12 +22,12 @@ class VehicleSelectionStore extends ChangeNotifier {
         documentStatus: DocumentStatus.verified,
         brand: 'Toyota',
         brandLogoUrl: null,
-        nextMaintenance: 1500,
+        nextMaintenance: 10000,
         lastMaintenance: '15 مارس',
         repairStatus: RepairStatus.good,
       ),
       health: const VehicleHealthCalculator().calculateDemo(
-        vehicleName: 'Toyota Corolla',
+        vehicleName: 'Toyota El Gamal',
         brand: 'Toyota',
         year: 2020,
         mileage: 100008,
@@ -115,7 +115,10 @@ class VehicleSelectionStore extends ChangeNotifier {
         (vehicle) => UserVehicleModel(
           id: vehicle.id,
           brand: vehicle.card.brand,
-          model: vehicle.card.carName.replaceFirst('${vehicle.card.brand} ', ''),
+          model: vehicle.card.carName.replaceFirst(
+            '${vehicle.card.brand} ',
+            '',
+          ),
           year: vehicle.card.year,
           imageUrl: vehicle.card.brandLogoUrl,
         ),
@@ -127,7 +130,8 @@ class VehicleSelectionStore extends ChangeNotifier {
   void selectUserVehicleById(String id) => selectById(id);
 
   void selectIndex(int index) {
-    if (index < 0 || index >= _vehicles.length || index == _selectedIndex) return;
+    if (index < 0 || index >= _vehicles.length || index == _selectedIndex)
+      return;
     _selectedIndex = index;
     notifyListeners();
   }

@@ -28,13 +28,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
           scrolledUnderElevation: 0,
           surfaceTintColor: Colors.transparent,
           shadowColor: Colors.transparent,
-          leading: IconButton(
-            onPressed: () => Navigator.pushReplacementNamed(context, '/login'),
-            icon: const Icon(
-              Icons.arrow_back_ios_new_rounded,
-              color: AppColors.primary,
+          actions: [
+            IconButton(
+              onPressed: () =>
+                  Navigator.pushReplacementNamed(context, '/login'),
+              icon: const Icon(
+                Icons.arrow_forward_ios,
+                color: AppColors.primary,
+              ),
             ),
-          ),
+          ],
+          leading: SizedBox(),
         ),
         body: Stack(
           children: [

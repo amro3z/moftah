@@ -153,7 +153,7 @@ class AuthLogo extends StatelessWidget {
           isBold: true,
         ),
         customText(
-          text: 'كل خدمات سيارتك في مكان واحد',
+          text: 'كل شيء أصبح أقرب',
           fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
           color: AppColors.textMuted,
         ),
@@ -223,9 +223,9 @@ class GoogleAuthButton extends StatelessWidget {
         border: Border.all(color: AppColors.border.withValues(alpha: .12)),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withValues(alpha: .07),
-            blurRadius: 16,
-            offset: const Offset(0, 6),
+            color: Colors.black.withValues(alpha: .22),
+            blurRadius: AppSizes.radiusSm,
+            offset: const Offset(0, -6),
           ),
         ],
       ),
