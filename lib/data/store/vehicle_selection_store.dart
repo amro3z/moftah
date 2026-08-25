@@ -14,7 +14,7 @@ class VehicleSelectionStore extends ChangeNotifier {
     AppVehicleModel(
       id: 'toyota-corolla-2020',
       card: VehicleCardModel(
-        carName: 'Toyota Corolla',
+        carName: 'Toyota El Gamal',
         year: 2020,
         mileage: 100008,
         healthScore: 85,
@@ -22,7 +22,7 @@ class VehicleSelectionStore extends ChangeNotifier {
         documentStatus: DocumentStatus.verified,
         brand: 'Toyota',
         brandLogoUrl: null,
-        nextMaintenance: 1500,
+        nextMaintenance: 1000,
         lastMaintenance: '15 مارس',
         repairStatus: RepairStatus.good,
       ),
@@ -36,8 +36,8 @@ class VehicleSelectionStore extends ChangeNotifier {
     AppVehicleModel(
       id: 'hyundai-elantra-2018',
       card: VehicleCardModel(
-        carName: 'Hyundai Elantra',
-        year: 2018,
+        carName: 'Hyundai Tuscany',
+        year: 2026,
         mileage: 124500,
         healthScore: 78,
         maintenanceStatus: MaintenanceStatus.needsService,
@@ -49,7 +49,7 @@ class VehicleSelectionStore extends ChangeNotifier {
         repairStatus: RepairStatus.pending,
       ),
       health: const VehicleHealthModel(
-        vehicleName: 'Hyundai Elantra',
+        vehicleName: 'Hyundai Tuscany',
         brand: 'Hyundai',
         brandLogoUrl: null,
         year: 2018,
@@ -115,7 +115,10 @@ class VehicleSelectionStore extends ChangeNotifier {
         (vehicle) => UserVehicleModel(
           id: vehicle.id,
           brand: vehicle.card.brand,
-          model: vehicle.card.carName.replaceFirst('${vehicle.card.brand} ', ''),
+          model: vehicle.card.carName.replaceFirst(
+            '${vehicle.card.brand} ',
+            '',
+          ),
           year: vehicle.card.year,
           imageUrl: vehicle.card.brandLogoUrl,
         ),
@@ -127,7 +130,8 @@ class VehicleSelectionStore extends ChangeNotifier {
   void selectUserVehicleById(String id) => selectById(id);
 
   void selectIndex(int index) {
-    if (index < 0 || index >= _vehicles.length || index == _selectedIndex) return;
+    if (index < 0 || index >= _vehicles.length || index == _selectedIndex)
+      return;
     _selectedIndex = index;
     notifyListeners();
   }
