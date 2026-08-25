@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moftah/data/models/current_repair_model.dart';
@@ -37,47 +39,114 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final AppUpdateDownloadService _downloadService = AppUpdateDownloadService();
 
+  Timer? _updateCheckTimer;
+
   bool _checkingForUpdate = false;
   bool _downloadingUpdate = false;
+
+  /// آخر Version ظهر للمستخدم في الـSession الحالي.
+  ///
+  /// الهدف إننا نفضل نعمل Check كل فترة،
+  /// لكن منفتحش نفس Dialog كل 10 دقائق.
+  String? _lastPromptedVersion;
+
+  /// مدة الـCheck الدوري.
+  static const Duration _updateCheckInterval = Duration(minutes: 10);
 
   @override
   void initState() {
     super.initState();
 
+    // Check أول ما الـHome تظهر.
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkForUpdate();
+    });
+
+    // Check دوري طول ما الـHome موجودة.
+    _updateCheckTimer = Timer.periodic(_updateCheckInterval, (_) {
       _checkForUpdate();
     });
   }
 
+  @override
+  void dispose() {
+    _updateCheckTimer?.cancel();
+    super.dispose();
+  }
+
+  // =========================================================
+  // UPDATE CHECK
+  // =========================================================
+
   Future<void> _checkForUpdate() async {
-    if (_checkingForUpdate || _downloadingUpdate) return;
+    // منع أكثر من Check في نفس الوقت.
+    //
+    // وكمان مفيش داعي نعمل Check أثناء تحميل Update.
+    if (_checkingForUpdate || _downloadingUpdate) {
+      return;
+    }
 
     _checkingForUpdate = true;
 
     try {
+      debugPrint('Checking for app update...');
+
       final result = await _updateRepository.checkForUpdate();
 
       if (!mounted) return;
 
       debugPrint('Current Version: ${result.currentVersion}');
+
       debugPrint('Latest Version: ${result.latestVersion}');
+
       debugPrint('Update Available: ${result.updateAvailable}');
+
       debugPrint('APK URL: ${result.apkUrl}');
+
       debugPrint('Update Error: ${result.error}');
 
+      // لو حصل Error أثناء الاتصال بـGitHub.
       if (result.error != null) {
         debugPrint('Update check failed: ${result.error}');
+
         return;
       }
 
-      if (!result.updateAvailable) return;
+      // مفيش Update.
+      if (!result.updateAvailable) {
+        _lastPromptedVersion = null;
+
+        debugPrint('Application is already up to date.');
+
+        return;
+      }
+
+      final latestVersion = result.latestVersion;
+
+      // نفس الـVersion اتعرض للمستخدم بالفعل.
+      //
+      // هنفضل نعمل Check في الخلفية،
+      // لكن مش هنزعجه بنفس الـDialog.
+      if (latestVersion != null && latestVersion == _lastPromptedVersion) {
+        debugPrint(
+          'Update $latestVersion was already '
+          'shown in this session.',
+        );
+
+        return;
+      }
 
       final apkUrl = result.apkUrl;
 
+      // Update موجود لكن مفيش APK.
       if (apkUrl == null || apkUrl.trim().isEmpty) {
         debugPrint('Update exists but APK URL is missing.');
+
         return;
       }
+
+      // نسجل الـVersion قبل عرض الـDialog.
+      _lastPromptedVersion = latestVersion;
 
       final updateNow = await showAppUpdateDialog(
         context: context,
@@ -86,24 +155,41 @@ class _HomeScreenState extends State<HomeScreen> {
 
       if (!mounted) return;
 
-      if (updateNow != true) return;
+      // المستخدم اختار لاحقًا.
+      if (updateNow != true) {
+        debugPrint(
+          'User postponed update '
+          '${latestVersion ?? ''}.',
+        );
 
+        return;
+      }
+
+      // المستخدم اختار تحديث الآن.
       await _downloadAndInstallUpdate(
         url: apkUrl,
-        version: result.latestVersion ?? 'latest',
+        version: latestVersion ?? 'latest',
       );
-    } catch (error) {
+    } catch (error, stackTrace) {
       debugPrint('Unexpected update check error: $error');
+
+      debugPrint('Update check stack trace: $stackTrace');
     } finally {
       _checkingForUpdate = false;
     }
   }
 
+  // =========================================================
+  // DOWNLOAD + INSTALL UPDATE
+  // =========================================================
+
   Future<void> _downloadAndInstallUpdate({
     required String url,
     required String version,
   }) async {
-    if (_downloadingUpdate) return;
+    if (_downloadingUpdate) {
+      return;
+    }
 
     _downloadingUpdate = true;
 
@@ -145,12 +231,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
       progressNotifier.value = 1;
 
+      // إغلاق Progress Dialog بعد اكتمال التحميل.
       if (dialogIsOpen) {
         Navigator.of(context, rootNavigator: true).pop();
 
         dialogIsOpen = false;
       }
 
+      // فتح Android Installer.
       final installResult = await _downloadService.installApk(apk);
 
       debugPrint(
@@ -174,9 +262,14 @@ class _HomeScreenState extends State<HomeScreen> {
       _showUpdateError();
     } finally {
       _downloadingUpdate = false;
+
       progressNotifier.dispose();
     }
   }
+
+  // =========================================================
+  // UPDATE ERROR
+  // =========================================================
 
   void _showUpdateError() {
     if (!mounted) return;
@@ -196,6 +289,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       );
   }
+
+  // =========================================================
+  // HOME UI
+  // =========================================================
 
   @override
   Widget build(BuildContext context) {
@@ -296,6 +393,10 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
+  // =========================================================
+  // VEHICLE SWITCHER
+  // =========================================================
 
   void _showVehicleSwitcher(BuildContext context) {
     final store = VehicleSelectionStore.instance;
@@ -433,6 +534,9 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // =========================================================
+  // NEARBY PLACES
+  // =========================================================
 
   Widget _buildNearbyPlacesSection(BuildContext context) {
     return BlocBuilder<NearbyPlacesCubit, NearbyPlacesState>(
