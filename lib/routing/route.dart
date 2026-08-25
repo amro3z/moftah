@@ -4,6 +4,8 @@ import 'package:moftah/data/models/nerbay_places_model.dart';
 import 'package:moftah/data/models/vehicle_health_model.dart';
 import 'package:moftah/data/repos/nearby_places_repository.dart';
 import 'package:moftah/data/repos/obd_repository.dart';
+import 'package:moftah/ui/register/register_screen.dart';
+import 'package:moftah/ui/auth/login_screen.dart';
 import 'package:moftah/ui/vehicle_health/cubit/obd_cubit.dart';
 import 'package:moftah/routing/map_route_arguments.dart';
 import 'package:moftah/routing/workshops_route_arguments.dart';
@@ -82,6 +84,12 @@ class AppRoute {
 
       case '/emergency':
         return _animatedRoute(const EmergencyScreen());
+      
+      case '/login':
+        return _animatedRoute(const LoginScreen());
+
+      case '/register':
+        return _animatedRoute(const RegisterScreen());
 
       case '/chat':
         final arguments = settings.arguments;
