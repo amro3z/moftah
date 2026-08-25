@@ -4,9 +4,12 @@ import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
 import 'package:moftah/ui/core/ui/custom_text.dart';
 import 'package:moftah/utils/responsive.dart';
+import 'package:moftah/ui/onboarding/role_selection_screen.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+  final AppUserRole? selectedRole;
+
+  const LoginScreen({super.key, this.selectedRole});
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +39,25 @@ class LoginScreen extends StatelessWidget {
 
                   children: [
                     const AuthLogo(),
+                    if (selectedRole != null) ...[
+                      SizedBox(height: ResponsiveSize.height(context, 1.5)),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: ResponsiveSize.width(context, 3),
+                          vertical: ResponsiveSize.height(context, .8),
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.secondary.withValues(alpha: .09),
+                          borderRadius: BorderRadius.circular(AppSizes.radiusSm),
+                        ),
+                        child: customText(
+                          text: 'تسجيل الدخول كـ ${_roleName(selectedRole!)}',
+                          fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
+                          color: AppColors.primary,
+                          isBold: true,
+                        ),
+                      ),
+                    ],
                     SizedBox(height: ResponsiveSize.height(context, 3.5)),
                     Container(
                       padding: EdgeInsets.all(ResponsiveSize.width(context, 5)),
@@ -89,7 +111,7 @@ class LoginScreen extends StatelessWidget {
                             text: 'تسجيل الدخول',
                             onPressed: () => Navigator.pushReplacementNamed(
                               context,
-                              '/home',
+                              '/onboarding',
                             ),
                           ),
                           TextButton(
@@ -180,4 +202,12 @@ class LoginScreen extends StatelessWidget {
       ),
     );
   }
+
+  String _roleName(AppUserRole role) => switch (role) {
+        AppUserRole.driver => 'سائق',
+        AppUserRole.technician => 'فني',
+        AppUserRole.workshopOwner => 'صاحب مركز صيانة',
+        AppUserRole.towOperator => 'ونش',
+      };
+
 }

@@ -6,6 +6,8 @@ import 'package:moftah/data/repos/nearby_places_repository.dart';
 import 'package:moftah/data/repos/obd_repository.dart';
 import 'package:moftah/ui/register/register_screen.dart';
 import 'package:moftah/ui/auth/login_screen.dart';
+import 'package:moftah/ui/onboarding/onboarding_screen.dart';
+import 'package:moftah/ui/onboarding/role_selection_screen.dart';
 import 'package:moftah/ui/vehicle_health/cubit/obd_cubit.dart';
 import 'package:moftah/routing/map_route_arguments.dart';
 import 'package:moftah/routing/workshops_route_arguments.dart';
@@ -85,8 +87,17 @@ class AppRoute {
       case '/emergency':
         return _animatedRoute(const EmergencyScreen());
       
+      case '/onboarding':
+        return _animatedRoute(const OnboardingScreen());
+
+      case '/role-selection':
+        return _animatedRoute(const RoleSelectionScreen());
+
       case '/login':
-        return _animatedRoute(const LoginScreen());
+        final role = settings.arguments is AppUserRole
+            ? settings.arguments as AppUserRole
+            : null;
+        return _animatedRoute(LoginScreen(selectedRole: role));
 
       case '/register':
         return _animatedRoute(const RegisterScreen());
