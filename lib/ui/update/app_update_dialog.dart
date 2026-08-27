@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:moftah/data/models/app_update_result.dart';
+import 'package:moftah/data/models/update/app_update_result.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
 import 'package:moftah/ui/core/ui/custom_text.dart';

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:moftah/data/models/overpass_dto.dart';
+import 'package:moftah/data/models/map/overpass_dto.dart';
 import 'package:moftah/ui/core/helper/map.dart';
 import 'package:moftah/utils/opening_hours_helper.dart';
 

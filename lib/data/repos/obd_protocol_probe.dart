@@ -1,4 +1,4 @@
-import 'package:moftah/data/models/obd_models.dart';
+import 'package:moftah/data/models/obd/obd_models.dart';
 
 class ObdProtocolProbe {
   final Future<String> Function(String command) sendCommand;

@@ -1,4 +1,4 @@
-  import 'package:moftah/data/models/emergency_tow_provider_model.dart';
+  import 'package:moftah/data/models/car_owner/emergency_tow_provider_model.dart';
 
 const providers = [
     EmergencyTowProviderModel(

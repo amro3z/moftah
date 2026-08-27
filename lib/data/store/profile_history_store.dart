@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:moftah/data/models/profile_history_models.dart';
-import 'package:moftah/data/models/spare_part_model.dart';
+import 'package:moftah/data/models/car_owner/profile_history_models.dart';
+import 'package:moftah/data/models/car_owner/spare_part_model.dart';
 
 class ProfileHistoryStore extends ChangeNotifier {
   ProfileHistoryStore._();

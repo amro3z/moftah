@@ -1,5 +1,5 @@
 import 'package:geolocator/geolocator.dart';
-import 'package:moftah/data/models/nerbay_places_model.dart';
+import 'package:moftah/data/models/car_owner/nerbay_places_model.dart';
 
 class NearbyPlacesCache {
   NearbyPlacesCache._();

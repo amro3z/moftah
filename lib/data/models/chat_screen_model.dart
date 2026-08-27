@@ -1,6 +1,6 @@
-import 'package:moftah/data/models/current_repair_model.dart';
-import 'package:moftah/data/models/emergency_tow_provider_model.dart';
-import 'package:moftah/data/models/profile_history_models.dart';
+import 'package:moftah/data/models/car_owner/current_repair_model.dart';
+import 'package:moftah/data/models/car_owner/emergency_tow_provider_model.dart';
+import 'package:moftah/data/models/car_owner/profile_history_models.dart';
 
 class ChatSeedMessageModel {
   final String text;
@@ -22,6 +22,9 @@ class ChatScreenModel {
   final String? phone;
   final CurrentRepairModel? repairData;
   final bool isRoadside;
+  final String? requestId;
+  final String? requestTitle;
+  final String? requestDetailsRoute;
   final List<ChatSeedMessageModel> initialMessages;
 
   const ChatScreenModel({
@@ -32,6 +35,9 @@ class ChatScreenModel {
     this.phone,
     this.repairData,
     this.isRoadside = false,
+    this.requestId,
+    this.requestTitle,
+    this.requestDetailsRoute,
     this.initialMessages = const [],
   });
 

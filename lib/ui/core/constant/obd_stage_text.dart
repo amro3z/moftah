@@ -1,4 +1,4 @@
-import 'package:moftah/ui/vehicle_health/cubit/obd_state.dart';
+import 'package:moftah/ui/car_owner/vehicle_health/cubit/obd_state.dart';
 
 String obdStageText(ObdConnectionStage stage) => switch (stage) {
       ObdConnectionStage.checkingPairedDevices =>

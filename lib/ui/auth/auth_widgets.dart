@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
 import 'package:moftah/ui/core/ui/custom_text.dart';
+import 'package:moftah/ui/core/ui/app_text_field.dart';
 import 'package:moftah/utils/responsive.dart';
 
 class AuthField extends StatelessWidget {
@@ -22,73 +23,12 @@ class AuthField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: .22),
-            blurRadius: AppSizes.radiusSm,
-            offset: const Offset(0, -6),
-          ),
-        ],
-      ),
-      child: TextFormField(
-        controller: controller,
-        textDirection: TextDirection.rtl,
-        obscureText: obscureText,
-        keyboardType: keyboardType,
-        style: TextStyle(
-          fontFamily: 'Cairo',
-          fontSize: ResponsiveSize.width(context, AppSizes.fontMd),
-          color: AppColors.primary,
-          fontWeight: FontWeight.w600,
-        ),
-        decoration: InputDecoration(
-          // labelText: label,
-          hintText: hint,
-          labelStyle: TextStyle(
-            fontFamily: 'Cairo',
-            color: AppColors.textMuted,
-            fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
-          ),
-          hintStyle: TextStyle(
-            fontFamily: 'Cairo',
-            color: AppColors.textMuted.withValues(alpha: .75),
-            fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
-          ),
-          suffixIcon: Container(
-            margin: EdgeInsets.all(ResponsiveSize.width(context, 2.2)),
-            decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: .08),
-              borderRadius: BorderRadius.circular(AppSizes.radiusSm),
-            ),
-            child: Icon(
-              icon,
-              color: AppColors.primary,
-              size: ResponsiveSize.width(context, 5),
-            ),
-          ),
-          filled: true,
-          fillColor: AppColors.textSecondary,
-          contentPadding: EdgeInsets.symmetric(
-            horizontal: ResponsiveSize.width(context, 4),
-            vertical: ResponsiveSize.height(context, 2),
-          ),
-          enabledBorder: _border(AppColors.border.withValues(alpha: .12)),
-          focusedBorder: _border(AppColors.primary, width: 1.5),
-          errorBorder: _border(AppColors.danger),
-          focusedErrorBorder: _border(AppColors.danger, width: 1.5),
-        ),
-      ),
-    );
-  }
-
-  OutlineInputBorder _border(Color color, {double width = 1}) {
-    return OutlineInputBorder(
-      borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-      borderSide: BorderSide(color: color, width: width),
+    return AppTextField(
+      controller: controller,
+      hint: hint,
+      icon: icon,
+      obscureText: obscureText,
+      keyboardType: keyboardType,
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:moftah/data/models/home_options_model.dart';
+import 'package:moftah/data/models/car_owner/home_options_model.dart';
 
 class HomeOptionsInfo {
   HomeOptionsInfo._();

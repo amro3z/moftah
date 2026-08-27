@@ -1,7 +1,7 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:moftah/data/datasources/overpass_nearby_places_data_source.dart';
-import 'package:moftah/data/models/nerbay_places_model.dart';
-import 'package:moftah/data/models/overpass_dto.dart';
+import 'package:moftah/data/models/car_owner/nerbay_places_model.dart';
+import 'package:moftah/data/models/map/overpass_dto.dart';
 import 'package:moftah/data/repos/workshop_rating_repository.dart';
 import 'package:moftah/ui/core/constant/nerbay_places.dart';
 

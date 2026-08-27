@@ -1,5 +1,5 @@
 import 'package:moftah/data/dtc/dtc_asset_database.dart';
-import 'package:moftah/data/models/dtc_info.dart';
+import 'package:moftah/data/models/obd/dtc_info.dart';
 
 class ObdDtcHelper {
   static Future<ObdDtcInfo> infoAsync(String code) async {

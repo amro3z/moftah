@@ -1,5 +1,5 @@
 import 'package:bluetooth_serial_android/bluetooth_serial_android.dart';
-import 'package:moftah/data/models/obd_models.dart';
+import 'package:moftah/data/models/obd/obd_models.dart';
 
 class Elm327BluetoothDataSource {
   static const String _sppUuid =

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:moftah/data/models/rolde_data.dart';
+import 'package:moftah/data/models/role_data.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
 import 'package:moftah/ui/core/ui/custom_text.dart';

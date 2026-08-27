@@ -1,59 +1,68 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:moftah/data/models/nerbay_places_model.dart';
-import 'package:moftah/data/models/vehicle_health_model.dart';
+import 'package:moftah/data/models/car_owner/nerbay_places_model.dart';
+import 'package:moftah/data/models/vehicle_card/vehicle_health_model.dart';
 import 'package:moftah/data/repos/nearby_places_repository.dart';
 import 'package:moftah/data/repos/obd_repository.dart';
 import 'package:moftah/ui/register/register_screen.dart';
 import 'package:moftah/ui/auth/login_screen.dart';
 import 'package:moftah/ui/onboarding/onboarding_screen.dart';
 import 'package:moftah/ui/onboarding/role_selection_screen.dart';
-import 'package:moftah/ui/vehicle_health/cubit/obd_cubit.dart';
+import 'package:moftah/ui/car_owner/vehicle_health/cubit/obd_cubit.dart';
 import 'package:moftah/routing/map_route_arguments.dart';
 import 'package:moftah/routing/workshops_route_arguments.dart';
-import 'package:moftah/ui/home/cubit/nearby_places_cubit.dart';
-import 'package:moftah/ui/home/widgets/home_screen.dart';
-import 'package:moftah/ui/map/widgets/map_screen.dart';
-import 'package:moftah/ui/workshops/widgets/workshops_screen.dart';
-import 'package:moftah/ui/vehicle_health/widgets/vehicle_health_screen.dart';
-import 'package:moftah/data/models/current_repair_model.dart';
-import 'package:moftah/ui/repair/repair_details_screen.dart';
-import 'package:moftah/ui/repair/repair_chat_screen.dart';
-import 'package:moftah/ui/repair/repair_offer_screen.dart';
-import 'package:moftah/data/models/problem_report_model.dart';
+import 'package:moftah/ui/car_owner/home/cubit/nearby_places_cubit.dart';
+import 'package:moftah/ui/car_owner/home/widgets/customer_home.dart';
+import 'package:moftah/ui/car_owner/map/widgets/map_screen.dart';
+import 'package:moftah/ui/car_owner/workshops/widgets/workshops_screen.dart';
+import 'package:moftah/ui/car_owner/vehicle_health/widgets/vehicle_health_screen.dart';
+import 'package:moftah/data/models/car_owner/current_repair_model.dart';
+import 'package:moftah/ui/car_owner/repair/repair_details_screen.dart';
+import 'package:moftah/ui/car_owner/repair/repair_chat_screen.dart';
+import 'package:moftah/ui/car_owner/repair/repair_offer_screen.dart';
+import 'package:moftah/data/models/report/problem_report_model.dart';
 import 'package:moftah/routing/report_workshops_route_arguments.dart';
-import 'package:moftah/ui/report_problem/report_problem_flow_screen.dart';
-import 'package:moftah/ui/report_problem/problem_analysis_screen.dart';
-import 'package:moftah/ui/report_problem/report_workshops_screen.dart';
-import 'package:moftah/ui/report_problem/received_offers_screen.dart';
-import 'package:moftah/ui/report_problem/report_technicians_screen.dart';
-import 'package:moftah/ui/report_problem/offer_details_screen.dart';
-import 'package:moftah/data/models/service_offer_model.dart';
+import 'package:moftah/ui/car_owner/report_problem/report_problem_flow_screen.dart';
+import 'package:moftah/ui/car_owner/report_problem/problem_analysis_screen.dart';
+import 'package:moftah/ui/car_owner/report_problem/report_workshops_screen.dart';
+import 'package:moftah/ui/car_owner/report_problem/received_offers_screen.dart';
+import 'package:moftah/ui/car_owner/report_problem/report_technicians_screen.dart';
+import 'package:moftah/ui/car_owner/report_problem/offer_details_screen.dart';
+import 'package:moftah/data/models/car_owner/service_offer_model.dart';
 import 'package:moftah/ui/notifications/notifications_screen.dart';
-import 'package:moftah/ui/spare_parts/cubit/spare_parts_cubit.dart';
-import 'package:moftah/ui/spare_parts/spare_parts_screen.dart';
-import 'package:moftah/ui/spare_parts/spare_part_details_screen.dart';
-import 'package:moftah/ui/spare_parts/spare_parts_cart_screen.dart';
-import 'package:moftah/ui/spare_parts/spare_parts_favorites_screen.dart';
+import 'package:moftah/ui/car_owner/spare_parts/cubit/spare_parts_cubit.dart';
+import 'package:moftah/ui/car_owner/spare_parts/spare_parts_screen.dart';
+import 'package:moftah/ui/car_owner/spare_parts/spare_part_details_screen.dart';
+import 'package:moftah/ui/car_owner/spare_parts/spare_parts_cart_screen.dart';
+import 'package:moftah/ui/car_owner/spare_parts/spare_parts_favorites_screen.dart';
 import 'package:moftah/data/models/chat_screen_model.dart';
-import 'package:moftah/ui/emergency/emergency_screen.dart';
-import 'package:moftah/data/models/profile_history_models.dart';
-import 'package:moftah/ui/profile/profile_screen.dart';
-import 'package:moftah/ui/profile/spare_part_orders_screen.dart';
-import 'package:moftah/ui/profile/spare_part_order_details_screen.dart';
-import 'package:moftah/ui/profile/worker_requests_screen.dart';
-import 'package:moftah/ui/profile/worker_request_details_screen.dart';
-import 'package:moftah/ui/profile/chat_history_screen.dart';
+import 'package:moftah/ui/car_owner/emergency/emergency_screen.dart';
+import 'package:moftah/data/models/car_owner/profile_history_models.dart';
+import 'package:moftah/ui/car_owner/profile/profile_screen.dart';
+import 'package:moftah/ui/car_owner/profile/spare_part_orders_screen.dart';
+import 'package:moftah/ui/car_owner/profile/spare_part_order_details_screen.dart';
+import 'package:moftah/ui/car_owner/profile/worker_requests_screen.dart';
+import 'package:moftah/ui/car_owner/profile/worker_request_details_screen.dart';
+import 'package:moftah/ui/car_owner/profile/chat_history_screen.dart';
+import 'package:moftah/ui/technician/home/technician_home.dart';
+import 'package:moftah/data/models/technician/technician_models.dart';
+import 'package:moftah/data/store/technician_store.dart';
+import 'package:moftah/ui/technician/requests/technician_requests_screen.dart';
+import 'package:moftah/ui/technician/requests/technician_request_details_screen.dart';
+import 'package:moftah/ui/technician/requests/send_offer_screen.dart';
+import 'package:moftah/ui/technician/works/technician_works_screen.dart';
+import 'package:moftah/ui/technician/chats/technician_chats_screen.dart';
+import 'package:moftah/ui/technician/profile/technician_profile_screen.dart';
 
 class AppRoute {
   final SparePartsCubit _sparePartsCubit = SparePartsCubit();
 
   Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case '/home':
+      case '/customer_home':
         return _animatedRoute(BlocProvider(
             create: (_) => _createNearbyPlacesCubit()..loadNearestWorkshops(),
-            child: const HomeScreen(),
+            child: const CustomerHomeScreen(),
           ));
 
       case '/nearby-workshops':
@@ -81,9 +90,29 @@ class AppRoute {
               userLongitude: workshopArguments?.userLongitude,
             ),
           ));
-
-
-
+      case '/technician_home':
+        return _animatedRoute(const TechnicianHome());
+      case '/technician/requests':
+        return _animatedRoute(const TechnicianRequestsScreen());
+      case '/technician/request-details':
+        final arg = settings.arguments;
+        TechnicianRequestModel? request;
+        if (arg is TechnicianRequestModel) request = arg;
+        if (arg is String) {
+          try { request = TechnicianStore.instance.byId(arg); } catch (_) {}
+        }
+        if (request == null) return _animatedRoute(const Scaffold(body: Center(child: Text('Request data is required'))));
+        return _animatedRoute(TechnicianRequestDetailsScreen(request: request));
+      case '/technician/send-offer':
+        final arg = settings.arguments;
+        if (arg is! TechnicianRequestModel) return _animatedRoute(const Scaffold(body: Center(child: Text('Request data is required'))));
+        return _animatedRoute(SendOfferScreen(request: arg));
+      case '/technician/works':
+        return _animatedRoute(const TechnicianWorksScreen());
+      case '/technician/chats':
+        return _animatedRoute(const TechnicianChatsScreen());
+      case '/technician/profile':
+        return _animatedRoute(const TechnicianProfileScreen());
       case '/emergency':
         return _animatedRoute(const EmergencyScreen());
       

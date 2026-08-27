@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:moftah/data/models/route_path_model.dart';
+import 'package:moftah/data/models/map/route_path_model.dart';
 import 'package:moftah/ui/core/helper/map.dart';
 
 class OsrmRoutingDataSource {

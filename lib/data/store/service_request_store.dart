@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:moftah/data/models/problem_report_model.dart';
-import 'package:moftah/data/models/service_offer_model.dart';
+import 'package:moftah/data/models/report/problem_report_model.dart';
+import 'package:moftah/data/models/car_owner/service_offer_model.dart';
 
 class ServiceRequestStore extends ChangeNotifier {
   ServiceRequestStore._();

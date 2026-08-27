@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:moftah/data/models/github_release_info.dart';
+import 'package:moftah/data/models/update/github_release_info.dart';
 
 class GitHubUpdateService {
   static const String _owner = 'amro3z';

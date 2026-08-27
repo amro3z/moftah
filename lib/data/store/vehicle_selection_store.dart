@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
-import 'package:moftah/data/models/app_vehicle_model.dart';
-import 'package:moftah/data/models/vehicle_card.dart';
-import 'package:moftah/data/models/vehicle_health_model.dart';
-import 'package:moftah/data/models/user_vehicle_model.dart';
+import 'package:moftah/data/models/update/app_vehicle_model.dart';
+import 'package:moftah/data/models/vehicle_card/vehicle_card.dart';
+import 'package:moftah/data/models/vehicle_card/vehicle_health_model.dart';
+import 'package:moftah/data/models/vehicle_card/user_vehicle_model.dart';
 import 'package:moftah/domain/vehicle_health/vehicle_health_calculator.dart';
 
 class VehicleSelectionStore extends ChangeNotifier {
@@ -130,8 +130,9 @@ class VehicleSelectionStore extends ChangeNotifier {
   void selectUserVehicleById(String id) => selectById(id);
 
   void selectIndex(int index) {
-    if (index < 0 || index >= _vehicles.length || index == _selectedIndex)
+    if (index < 0 || index >= _vehicles.length || index == _selectedIndex) {
       return;
+    }
     _selectedIndex = index;
     notifyListeners();
   }

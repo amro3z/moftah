@@ -1,4 +1,4 @@
-import 'package:moftah/data/models/problem_report_model.dart';
+import 'package:moftah/data/models/report/problem_report_model.dart';
 
 class ReportWorkshopsRouteArguments {
   final ProblemReportModel report;

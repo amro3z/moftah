@@ -1,4 +1,4 @@
-import 'package:moftah/data/models/vehicle_health_model.dart';
+import 'package:moftah/data/models/vehicle_card/vehicle_health_model.dart';
 
 class VehicleHealthCalculator {
   const VehicleHealthCalculator();

@@ -24,10 +24,26 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
 
   void _continue() {
     if (selectedRole == null) return;
-
+    String path = '';
+    switch (selectedRole) {
+      case AppUserRole.driver :
+        path = '/customer_home';
+        break;
+      case AppUserRole.technician:
+        path = '/technician_home';
+        break;
+      case AppUserRole.workshopOwner:
+        path = '/workshop_owner_home';
+        break;
+      case AppUserRole.towOperator:
+        path = '/tow_operator_home';
+        break;
+      default:
+        break;
+    }
     Navigator.pushNamedAndRemoveUntil(
       context,
-      '/home',
+      path,
       (route) => false,
       arguments: selectedRole,
     );

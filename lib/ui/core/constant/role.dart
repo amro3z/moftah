@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:moftah/data/models/rolde_data.dart';
+import 'package:moftah/data/models/role_data.dart';
 import 'package:moftah/ui/onboarding/role_selection_screen.dart';
 
 const roles = [
