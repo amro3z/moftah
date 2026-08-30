@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:moftah/data/store/custom_list.dart';
 import 'package:moftah/ui/auth/auth_widgets.dart';
+import 'package:moftah/ui/core/helper/custom_list.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
 import 'package:moftah/ui/core/ui/custom_text.dart';
+import 'package:moftah/ui/technician/register/widgets/questions_list.dart';
 import 'package:moftah/utils/responsive.dart';
 
-class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+class TechnicianRegisterScreen extends StatefulWidget {
+  const TechnicianRegisterScreen({super.key});
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  State<TechnicianRegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _RegisterScreenState extends State<TechnicianRegisterScreen> {
   bool accepted = false;
   String? selectedGovernorate;
-
+  String? selectedCategory;
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -31,7 +34,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           actions: [
             IconButton(
               onPressed: () =>
-                  Navigator.pushReplacementNamed(context, '/login'),
+                  Navigator.pushReplacementNamed(context, '/role-selection'),
               icon: const Icon(
                 Icons.arrow_forward_ios,
                 color: AppColors.primary,
@@ -152,10 +155,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       keyboardType: TextInputType.emailAddress,
                     ),
                     _gap(context),
-                    EgyptGovernorateField(
+                    CustomListField(
+                      icon: Icons.location_on_rounded,
+                      theme: 'المحافظة',
+                      list: CustomListStore.governorates,
                       value: selectedGovernorate,
                       onChanged: (value) {
                         setState(() => selectedGovernorate = value);
+                      },
+                    ),
+                    _gap(context),
+                    CustomListField(
+                      icon: Icons.build_rounded,
+                      theme: 'التخصص',
+                      list: CustomListStore.technicianCategories,
+                      value: selectedCategory,
+                      onChanged: (value) {
+                        setState(() => selectedCategory = value);
+                      },
+                    ),
+                    _gap(context),
+                     Questions(
+                      accepted: accepted ,
+                      onChanged: (value) {
+                          if (value == null) return;
+                        setState(() => accepted = value);
                       },
                     ),
                     _gap(context),

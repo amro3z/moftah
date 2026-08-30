@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:moftah/data/models/onboarding_page_data.dart';
 import 'package:moftah/ui/core/constant/onboarding_pages.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';

@@ -4,7 +4,7 @@ import 'package:moftah/data/models/car_owner/nerbay_places_model.dart';
 import 'package:moftah/data/models/vehicle_card/vehicle_health_model.dart';
 import 'package:moftah/data/repos/nearby_places_repository.dart';
 import 'package:moftah/data/repos/obd_repository.dart';
-import 'package:moftah/ui/register/register_screen.dart';
+import 'package:moftah/ui/technician/register/register_screen.dart';
 import 'package:moftah/ui/auth/login_screen.dart';
 import 'package:moftah/ui/onboarding/onboarding_screen.dart';
 import 'package:moftah/ui/onboarding/role_selection_screen.dart';
@@ -123,13 +123,10 @@ class AppRoute {
         return _animatedRoute(const RoleSelectionScreen());
 
       case '/login':
-        final role = settings.arguments is AppUserRole
-            ? settings.arguments as AppUserRole
-            : null;
-        return _animatedRoute(LoginScreen(selectedRole: role));
+        return _animatedRoute(LoginScreen());
 
-      case '/register':
-        return _animatedRoute(const RegisterScreen());
+      case '/technician/register':
+        return _animatedRoute(const TechnicianRegisterScreen());
 
       case '/chat':
         final arguments = settings.arguments;
