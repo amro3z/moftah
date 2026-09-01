@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:moftah/ui/auth/auth_widgets.dart';
+import 'package:moftah/ui/core/helper/text_filed_validator.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
 import 'package:moftah/ui/core/ui/custom_text.dart';
+import 'package:moftah/ui/technician/register/widgets/register_widgets.dart';
 import 'package:moftah/utils/responsive.dart';
-import 'package:moftah/ui/onboarding/role_selection_screen.dart';
 
-class LoginScreen extends StatelessWidget {
-
-
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  String email = "";
+  List<String> emailErrors = [];
+  String password = "";
+  bool obscureText = true;
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -77,16 +85,50 @@ class LoginScreen extends StatelessWidget {
                             textAlign: TextAlign.center,
                           ),
                           SizedBox(height: ResponsiveSize.height(context, 3)),
-                          const AuthField(
-                            hint: 'أدخل البريد أو رقم الهاتف',
+                          AuthField(
+                            hint: 'أدخل البريد الإلكتروني',
                             icon: Icons.person_outline_rounded,
+                            validator: TextFiledValidator.emailValidator,
+                            onChanged: (value) {
+                              setState(() {
+                                email = value;
+                                emailErrors = TextFiledValidator.emailErrors(
+                                  email,
+                                );
+                              });
+                            },
                           ),
+                          SizedBox(height: ResponsiveSize.height(context, 1)),
+                          for (var error in emailErrors) ...[
+                            errorText(text: error, context: context),
+                            SizedBox(height: ResponsiveSize.height(context, 1)),
+                          ],
                           SizedBox(height: ResponsiveSize.height(context, 1.6)),
-                          const AuthField(
+                          AuthField(
                             hint: 'أدخل كلمة المرور',
                             icon: Icons.lock_outline_rounded,
-                            obscureText: true,
+                            obscureText: obscureText,
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                obscureText
+                                    ? Icons.visibility_off_outlined
+                                    : Icons.visibility_outlined,
+                                color: AppColors.textMuted,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  obscureText = !obscureText;
+                                });
+                              },
+                            ),
+                            validator: TextFiledValidator.passwordValidator,
+                            onChanged: (value) {
+                              setState(() {
+                                password = value;
+                              });
+                            },
                           ),
+
                           SizedBox(height: ResponsiveSize.height(context, 2.4)),
                           AuthPrimaryButton(
                             text: 'تسجيل الدخول',
@@ -183,5 +225,4 @@ class LoginScreen extends StatelessWidget {
       ),
     );
   }
-
 }

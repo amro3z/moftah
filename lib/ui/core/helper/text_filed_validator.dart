@@ -63,7 +63,7 @@ class TextFiledValidator {
 
     if (value.startsWith(' ') || value.endsWith(' ')) {
       errors.add('يجب ألا يبدأ أو ينتهي الاسم بمسافة');
-    } 
+    }
 
     return errors;
   }
@@ -83,6 +83,10 @@ class TextFiledValidator {
     if (value == null || value.trim().isEmpty) {
       errors.add('يجب إدخال البريد الإلكتروني');
       return errors;
+    }
+
+    if (RegExp(r'\s').hasMatch(value)) {
+      errors.add('يجب ألا تحتوي كلمة المرور على مسافات');
     }
 
     if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
@@ -107,6 +111,10 @@ class TextFiledValidator {
     if (value == null || value.trim().isEmpty) {
       errors.add('يجب إدخال رقم الهاتف');
       return errors;
+    }
+
+    if (RegExp(r'\s').hasMatch(value)) {
+      errors.add('يجب ألا تحتوي كلمة المرور على مسافات');
     }
 
     if (!RegExp(r'^\d{11}$').hasMatch(value)) {
