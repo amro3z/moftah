@@ -6,10 +6,8 @@ import 'package:moftah/ui/technician/register/widgets/questions_card.dart';
 import 'package:moftah/utils/responsive.dart';
 
 class Questions extends StatefulWidget {
-  const Questions({super.key, required this.accepted, required this.onChanged});
+  const Questions({super.key});
 
-  final bool accepted;
-  final Function(bool?) onChanged;
 
   @override
   State<Questions> createState() => _QuestionsState();

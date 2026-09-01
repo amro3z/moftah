@@ -129,6 +129,7 @@ class _QuestionsCardState extends State<QuestionsCard> {
           borderRadius: BorderRadius.circular(100),
           child: LinearProgressIndicator(
             value: progress,
+            borderRadius: BorderRadius.circular(AppSizes.radiusMd),
             minHeight: ResponsiveSize.height(context, .65),
             backgroundColor: AppColors.surfaceLight,
             valueColor: const AlwaysStoppedAnimation<Color>(
@@ -251,7 +252,6 @@ class _QuestionsCardState extends State<QuestionsCard> {
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeOutCubic,
 
-        // صغرنا الكارد هنا
         width: ResponsiveSize.width(context, 27),
         height: ResponsiveSize.height(context, 12),
 

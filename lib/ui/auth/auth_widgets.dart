@@ -11,7 +11,9 @@ class AuthField extends StatelessWidget {
   final bool obscureText;
   final TextInputType? keyboardType;
   final TextEditingController? controller;
-
+  final FocusNode? focusNode;
+  final Function(String)? onChanged;
+  final String? Function(String?)? validator;
   const AuthField({
     super.key,
     required this.hint,
@@ -19,6 +21,9 @@ class AuthField extends StatelessWidget {
     this.obscureText = false,
     this.keyboardType,
     this.controller,
+    this.focusNode,
+    this.onChanged,
+    this.validator,
   });
 
   @override
@@ -27,6 +32,9 @@ class AuthField extends StatelessWidget {
       controller: controller,
       hint: hint,
       icon: icon,
+      focusNode: focusNode,
+      onChanged: onChanged,
+      validator: validator,
       obscureText: obscureText,
       keyboardType: keyboardType,
     );
@@ -211,5 +219,3 @@ class GoogleAuthButton extends StatelessWidget {
     );
   }
 }
-
-

@@ -18,7 +18,7 @@ class AppTextField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final VoidCallback? onTap;
   final String? Function(String?)? validator;
-
+final FocusNode? focusNode;
   const AppTextField({
     super.key,
     this.controller,
@@ -34,6 +34,7 @@ class AppTextField extends StatelessWidget {
     this.onChanged,
     this.onTap,
     this.validator,
+    this.focusNode,
   });
 
   @override
@@ -51,6 +52,7 @@ class AppTextField extends StatelessWidget {
           SizedBox(height: ResponsiveSize.height(context, .65)),
         ],
         TextFormField(
+          focusNode: focusNode,
           controller: controller,
           obscureText: obscureText,
           readOnly: readOnly,
