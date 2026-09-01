@@ -1,15 +1,13 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:moftah/data/store/custom_list.dart';
 import 'package:moftah/ui/auth/auth_widgets.dart';
 import 'package:moftah/ui/core/helper/custom_list.dart';
 import 'package:moftah/ui/core/helper/text_filed_validator.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
-import 'package:moftah/ui/core/themes/sizes.dart';
-import 'package:moftah/ui/core/ui/custom_text.dart';
 import 'package:moftah/ui/technician/register/widgets/pass_instructions.dart';
 import 'package:moftah/ui/technician/register/widgets/questions_list.dart';
+import 'package:moftah/ui/technician/register/widgets/register_widgets.dart';
 import 'package:moftah/utils/responsive.dart';
 
 class TechnicianRegisterScreen extends StatefulWidget {
@@ -24,9 +22,14 @@ class _RegisterScreenState extends State<TechnicianRegisterScreen> {
   String? selectedCategory;
 
   final FocusNode passwordFocusNode = FocusNode();
+  bool obscurePassword = true;
+  bool obscureConfirmPassword = true;
 
   String password = '';
   String confirmPassword = '';
+  String name = '';
+  String phone = '';
+  String email = '';
 
   bool showPassInstructions = false;
 
@@ -37,6 +40,9 @@ class _RegisterScreenState extends State<TechnicianRegisterScreen> {
   bool? hasNumber;
 
   List<String> passErrors = [];
+  List<String> nameErrors = [];
+  List<String> phoneErrors = [];
+  List<String> emailErrors = [];
 
   bool get isPasswordValid {
     return password.isNotEmpty && passErrors.isEmpty;
@@ -65,7 +71,7 @@ class _RegisterScreenState extends State<TechnicianRegisterScreen> {
     super.dispose();
   }
 
-  void _onPasswordChanged(String value) {
+  void onPasswordChanged(String value) {
     setState(() {
       password = value;
 
@@ -158,100 +164,64 @@ class _RegisterScreenState extends State<TechnicianRegisterScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Container(
-                      padding: EdgeInsets.all(
-                        ResponsiveSize.width(context, 4.5),
-                      ),
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          begin: Alignment.topRight,
-                          end: Alignment.bottomLeft,
-                          colors: [AppColors.primary, AppColors.surfaceDark],
-                        ),
-                        borderRadius: BorderRadius.circular(AppSizes.radiusLg),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.primary.withValues(alpha: .22),
-                            blurRadius: 24,
-                            offset: const Offset(0, 10),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: ResponsiveSize.width(context, 16),
-                            height: ResponsiveSize.width(context, 16),
-                            decoration: BoxDecoration(
-                              color: AppColors.textSecondary.withValues(
-                                alpha: .12,
-                              ),
-                              borderRadius: BorderRadius.circular(
-                                AppSizes.radiusMd,
-                              ),
-                            ),
-                            child: Icon(
-                              Icons.person_add_alt_1_rounded,
-                              color: AppColors.textSecondary,
-                              size: ResponsiveSize.width(context, 8),
-                            ),
-                          ),
 
-                          SizedBox(width: ResponsiveSize.width(context, 4)),
-
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                customText(
-                                  text: 'أنشئ حسابك',
-                                  fontSize: ResponsiveSize.width(
-                                    context,
-                                    AppSizes.fontXxl,
-                                  ),
-                                  color: AppColors.textSecondary,
-                                  isBold: true,
-                                ),
-                                customText(
-                                  text: 'ابدأ رحلتك مع خدمات مفتاح',
-                                  fontSize: ResponsiveSize.width(
-                                    context,
-                                    AppSizes.fontSm,
-                                  ),
-                                  color: AppColors.textSecondary.withValues(
-                                    alpha: .75,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    header(context: context),
 
                     SizedBox(height: ResponsiveSize.height(context, 2.5)),
 
-                    const AuthField(
+                    AuthField(
                       hint: 'أدخل اسمك الكامل',
                       icon: Icons.person_outline_rounded,
+                      validator: TextFiledValidator.nameValidator,
+                      onChanged: (value) {
+                        setState(() {
+                          name = value;
+                          nameErrors = TextFiledValidator.nameErrors(value);
+                        });
+                      },
                     ),
-
                     _gap(context),
 
-                    const AuthField(
+                    for (var error in nameErrors) ...[
+                      errorText(text: error, context: context),
+                      SizedBox(height: ResponsiveSize.height(context, 1)),
+                    ],
+
+                    AuthField(
                       hint: 'أدخل رقم الهاتف',
                       icon: Icons.phone_outlined,
                       keyboardType: TextInputType.phone,
+                      validator: TextFiledValidator.phoneValidator,
+                      onChanged: (value) {
+                        setState(() {
+                          phone = value;
+                          phoneErrors = TextFiledValidator.phoneErrors(value);
+                        });
+                      },
                     ),
 
+                    for (var error in phoneErrors) ...[
+                      errorText(text: error, context: context),
+                      SizedBox(height: ResponsiveSize.height(context, 1)),
+                    ],
                     _gap(context),
 
-                    const AuthField(
+                    AuthField(
                       hint: 'أدخل البريد الإلكتروني',
                       icon: Icons.mail_outline_rounded,
                       keyboardType: TextInputType.emailAddress,
+                      validator: TextFiledValidator.emailValidator,
+                      onChanged: (value) {
+                        setState(() {
+                          email = value;
+                          emailErrors = TextFiledValidator.emailErrors(value);
+                        });
+                      },
                     ),
-
+                    for (var error in emailErrors) ...[
+                      errorText(text: error, context: context),
+                      SizedBox(height: ResponsiveSize.height(context, 1)),
+                    ],
                     _gap(context),
 
                     CustomListField(
@@ -289,10 +259,23 @@ class _RegisterScreenState extends State<TechnicianRegisterScreen> {
                     AuthField(
                       hint: 'أدخل كلمة مرور قوية',
                       icon: Icons.lock_outline_rounded,
-                      obscureText: true,
+                      obscureText: obscurePassword,
                       focusNode: passwordFocusNode,
                       validator: TextFiledValidator.passwordValidator,
-                      onChanged: _onPasswordChanged,
+                      onChanged: onPasswordChanged,
+                      suffixIcon: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            obscurePassword = !obscurePassword;
+                          });
+                        },
+                        child: Icon(
+                          obscurePassword
+                              ? Icons.visibility_outlined
+                              : Icons.visibility_off_outlined,
+                          color: AppColors.textMuted,
+                        ),
+                      ),
                     ),
 
                     _gap(context),
@@ -315,7 +298,21 @@ class _RegisterScreenState extends State<TechnicianRegisterScreen> {
                         child: AuthField(
                           hint: 'أعد إدخال كلمة المرور',
                           icon: Icons.verified_user_outlined,
-                          obscureText: true,
+                          obscureText: obscureConfirmPassword,
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                obscureConfirmPassword =
+                                    !obscureConfirmPassword;
+                              });
+                            },
+                            child: Icon(
+                              obscurePassword
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined,
+                              color: AppColors.textMuted,
+                            ),
+                          ),
                           onChanged: (value) {
                             setState(() {
                               confirmPassword = value;
@@ -329,18 +326,9 @@ class _RegisterScreenState extends State<TechnicianRegisterScreen> {
 
                     if (confirmPassword.isNotEmpty &&
                         confirmPassword != password) ...[
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: ResponsiveSize.width(context, 2),
-                        ),
-                        child: customText(
-                          text: 'كلمتا المرور غير متطابقتين',
-                          fontSize: ResponsiveSize.width(
-                            context,
-                            AppSizes.fontSm,
-                          ),
-                          color: AppColors.danger,
-                        ),
+                      errorText(
+                        text: 'كلمتا المرور غير متطابقتين',
+                        context: context,
                       ),
                       SizedBox(height: ResponsiveSize.height(context, 1)),
                     ],
@@ -354,33 +342,7 @@ class _RegisterScreenState extends State<TechnicianRegisterScreen> {
 
                     SizedBox(height: ResponsiveSize.height(context, 2)),
 
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Divider(
-                            color: AppColors.border.withValues(alpha: .15),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: ResponsiveSize.width(context, 3),
-                          ),
-                          child: customText(
-                            text: 'أو',
-                            fontSize: ResponsiveSize.width(
-                              context,
-                              AppSizes.fontSm,
-                            ),
-                            color: AppColors.textMuted,
-                          ),
-                        ),
-                        Expanded(
-                          child: Divider(
-                            color: AppColors.border.withValues(alpha: .15),
-                          ),
-                        ),
-                      ],
-                    ),
+                    orDivider(context: context),
 
                     SizedBox(height: ResponsiveSize.height(context, 1.5)),
 
@@ -388,33 +350,7 @@ class _RegisterScreenState extends State<TechnicianRegisterScreen> {
 
                     SizedBox(height: ResponsiveSize.height(context, 1.5)),
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        customText(
-                          text: 'لديك حساب بالفعل؟',
-                          fontSize: ResponsiveSize.width(
-                            context,
-                            AppSizes.fontSm,
-                          ),
-                          color: AppColors.primary,
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pushReplacementNamed(context, '/login');
-                          },
-                          child: customText(
-                            text: 'تسجيل الدخول',
-                            fontSize: ResponsiveSize.width(
-                              context,
-                              AppSizes.fontSm,
-                            ),
-                            color: AppColors.secondary,
-                            isBold: true,
-                          ),
-                        ),
-                      ],
-                    ),
+                    alreadyHaveAnAccount(context: context),
                   ],
                 ),
               ),

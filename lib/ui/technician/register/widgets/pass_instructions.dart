@@ -36,9 +36,6 @@ class PassInstructions extends StatelessWidget {
         hasNoSpace == true;
   }
 
-  bool get _hasAnyError {
-    return !_isNotStarted && !_isAllValid;
-  }
 
   @override
   Widget build(BuildContext context) {

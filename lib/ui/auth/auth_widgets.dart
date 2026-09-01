@@ -14,6 +14,7 @@ class AuthField extends StatelessWidget {
   final FocusNode? focusNode;
   final Function(String)? onChanged;
   final String? Function(String?)? validator;
+  final Widget? suffixIcon;
   const AuthField({
     super.key,
     required this.hint,
@@ -24,6 +25,7 @@ class AuthField extends StatelessWidget {
     this.focusNode,
     this.onChanged,
     this.validator,
+    this.suffixIcon,
   });
 
   @override
@@ -36,6 +38,7 @@ class AuthField extends StatelessWidget {
       onChanged: onChanged,
       validator: validator,
       obscureText: obscureText,
+      suffixIcon: suffixIcon,
       keyboardType: keyboardType,
     );
   }

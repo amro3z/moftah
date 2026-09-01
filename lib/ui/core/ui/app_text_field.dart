@@ -18,7 +18,8 @@ class AppTextField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final VoidCallback? onTap;
   final String? Function(String?)? validator;
-final FocusNode? focusNode;
+  final Widget? suffixIcon;
+  final FocusNode? focusNode;
   const AppTextField({
     super.key,
     this.controller,
@@ -35,6 +36,7 @@ final FocusNode? focusNode;
     this.onTap,
     this.validator,
     this.focusNode,
+    this.suffixIcon,
   });
 
   @override
@@ -72,6 +74,7 @@ final FocusNode? focusNode;
           decoration: InputDecoration(
             hintText: hint,
             suffixText: suffixText,
+            suffixIcon: suffixIcon,
             suffixStyle: TextStyle(
               fontFamily: 'Cairo',
               fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
@@ -85,9 +88,7 @@ final FocusNode? focusNode;
             prefixIcon: icon == null
                 ? null
                 : Padding(
-                    padding: EdgeInsets.all(
-                      ResponsiveSize.width(context, 2.1),
-                    ),
+                    padding: EdgeInsets.all(ResponsiveSize.width(context, 2.1)),
                     child: Container(
                       decoration: BoxDecoration(
                         color: AppColors.secondary.withValues(alpha: .08),
@@ -106,9 +107,7 @@ final FocusNode? focusNode;
               horizontal: ResponsiveSize.width(context, 4),
               vertical: ResponsiveSize.height(context, 1.65),
             ),
-            enabledBorder: _border(
-              AppColors.border.withValues(alpha: .12),
-            ),
+            enabledBorder: _border(AppColors.border.withValues(alpha: .12)),
             focusedBorder: _border(AppColors.secondary, width: 1.4),
             errorBorder: _border(AppColors.danger),
             focusedErrorBorder: _border(AppColors.danger, width: 1.4),
