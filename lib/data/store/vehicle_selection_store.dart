@@ -16,7 +16,7 @@ class VehicleSelectionStore extends ChangeNotifier {
       card: VehicleCardModel(
         carName: 'Toyota El Gamal',
         year: 2020,
-        mileage: 100008,
+        kilo: 100008,
         healthScore: 85,
         maintenanceStatus: MaintenanceStatus.good,
         brand: 'Toyota',
@@ -35,7 +35,7 @@ class VehicleSelectionStore extends ChangeNotifier {
       card: VehicleCardModel(
         carName: 'Hyundai Tuscany',
         year: 2026,
-        mileage: 124500,
+        kilo: 124500,
         healthScore: 78,
         maintenanceStatus: MaintenanceStatus.needsService,
         brand: 'Hyundai',

@@ -43,7 +43,6 @@ class SparePartDetailsScreen extends StatelessWidget {
           child: Scaffold(
             backgroundColor: AppColors.background,
             appBar: const SparePartsAppBar(
-   
               title: 'تفاصيل القطعة',
               showBack: true,
             ),

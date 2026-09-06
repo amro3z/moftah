@@ -4,8 +4,5 @@ class ProblemAttachmentModel {
   final String path;
   final ProblemAttachmentType type;
 
-  const ProblemAttachmentModel({
-    required this.path,
-    required this.type,
-  });
+  const ProblemAttachmentModel({required this.path, required this.type});
 }

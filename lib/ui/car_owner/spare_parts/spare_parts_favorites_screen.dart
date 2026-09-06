@@ -49,25 +49,36 @@ class SparePartsFavoritesScreen extends StatelessWidget {
                       SizedBox(height: ResponsiveSize.height(context, 1.78)),
                       customText(
                         text: 'مفيش قطع في المفضلة',
-                        fontSize: ResponsiveSize.width(context, AppSizes.fontXxl),
+                        fontSize: ResponsiveSize.width(
+                          context,
+                          AppSizes.fontXxl,
+                        ),
                         isBold: true,
                         color: AppColors.primary,
                       ),
                       SizedBox(height: ResponsiveSize.height(context, 0.59)),
                       customText(
                         text: 'اضغط على علامة القلب لحفظ القطعة هنا',
-                        fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
+                        fontSize: ResponsiveSize.width(
+                          context,
+                          AppSizes.fontSm,
+                        ),
                         color: AppColors.textMuted,
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(height: ResponsiveSize.height(context, 2.01)),
                       FilledButton.icon(
                         onPressed: () => Navigator.pop(context),
-                        style: FilledButton.styleFrom(backgroundColor: AppColors.secondary),
+                        style: FilledButton.styleFrom(
+                          backgroundColor: AppColors.secondary,
+                        ),
                         icon: Icon(Icons.storefront_rounded),
                         label: customText(
                           text: 'تصفح قطع الغيار',
-                          fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
+                          fontSize: ResponsiveSize.width(
+                            context,
+                            AppSizes.fontSm,
+                          ),
                           isBold: true,
                           color: Colors.white,
                         ),
@@ -79,7 +90,12 @@ class SparePartsFavoritesScreen extends StatelessWidget {
             }
 
             return ListView.builder(
-              padding: EdgeInsets.fromLTRB(ResponsiveSize.width(context, 3.08), ResponsiveSize.height(context, 1.66), ResponsiveSize.width(context, 3.08), ResponsiveSize.height(context, 2.84)),
+              padding: EdgeInsets.fromLTRB(
+                ResponsiveSize.width(context, 3.08),
+                ResponsiveSize.height(context, 1.66),
+                ResponsiveSize.width(context, 3.08),
+                ResponsiveSize.height(context, 2.84),
+              ),
               itemCount: products.length,
               itemBuilder: (_, index) => SparePartCard(part: products[index]),
             );

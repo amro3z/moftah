@@ -69,7 +69,9 @@ class SparePartsState {
     if (vehicle == null) return product.compatibleWithSelectedVehicle;
     final name = '${vehicle.brand} ${vehicle.model}'.trim().toLowerCase();
     return product.compatibility.any(
-      (item) => item.vehicleName.trim().toLowerCase() == name && item.years.contains(vehicle.year),
+      (item) =>
+          item.vehicleName.trim().toLowerCase() == name &&
+          item.years.contains(vehicle.year),
     );
   }
 

@@ -26,12 +26,13 @@ class WorkshopRatingRepository {
     );
   }
 
-  void addRating({
-    required String workshopExternalId,
-    required double rating,
-  }) {
+  void addRating({required String workshopExternalId, required double rating}) {
     if (rating < 0 || rating > 5) {
-      throw ArgumentError.value(rating, 'rating', 'Rating must be between 0 and 5');
+      throw ArgumentError.value(
+        rating,
+        'rating',
+        'Rating must be between 0 and 5',
+      );
     }
 
     _totalScores[workshopExternalId] =

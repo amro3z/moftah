@@ -25,7 +25,11 @@ class ObdTracePanel extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.car_repair_rounded, color: AppColors.info, size: ResponsiveSize.width(context, 4.87)),
+              Icon(
+                Icons.car_repair_rounded,
+                color: AppColors.info,
+                size: ResponsiveSize.width(context, 4.87),
+              ),
               SizedBox(width: ResponsiveSize.width(context, 2.05)),
               Expanded(
                 child: customText(
@@ -39,13 +43,16 @@ class ObdTracePanel extends StatelessWidget {
           ),
           SizedBox(height: ResponsiveSize.height(context, 0.71)),
           customText(
-            text: 'هنا بنعرضلك اللي بيحصل أثناء الفحص خطوة بخطوة. التفاصيل التقنية موجودة علشان نعرف سبب أي مشكلة في الاتصال.',
+            text:
+                'هنا بنعرضلك اللي بيحصل أثناء الفحص خطوة بخطوة. التفاصيل التقنية موجودة علشان نعرف سبب أي مشكلة في الاتصال.',
             fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
             color: Colors.white60,
           ),
           SizedBox(height: ResponsiveSize.height(context, 1.18)),
           Container(
-            constraints: BoxConstraints(maxHeight: ResponsiveSize.height(context, 26.07)),
+            constraints: BoxConstraints(
+              maxHeight: ResponsiveSize.height(context, 26.07),
+            ),
             padding: EdgeInsets.all(ResponsiveSize.width(context, 2.56)),
             decoration: BoxDecoration(
               color: Colors.black.withValues(alpha: .28),
@@ -55,14 +62,23 @@ class ObdTracePanel extends StatelessWidget {
               reverse: true,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: state.trace.map((line) => Padding(
-                  padding: EdgeInsets.only(bottom: ResponsiveSize.height(context, 0.59)),
-                  child: customText(
-                    text: _friendlyLine(line),
-                    fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
-                    color: Colors.white70,
-                  ),
-                )).toList(),
+                children: state.trace
+                    .map(
+                      (line) => Padding(
+                        padding: EdgeInsets.only(
+                          bottom: ResponsiveSize.height(context, 0.59),
+                        ),
+                        child: customText(
+                          text: _friendlyLine(line),
+                          fontSize: ResponsiveSize.width(
+                            context,
+                            AppSizes.fontXs,
+                          ),
+                          color: Colors.white70,
+                        ),
+                      ),
+                    )
+                    .toList(),
               ),
             ),
           ),

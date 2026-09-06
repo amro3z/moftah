@@ -8,10 +8,7 @@ import 'package:moftah/utils/responsive.dart';
 class ObdConnectionInfo extends StatelessWidget {
   final ObdState state;
 
-  const ObdConnectionInfo({
-    super.key,
-    required this.state,
-  });
+  const ObdConnectionInfo({super.key, required this.state});
 
   @override
   Widget build(BuildContext context) {
@@ -89,10 +86,7 @@ class ObdWaitingForData extends StatelessWidget {
 class ObdStatusMessage extends StatelessWidget {
   final String text;
 
-  const ObdStatusMessage({
-    super.key,
-    required this.text,
-  });
+  const ObdStatusMessage({super.key, required this.text});
 
   @override
   Widget build(BuildContext context) {

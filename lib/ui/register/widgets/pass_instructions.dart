@@ -36,7 +36,6 @@ class PassInstructions extends StatelessWidget {
         hasNoSpace == true;
   }
 
-
   @override
   Widget build(BuildContext context) {
     final Color statusColor = _isNotStarted

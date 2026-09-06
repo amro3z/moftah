@@ -9,10 +9,7 @@ import 'package:moftah/utils/responsive.dart';
 class ObdConnectionHeader extends StatelessWidget {
   final ObdState state;
 
-  const ObdConnectionHeader({
-    super.key,
-    required this.state,
-  });
+  const ObdConnectionHeader({super.key, required this.state});
 
   @override
   Widget build(BuildContext context) {
@@ -54,8 +51,8 @@ class ObdConnectionHeader extends StatelessWidget {
                 text: connecting
                     ? obdStageText(state.connectionStage)
                     : connected
-                        ? 'بيانات حية من السيارة عبر ELM327'
-                        : 'وصّل ELM327 علشان تقرأ الأعطال والبيانات الحية',
+                    ? 'بيانات حية من السيارة عبر ELM327'
+                    : 'وصّل ELM327 علشان تقرأ الأعطال والبيانات الحية',
                 fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
                 color: Colors.white70,
               ),
@@ -73,13 +70,17 @@ class ObdConnectionHeader extends StatelessWidget {
             borderRadius: BorderRadius.circular(AppSizes.radiusXl),
           ),
           child: customText(
-            text: connecting ? 'جاري الاتصال' : connected ? 'متصل' : 'غير متصل',
+            text: connecting
+                ? 'جاري الاتصال'
+                : connected
+                ? 'متصل'
+                : 'غير متصل',
             fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
             color: connecting
                 ? AppColors.info
                 : connected
-                    ? AppColors.success
-                    : Colors.white70,
+                ? AppColors.success
+                : Colors.white70,
             isBold: true,
           ),
         ),
@@ -92,11 +93,7 @@ class ObdExpandHint extends StatelessWidget {
   final bool expanded;
   final VoidCallback onTap;
 
-  const ObdExpandHint({
-    super.key,
-    required this.expanded,
-    required this.onTap,
-  });
+  const ObdExpandHint({super.key, required this.expanded, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -111,9 +108,7 @@ class ObdExpandHint extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.secondary.withValues(alpha: .12),
           borderRadius: BorderRadius.circular(AppSizes.radiusSm),
-          border: Border.all(
-            color: AppColors.secondary.withValues(alpha: .18),
-          ),
+          border: Border.all(color: AppColors.secondary.withValues(alpha: .18)),
         ),
         child: Row(
           children: [

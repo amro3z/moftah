@@ -28,8 +28,7 @@ class VehicleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    final formattedMileage = _formatNumber(data.mileage);
+    final formattedMileage = _formatNumber(data.kilo);
 
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -59,10 +58,7 @@ class VehicleCard extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    VehicleBrandLogo(
-                      brand: data.brand,
-                      sizePercent: 15,
-                    ),
+                    VehicleBrandLogo(brand: data.brand, sizePercent: 15),
 
                     SizedBox(width: ResponsiveSize.width(context, 3)),
 
@@ -102,13 +98,20 @@ class VehicleCard extends StatelessWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.textMuted, size: ResponsiveSize.width(context, 5.13)),
+                          Icon(
+                            Icons.keyboard_arrow_down_rounded,
+                            color: AppColors.textMuted,
+                            size: ResponsiveSize.width(context, 5.13),
+                          ),
                           SizedBox(width: ResponsiveSize.width(context, .6)),
                           Text(
                             'تغيير السيارة',
                             style: TextStyle(
                               fontFamily: 'Cairo',
-                              fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
+                              fontSize: ResponsiveSize.width(
+                                context,
+                                AppSizes.fontXs,
+                              ),
                               color: AppColors.textMuted,
                               fontWeight: FontWeight.w700,
                             ),
@@ -124,7 +127,6 @@ class VehicleCard extends StatelessWidget {
                 VehicleCardInfo(
                   nextMaintenance: '${_formatNumber(data.nextMaintenance)} كم',
                   lastMaintenance: data.lastMaintenance,
-               
                 ),
               ],
             ),

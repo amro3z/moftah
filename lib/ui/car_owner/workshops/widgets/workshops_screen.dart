@@ -15,11 +15,7 @@ class WorkshopsScreen extends StatelessWidget {
   final double? userLatitude;
   final double? userLongitude;
 
-  const WorkshopsScreen({
-    super.key,
-    this.userLatitude,
-    this.userLongitude,
-  });
+  const WorkshopsScreen({super.key, this.userLatitude, this.userLongitude});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +30,8 @@ class WorkshopsScreen extends StatelessWidget {
                   ? state.places
                   : const [];
 
-              final loadingMore = state is NearbyPlacesSuccess && state.isLoadingMore;
+              final loadingMore =
+                  state is NearbyPlacesSuccess && state.isLoadingMore;
 
               return Column(
                 children: [
@@ -52,20 +49,31 @@ class WorkshopsScreen extends StatelessWidget {
                         ),
                         decoration: BoxDecoration(
                           color: AppColors.secondary.withValues(alpha: .07),
-                          borderRadius: BorderRadius.circular(AppSizes.radiusSm),
+                          borderRadius: BorderRadius.circular(
+                            AppSizes.radiusSm,
+                          ),
                         ),
                         child: Row(
                           children: [
                             SizedBox(
                               width: ResponsiveSize.width(context, 4.62),
                               height: ResponsiveSize.height(context, 2.13),
-                              child: CircularProgressIndicator(strokeWidth: ResponsiveSize.width(context, 0.56)),
+                              child: CircularProgressIndicator(
+                                strokeWidth: ResponsiveSize.width(
+                                  context,
+                                  0.56,
+                                ),
+                              ),
                             ),
                             SizedBox(width: ResponsiveSize.width(context, 2)),
                             Expanded(
                               child: customText(
-                                text: 'عرضنا أقرب ${places.length} ورش وبنكمل تحميل باقي النتائج حتى 50...',
-                                fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
+                                text:
+                                    'عرضنا أقرب ${places.length} ورش وبنكمل تحميل باقي النتائج حتى 50...',
+                                fontSize: ResponsiveSize.width(
+                                  context,
+                                  AppSizes.fontXs,
+                                ),
                                 color: AppColors.primary,
                                 isBold: true,
                               ),
@@ -74,9 +82,7 @@ class WorkshopsScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                  Expanded(
-                    child: _body(context, state),
-                  ),
+                  Expanded(child: _body(context, state)),
                 ],
               );
             },
@@ -116,19 +122,13 @@ class WorkshopsScreen extends StatelessWidget {
                   children: [
                     customText(
                       text: 'الورش ومراكز الصيانة',
-                      fontSize: ResponsiveSize.width(
-                        context,
-                        AppSizes.fontXl,
-                      ),
+                      fontSize: ResponsiveSize.width(context, AppSizes.fontXl),
                       color: AppColors.primary,
                       isBold: true,
                     ),
                     customText(
                       text: 'مرتبة حسب الأقرب لموقعك',
-                      fontSize: ResponsiveSize.width(
-                        context,
-                        AppSizes.fontSm,
-                      ),
+                      fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
                       color: AppColors.progressBackground,
                     ),
                   ],
@@ -217,10 +217,7 @@ class WorkshopsScreen extends StatelessWidget {
 
     if (state is NearbyPlacesLoading) {
       return SingleChildScrollView(
-        child: NearbyPlacesLoadingIndicator(
-          state: state,
-          directoryMode: true,
-        ),
+        child: NearbyPlacesLoadingIndicator(state: state, directoryMode: true),
       );
     }
 
@@ -277,14 +274,10 @@ class WorkshopsScreen extends StatelessWidget {
           ResponsiveSize.height(context, 4),
         ),
         itemCount: places.length,
-        separatorBuilder: (_, __) => SizedBox(
-          height: ResponsiveSize.height(context, 1.4),
-        ),
+        separatorBuilder: (_, __) =>
+            SizedBox(height: ResponsiveSize.height(context, 1.4)),
         itemBuilder: (context, index) {
-          return WorkshopDirectoryCard(
-            place: places[index],
-            allPlaces: places,
-          );
+          return WorkshopDirectoryCard(place: places[index], allPlaces: places);
         },
       ),
     );

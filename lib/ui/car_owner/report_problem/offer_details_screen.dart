@@ -27,8 +27,8 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
       child: Scaffold(
         backgroundColor: AppColors.background,
         appBar: AppBar(
-      scrolledUnderElevation: 0,
-      shadowColor: Colors.transparent,
+          scrolledUnderElevation: 0,
+          shadowColor: Colors.transparent,
           backgroundColor: Colors.white,
           elevation: 0,
           automaticallyImplyLeading: false,
@@ -58,31 +58,59 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
               _offerSummary(context),
               if (report != null) ...[
                 SizedBox(height: ResponsiveSize.height(context, 1.5)),
-                _requestSummary(context, report.problemSummary, report.vehicleName),
+                _requestSummary(
+                  context,
+                  report.problemSummary,
+                  report.vehicleName,
+                ),
               ],
               SizedBox(height: ResponsiveSize.height(context, 2)),
               Row(
                 children: [
                   Expanded(
                     child: FilledButton.icon(
-                      style: FilledButton.styleFrom(backgroundColor: AppColors.success, padding: EdgeInsets.symmetric(vertical: ResponsiveSize.height(context, 1.45))),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: AppColors.success,
+                        padding: EdgeInsets.symmetric(
+                          vertical: ResponsiveSize.height(context, 1.45),
+                        ),
+                      ),
                       onPressed: _processing ? null : _accept,
                       icon: Icon(Icons.check_circle_outline_rounded),
-                      label: Text('قبول', style: TextStyle(fontFamily: 'Cairo', fontWeight: FontWeight.bold)),
+                      label: Text(
+                        'قبول',
+                        style: TextStyle(
+                          fontFamily: 'Cairo',
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                   SizedBox(width: ResponsiveSize.width(context, 2)),
                   Expanded(
                     child: FilledButton.icon(
-                      style: FilledButton.styleFrom(backgroundColor: AppColors.danger, padding: EdgeInsets.symmetric(vertical: ResponsiveSize.height(context, 1.45))),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: AppColors.danger,
+                        padding: EdgeInsets.symmetric(
+                          vertical: ResponsiveSize.height(context, 1.45),
+                        ),
+                      ),
                       onPressed: _processing
                           ? null
                           : () {
-                              ServiceRequestStore.instance.rejectOffer(widget.offer);
+                              ServiceRequestStore.instance.rejectOffer(
+                                widget.offer,
+                              );
                               Navigator.pop(context);
                             },
                       icon: Icon(Icons.close_rounded),
-                      label: Text('رفض', style: TextStyle(fontFamily: 'Cairo', fontWeight: FontWeight.bold)),
+                      label: Text(
+                        'رفض',
+                        style: TextStyle(
+                          fontFamily: 'Cairo',
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -91,9 +119,19 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton.icon(
-                  onPressed: () => Navigator.pushNamed(context, '/repair-chat', arguments: _repairFromOffer()),
+                  onPressed: () => Navigator.pushNamed(
+                    context,
+                    '/repair-chat',
+                    arguments: _repairFromOffer(),
+                  ),
                   icon: Icon(Icons.chat_bubble_outline_rounded),
-                  label: Text('محادثة الفني', style: TextStyle(fontFamily: 'Cairo', fontWeight: FontWeight.bold)),
+                  label: Text(
+                    'محادثة الفني',
+                    style: TextStyle(
+                      fontFamily: 'Cairo',
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -110,30 +148,68 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppSizes.radiusLg),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: .16), blurRadius: 18, offset: const Offset(0, 6))],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: .16),
+            blurRadius: 18,
+            offset: const Offset(0, 6),
+          ),
+        ],
       ),
       child: Row(
         children: [
           CircleAvatar(
             radius: ResponsiveSize.width(context, 8),
             backgroundColor: AppColors.secondary.withValues(alpha: .1),
-            child: Icon(widget.offer.providerType == 'ورشة' ? Icons.car_repair_rounded : Icons.engineering_rounded, color: AppColors.secondary),
+            child: Icon(
+              widget.offer.providerType == 'ورشة'
+                  ? Icons.car_repair_rounded
+                  : Icons.engineering_rounded,
+              color: AppColors.secondary,
+            ),
           ),
           SizedBox(width: ResponsiveSize.width(context, 3)),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                customText(text: widget.offer.providerName, fontSize: ResponsiveSize.width(context, AppSizes.fontXl), color: AppColors.primary, isBold: true),
-                customText(text: '${widget.offer.providerType} • ${widget.offer.specialty}', fontSize: ResponsiveSize.width(context, AppSizes.fontSm), color: AppColors.textMuted),
+                customText(
+                  text: widget.offer.providerName,
+                  fontSize: ResponsiveSize.width(context, AppSizes.fontXl),
+                  color: AppColors.primary,
+                  isBold: true,
+                ),
+                customText(
+                  text:
+                      '${widget.offer.providerType} • ${widget.offer.specialty}',
+                  fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
+                  color: AppColors.textMuted,
+                ),
                 SizedBox(height: ResponsiveSize.height(context, .4)),
                 Row(
                   children: [
-                    Icon(Icons.star_rounded, color: AppColors.warning, size: ResponsiveSize.width(context, 4.62)),
-                    customText(text: widget.offer.rating.toStringAsFixed(1), fontSize: ResponsiveSize.width(context, AppSizes.fontSm), color: AppColors.primary, isBold: true),
+                    Icon(
+                      Icons.star_rounded,
+                      color: AppColors.warning,
+                      size: ResponsiveSize.width(context, 4.62),
+                    ),
+                    customText(
+                      text: widget.offer.rating.toStringAsFixed(1),
+                      fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
+                      color: AppColors.primary,
+                      isBold: true,
+                    ),
                     SizedBox(width: ResponsiveSize.width(context, 2)),
-                    Icon(Icons.location_on_rounded, color: AppColors.danger, size: ResponsiveSize.width(context, 4.1)),
-                    customText(text: '${widget.offer.distanceKm.toStringAsFixed(1)} كم', fontSize: ResponsiveSize.width(context, AppSizes.fontSm), color: AppColors.textMuted),
+                    Icon(
+                      Icons.location_on_rounded,
+                      color: AppColors.danger,
+                      size: ResponsiveSize.width(context, 4.1),
+                    ),
+                    customText(
+                      text: '${widget.offer.distanceKm.toStringAsFixed(1)} كم',
+                      fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
+                      color: AppColors.textMuted,
+                    ),
                   ],
                 ),
               ],
@@ -162,18 +238,34 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          customText(text: 'العرض المقدم', fontSize: ResponsiveSize.width(context, AppSizes.fontLg), color: AppColors.primary, isBold: true),
+          customText(
+            text: 'العرض المقدم',
+            fontSize: ResponsiveSize.width(context, AppSizes.fontLg),
+            color: AppColors.primary,
+            isBold: true,
+          ),
           SizedBox(height: ResponsiveSize.height(context, 1.2)),
           _line(context, 'رسوم الفحص', '${widget.offer.inspectionFee} جنيه'),
-          _line(context, 'التكلفة المتوقعة', '${widget.offer.minEstimatedCost} – ${widget.offer.maxEstimatedCost} جنيه'),
+          _line(
+            context,
+            'التكلفة المتوقعة',
+            '${widget.offer.minEstimatedCost} – ${widget.offer.maxEstimatedCost} جنيه',
+          ),
           _line(context, 'مدة الإصلاح', widget.offer.estimatedDuration),
           _line(context, 'التوفر', widget.offer.availability),
           SizedBox(height: ResponsiveSize.height(context, 1)),
           Container(
             width: double.infinity,
             padding: EdgeInsets.all(ResponsiveSize.width(context, 3)),
-            decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(AppSizes.radiusSm)),
-            child: customText(text: widget.offer.note, fontSize: ResponsiveSize.width(context, AppSizes.fontSm), color: AppColors.primary),
+            decoration: BoxDecoration(
+              color: AppColors.background,
+              borderRadius: BorderRadius.circular(AppSizes.radiusSm),
+            ),
+            child: customText(
+              text: widget.offer.note,
+              fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
+              color: AppColors.primary,
+            ),
           ),
         ],
       ),
@@ -198,10 +290,24 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          customText(text: 'البلاغ المرتبط بالعرض', fontSize: ResponsiveSize.width(context, AppSizes.fontMd), color: AppColors.primary, isBold: true),
+          customText(
+            text: 'البلاغ المرتبط بالعرض',
+            fontSize: ResponsiveSize.width(context, AppSizes.fontMd),
+            color: AppColors.primary,
+            isBold: true,
+          ),
           SizedBox(height: ResponsiveSize.height(context, .6)),
-          customText(text: vehicle, fontSize: ResponsiveSize.width(context, AppSizes.fontSm), color: AppColors.textMuted),
-          customText(text: problem, fontSize: ResponsiveSize.width(context, AppSizes.fontSm), color: AppColors.primary, isBold: true),
+          customText(
+            text: vehicle,
+            fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
+            color: AppColors.textMuted,
+          ),
+          customText(
+            text: problem,
+            fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
+            color: AppColors.primary,
+            isBold: true,
+          ),
         ],
       ),
     );
@@ -209,11 +315,24 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
 
   Widget _line(BuildContext context, String title, String value) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: ResponsiveSize.height(context, .7)),
+      padding: EdgeInsets.symmetric(
+        vertical: ResponsiveSize.height(context, .7),
+      ),
       child: Row(
         children: [
-          Expanded(child: customText(text: title, fontSize: ResponsiveSize.width(context, AppSizes.fontSm), color: AppColors.textMuted)),
-          customText(text: value, fontSize: ResponsiveSize.width(context, AppSizes.fontSm), color: AppColors.primary, isBold: true),
+          Expanded(
+            child: customText(
+              text: title,
+              fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
+              color: AppColors.textMuted,
+            ),
+          ),
+          customText(
+            text: value,
+            fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
+            color: AppColors.primary,
+            isBold: true,
+          ),
         ],
       ),
     );
@@ -238,6 +357,11 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
     await Future<void>.delayed(const Duration(milliseconds: 450));
     if (!mounted) return;
     ServiceRequestStore.instance.acceptOffer(widget.offer);
-    Navigator.pushNamedAndRemoveUntil(context, '/repair-details', (route) => route.settings.name == '/home', arguments: _repairFromOffer());
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      '/repair-details',
+      (route) => route.settings.name == '/home',
+      arguments: _repairFromOffer(),
+    );
   }
 }

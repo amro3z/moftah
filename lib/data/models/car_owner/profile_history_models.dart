@@ -84,12 +84,7 @@ class WorkerRequestHistoryModel {
   });
 }
 
-enum ConversationKind {
-  technician,
-  delivery,
-  emergency,
-  general,
-}
+enum ConversationKind { technician, delivery, emergency, general }
 
 class ConversationHistoryModel {
   final String id;

@@ -8,10 +8,7 @@ import 'package:moftah/utils/responsive.dart';
 class ObdTroubleCodes extends StatelessWidget {
   final ObdSnapshotModel snapshot;
 
-  const ObdTroubleCodes({
-    super.key,
-    required this.snapshot,
-  });
+  const ObdTroubleCodes({super.key, required this.snapshot});
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +31,11 @@ class ObdTroubleCodes extends StatelessWidget {
                 vertical: ResponsiveSize.height(context, .35),
               ),
               decoration: BoxDecoration(
-                color: (snapshot.troubleCodes.isEmpty
-                        ? AppColors.success
-                        : AppColors.danger)
-                    .withValues(alpha: .12),
+                color:
+                    (snapshot.troubleCodes.isEmpty
+                            ? AppColors.success
+                            : AppColors.danger)
+                        .withValues(alpha: .12),
                 borderRadius: BorderRadius.circular(AppSizes.radiusLg),
               ),
               child: customText(
@@ -78,9 +76,7 @@ class ObdTroubleCodes extends StatelessWidget {
             ),
           )
         else
-          ...snapshot.troubleCodes.map(
-            (code) => _DtcItem(item: code),
-          ),
+          ...snapshot.troubleCodes.map((code) => _DtcItem(item: code)),
       ],
     );
   }

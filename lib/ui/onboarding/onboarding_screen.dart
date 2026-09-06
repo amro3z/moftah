@@ -6,8 +6,6 @@ import 'package:moftah/ui/core/ui/custom_text.dart';
 import 'package:moftah/ui/onboarding/widgets/onboarding_widgets.dart';
 import 'package:moftah/utils/responsive.dart';
 
-
-
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
 
@@ -18,8 +16,6 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _controller = PageController();
   int _index = 0;
-
-  
 
   void _next() {
     if (_index == onboardingPages.length - 1) {

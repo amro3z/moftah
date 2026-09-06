@@ -164,9 +164,7 @@ class _ProblemAnalysisScreenState extends State<ProblemAnalysisScreen> {
       color: Colors.white,
       child: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.only(
-            bottom: ResponsiveSize.height(context, 4),
-          ),
+          padding: EdgeInsets.only(bottom: ResponsiveSize.height(context, 4)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -229,11 +227,7 @@ class _ProblemAnalysisScreenState extends State<ProblemAnalysisScreen> {
                   children: [
                     _inspectionNote(context),
                     SizedBox(height: ResponsiveSize.height(context, 2)),
-                    _sectionTitle(
-                      context,
-                      'إزاي تحب تكمل؟',
-                      onDark: false,
-                    ),
+                    _sectionTitle(context, 'إزاي تحب تكمل؟', onDark: false),
                     SizedBox(height: ResponsiveSize.height(context, 1)),
                     _choiceCard(
                       context,
@@ -288,10 +282,7 @@ class _ProblemAnalysisScreenState extends State<ProblemAnalysisScreen> {
             color: AppColors.secondary.withValues(alpha: .1),
             borderRadius: BorderRadius.circular(AppSizes.radiusSm),
           ),
-          child: Icon(
-            Icons.psychology_alt_rounded,
-            color: AppColors.secondary,
-          ),
+          child: Icon(Icons.psychology_alt_rounded, color: AppColors.secondary),
         ),
         SizedBox(width: ResponsiveSize.width(context, 3)),
         Expanded(
@@ -322,9 +313,7 @@ class _ProblemAnalysisScreenState extends State<ProblemAnalysisScreen> {
       padding: EdgeInsets.all(ResponsiveSize.width(context, 4)),
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: .07),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: .10),
-        ),
+        border: Border.all(color: Colors.white.withValues(alpha: .10)),
         borderRadius: BorderRadius.circular(AppSizes.radiusLg),
         boxShadow: _shadow(),
       ),
@@ -339,11 +328,7 @@ class _ProblemAnalysisScreenState extends State<ProblemAnalysisScreen> {
                 color: const Color(0xff42D997),
               ),
               SizedBox(width: ResponsiveSize.width(context, 1.5)),
-              _pill(
-                context,
-                text: _urgency,
-                color: AppColors.warning,
-              ),
+              _pill(context, text: _urgency, color: AppColors.warning),
             ],
           ),
           SizedBox(height: ResponsiveSize.height(context, 1.2)),
@@ -425,11 +410,7 @@ class _ProblemAnalysisScreenState extends State<ProblemAnalysisScreen> {
     );
   }
 
-  Widget _causeCard(
-    BuildContext context,
-    _AnalysisCause cause,
-    int index,
-  ) {
+  Widget _causeCard(BuildContext context, _AnalysisCause cause, int index) {
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0, end: 1),
       duration: Duration(milliseconds: 300 + (index * 100)),
@@ -457,10 +438,7 @@ class _ProblemAnalysisScreenState extends State<ProblemAnalysisScreen> {
                 Expanded(
                   child: customText(
                     text: cause.title,
-                    fontSize: ResponsiveSize.width(
-                      context,
-                      AppSizes.fontMd,
-                    ),
+                    fontSize: ResponsiveSize.width(context, AppSizes.fontMd),
                     color: AppColors.primary,
                     isBold: true,
                   ),
@@ -542,10 +520,7 @@ class _ProblemAnalysisScreenState extends State<ProblemAnalysisScreen> {
                 Expanded(
                   child: customText(
                     text: items[index],
-                    fontSize: ResponsiveSize.width(
-                      context,
-                      AppSizes.fontSm,
-                    ),
+                    fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
                     color: AppColors.primary,
                   ),
                 ),
@@ -564,9 +539,7 @@ class _ProblemAnalysisScreenState extends State<ProblemAnalysisScreen> {
       decoration: BoxDecoration(
         color: AppColors.warning.withValues(alpha: .09),
         borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-        border: Border.all(
-          color: AppColors.warning.withValues(alpha: .24),
-        ),
+        border: Border.all(color: AppColors.warning.withValues(alpha: .24)),
         boxShadow: _shadow(alpha: .13),
       ),
       child: Row(
@@ -646,10 +619,7 @@ class _ProblemAnalysisScreenState extends State<ProblemAnalysisScreen> {
                     ),
                     child: customText(
                       text: badge,
-                      fontSize: ResponsiveSize.width(
-                        context,
-                        AppSizes.fontXs,
-                      ),
+                      fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
                       color: AppColors.success,
                       isBold: true,
                     ),
@@ -675,9 +645,7 @@ class _ProblemAnalysisScreenState extends State<ProblemAnalysisScreen> {
       decoration: BoxDecoration(
         color: AppColors.secondary.withValues(alpha: .06),
         borderRadius: BorderRadius.circular(AppSizes.radiusLg),
-        border: Border.all(
-          color: AppColors.secondary.withValues(alpha: .13),
-        ),
+        border: Border.all(color: AppColors.secondary.withValues(alpha: .13)),
         boxShadow: _shadow(),
       ),
       child: Column(
@@ -692,10 +660,7 @@ class _ProblemAnalysisScreenState extends State<ProblemAnalysisScreen> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(AppSizes.radiusSm),
                 ),
-                child: Icon(
-                  Icons.campaign_rounded,
-                  color: AppColors.secondary,
-                ),
+                child: Icon(Icons.campaign_rounded, color: AppColors.secondary),
               ),
               SizedBox(width: ResponsiveSize.width(context, 2.5)),
               Expanded(
@@ -778,7 +743,11 @@ class _ProblemAnalysisScreenState extends State<ProblemAnalysisScreen> {
               color: AppColors.secondary.withValues(alpha: .07),
               borderRadius: BorderRadius.circular(AppSizes.radiusSm),
             ),
-            child: Icon(icon, color: AppColors.secondary, size: ResponsiveSize.width(context, 4.62)),
+            child: Icon(
+              icon,
+              color: AppColors.secondary,
+              size: ResponsiveSize.width(context, 4.62),
+            ),
           ),
           SizedBox(width: ResponsiveSize.width(context, 2)),
           SizedBox(
@@ -835,7 +804,6 @@ class _ProblemAnalysisScreenState extends State<ProblemAnalysisScreen> {
       ),
     ];
   }
-
 
   int get _confidence {
     var value = 68;

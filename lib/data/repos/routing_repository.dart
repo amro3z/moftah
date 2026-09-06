@@ -2,9 +2,8 @@ import 'package:moftah/data/datasources/osrm_routing_data_source.dart';
 import 'package:moftah/data/models/map/route_path_model.dart';
 
 class RoutingRepository {
-  RoutingRepository({
-    OsrmRoutingDataSource? dataSource,
-  }) : _dataSource = dataSource ?? OsrmRoutingDataSource();
+  RoutingRepository({OsrmRoutingDataSource? dataSource})
+    : _dataSource = dataSource ?? OsrmRoutingDataSource();
 
   final OsrmRoutingDataSource _dataSource;
 

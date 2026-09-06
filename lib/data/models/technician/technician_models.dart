@@ -23,7 +23,14 @@ class TechnicianProfileModel {
   });
 }
 
-enum TechnicianRequestStatus { newRequest, offerSent, accepted, inProgress, completed, rejected }
+enum TechnicianRequestStatus {
+  newRequest,
+  offerSent,
+  accepted,
+  inProgress,
+  completed,
+  rejected,
+}
 
 class TechnicianRequestModel {
   final String id;
@@ -79,27 +86,27 @@ class TechnicianRequestModel {
     String? warranty,
     String? offerNotes,
   }) => TechnicianRequestModel(
-        id: id,
-        customerName: customerName,
-        vehicleName: vehicleName,
-        vehicleYear: vehicleYear,
-        issueTitle: issueTitle,
-        issueDescription: issueDescription,
-        location: location,
-        distanceKm: distanceKm,
-        createdAt: createdAt,
-        riskLabel: riskLabel,
-        aiAnalysis: aiAnalysis,
-        tags: tags,
-        imageUrls: imageUrls,
-        status: status ?? this.status,
-        inspectionFee: inspectionFee ?? this.inspectionFee,
-        minCost: minCost ?? this.minCost,
-        maxCost: maxCost ?? this.maxCost,
-        estimatedDuration: estimatedDuration ?? this.estimatedDuration,
-        warranty: warranty ?? this.warranty,
-        offerNotes: offerNotes ?? this.offerNotes,
-      );
+    id: id,
+    customerName: customerName,
+    vehicleName: vehicleName,
+    vehicleYear: vehicleYear,
+    issueTitle: issueTitle,
+    issueDescription: issueDescription,
+    location: location,
+    distanceKm: distanceKm,
+    createdAt: createdAt,
+    riskLabel: riskLabel,
+    aiAnalysis: aiAnalysis,
+    tags: tags,
+    imageUrls: imageUrls,
+    status: status ?? this.status,
+    inspectionFee: inspectionFee ?? this.inspectionFee,
+    minCost: minCost ?? this.minCost,
+    maxCost: maxCost ?? this.maxCost,
+    estimatedDuration: estimatedDuration ?? this.estimatedDuration,
+    warranty: warranty ?? this.warranty,
+    offerNotes: offerNotes ?? this.offerNotes,
+  );
 }
 
 class TechnicianConversationModel {
@@ -120,16 +127,16 @@ class TechnicianConversationModel {
   });
 
   ChatScreenModel toChat(TechnicianRequestModel request) => ChatScreenModel(
-        participantId: id,
-        participantName: customerName,
-        subtitle: subtitle,
-        requestId: request.id,
-        requestTitle: request.issueTitle,
-        requestDetailsRoute: '/technician/request-details',
-        initialMessages: [
-          ChatSeedMessageModel(text: lastMessage, isMine: false, time: time),
-        ],
-      );
+    participantId: id,
+    participantName: customerName,
+    subtitle: subtitle,
+    requestId: request.id,
+    requestTitle: request.issueTitle,
+    requestDetailsRoute: '/technician/request-details',
+    initialMessages: [
+      ChatSeedMessageModel(text: lastMessage, isMine: false, time: time),
+    ],
+  );
 }
 
 class TechnicianAppBarModel {

@@ -164,7 +164,8 @@ class _ReportProblemFlowScreenState extends State<ReportProblemFlowScreen> {
     return SafeArea(
       top: false,
       minimum: EdgeInsets.fromLTRB(
-        ResponsiveSize.width(context, 4), 0,
+        ResponsiveSize.width(context, 4),
+        0,
         ResponsiveSize.width(context, 4),
         ResponsiveSize.height(context, 2),
       ),
@@ -182,15 +183,20 @@ class _ReportProblemFlowScreenState extends State<ReportProblemFlowScreen> {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              Center(child: customText(
-                text: isLast ? 'تحليل المشكلة بالذكاء الاصطناعي' : 'التالي',
-                fontSize: ResponsiveSize.width(context, AppSizes.fontMd),
-                color: Colors.white, isBold: true,
-              )),
+              Center(
+                child: customText(
+                  text: isLast ? 'تحليل المشكلة بالذكاء الاصطناعي' : 'التالي',
+                  fontSize: ResponsiveSize.width(context, AppSizes.fontMd),
+                  color: Colors.white,
+                  isBold: true,
+                ),
+              ),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Icon(
-                  isLast ? Icons.smart_toy_rounded : Icons.arrow_forward_rounded,
+                  isLast
+                      ? Icons.smart_toy_rounded
+                      : Icons.arrow_forward_rounded,
                   color: Colors.white,
                   size: ResponsiveSize.width(context, 5),
                 ),
@@ -263,8 +269,8 @@ class _ReportProblemFlowScreenState extends State<ReportProblemFlowScreen> {
   }
 
   void _showMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 }

@@ -17,8 +17,8 @@ class NotificationsScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: AppColors.background,
         appBar: AppBar(
-      scrolledUnderElevation: 0,
-      shadowColor: Colors.transparent,
+          scrolledUnderElevation: 0,
+          shadowColor: Colors.transparent,
           backgroundColor: Colors.white,
           elevation: 0,
           surfaceTintColor: Colors.transparent,
@@ -51,10 +51,8 @@ class NotificationsScreen extends StatelessWidget {
                     message:
                         'وصلتك عروض على طلب الصيانة. قارن السعر والتقييم والمدة قبل ما تختار.',
                     actionText: 'الذهاب إلى العروض',
-                    onAction: () => Navigator.pushNamed(
-                      context,
-                      '/received-offers',
-                    ),
+                    onAction: () =>
+                        Navigator.pushNamed(context, '/received-offers'),
                   ),
                 if (!hasOffersNotification)
                   Container(
@@ -131,9 +129,7 @@ class _NotificationCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppSizes.radiusLg),
-        border: Border.all(
-          color: AppColors.border.withValues(alpha: .12),
-        ),
+        border: Border.all(color: AppColors.border.withValues(alpha: .12)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: .13),
@@ -164,20 +160,14 @@ class _NotificationCard extends StatelessWidget {
                   children: [
                     customText(
                       text: title,
-                      fontSize: ResponsiveSize.width(
-                        context,
-                        AppSizes.fontMd,
-                      ),
+                      fontSize: ResponsiveSize.width(context, AppSizes.fontMd),
                       color: AppColors.primary,
                       isBold: true,
                     ),
                     SizedBox(height: ResponsiveSize.height(context, .45)),
                     customText(
                       text: message,
-                      fontSize: ResponsiveSize.width(
-                        context,
-                        AppSizes.fontSm,
-                      ),
+                      fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
                       color: AppColors.textMuted,
                     ),
                   ],

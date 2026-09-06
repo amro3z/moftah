@@ -22,8 +22,8 @@ class ReceivedOffersScreen extends StatelessWidget {
           return Scaffold(
             backgroundColor: AppColors.background,
             appBar: AppBar(
-      scrolledUnderElevation: 0,
-      shadowColor: Colors.transparent,
+              scrolledUnderElevation: 0,
+              shadowColor: Colors.transparent,
               backgroundColor: Colors.white,
               elevation: 0,
               automaticallyImplyLeading: false,
@@ -51,8 +51,8 @@ class ReceivedOffersScreen extends StatelessWidget {
                           text: store.waitingForOffers
                               ? 'لسه بنستقبل عروض جديدة...'
                               : offers.isEmpty
-                                  ? 'مفيش عروض لسه'
-                                  : 'وصلك ${offers.length} عروض',
+                              ? 'مفيش عروض لسه'
+                              : 'وصلك ${offers.length} عروض',
                           fontSize: ResponsiveSize.width(
                             context,
                             AppSizes.fontXs,
@@ -112,10 +112,7 @@ class ReceivedOffersScreen extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [
-            AppColors.primary,
-            AppColors.primary.withValues(alpha: .88),
-          ],
+          colors: [AppColors.primary, AppColors.primary.withValues(alpha: .88)],
         ),
         borderRadius: BorderRadius.circular(AppSizes.radiusLg),
         boxShadow: _shadow(),
@@ -129,10 +126,7 @@ class ReceivedOffersScreen extends StatelessWidget {
               color: Colors.white.withValues(alpha: .10),
               borderRadius: BorderRadius.circular(AppSizes.radiusMd),
             ),
-            child: Icon(
-              Icons.local_offer_rounded,
-              color: Colors.white,
-            ),
+            child: Icon(Icons.local_offer_rounded, color: Colors.white),
           ),
           SizedBox(width: ResponsiveSize.width(context, 3)),
           Expanded(
@@ -183,8 +177,12 @@ class ReceivedOffersScreen extends StatelessWidget {
               ),
               child: waiting
                   ? Padding(
-                      padding: EdgeInsets.all(ResponsiveSize.width(context, 5.64)),
-                      child: CircularProgressIndicator(strokeWidth: ResponsiveSize.width(context, 0.77)),
+                      padding: EdgeInsets.all(
+                        ResponsiveSize.width(context, 5.64),
+                      ),
+                      child: CircularProgressIndicator(
+                        strokeWidth: ResponsiveSize.width(context, 0.77),
+                      ),
                     )
                   : Icon(
                       Icons.inbox_outlined,
@@ -215,11 +213,7 @@ class ReceivedOffersScreen extends StatelessWidget {
     );
   }
 
-  Widget _offerCard(
-    BuildContext context,
-    ServiceOfferModel offer,
-    int index,
-  ) {
+  Widget _offerCard(BuildContext context, ServiceOfferModel offer, int index) {
     return TweenAnimationBuilder<double>(
       duration: Duration(milliseconds: 300 + index * 80),
       tween: Tween(begin: 0, end: 1),
@@ -234,11 +228,8 @@ class ReceivedOffersScreen extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () => Navigator.pushNamed(
-            context,
-            '/offer-details',
-            arguments: offer,
-          ),
+          onTap: () =>
+              Navigator.pushNamed(context, '/offer-details', arguments: offer),
           borderRadius: BorderRadius.circular(AppSizes.radiusLg),
           child: Ink(
             padding: EdgeInsets.all(ResponsiveSize.width(context, 4)),
@@ -365,7 +356,7 @@ class ReceivedOffersScreen extends StatelessWidget {
                           '${offer.inspectionFee} جنيه',
                         ),
                       ),
-                      _divider(context  ),
+                      _divider(context),
                       Expanded(
                         child: _metric(
                           context,
@@ -456,16 +447,16 @@ class ReceivedOffersScreen extends StatelessWidget {
   }
 
   Widget _divider(BuildContext context) => Container(
-        width: ResponsiveSize.width(context, 0.26),
-        height: ResponsiveSize.height(context, 4.5),
-        color: AppColors.border.withValues(alpha: .20),
-      );
+    width: ResponsiveSize.width(context, 0.26),
+    height: ResponsiveSize.height(context, 4.5),
+    color: AppColors.border.withValues(alpha: .20),
+  );
 
   List<BoxShadow> _shadow() => [
-        BoxShadow(
-          color: Colors.black.withValues(alpha: .15),
-          blurRadius: 15,
-          offset: const Offset(0, 5),
-        ),
-      ];
+    BoxShadow(
+      color: Colors.black.withValues(alpha: .15),
+      blurRadius: 15,
+      offset: const Offset(0, 5),
+    ),
+  ];
 }

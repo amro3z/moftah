@@ -20,10 +20,7 @@ class NearbyPlacesLoading extends NearbyPlacesState {
   final NearbyLoadingStep step;
   final int? searchRadiusMeters;
 
-  const NearbyPlacesLoading({
-    required this.step,
-    this.searchRadiusMeters,
-  });
+  const NearbyPlacesLoading({required this.step, this.searchRadiusMeters});
 }
 
 class NearbyPlacesSuccess extends NearbyPlacesState {

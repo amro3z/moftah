@@ -1,6 +1,6 @@
 class CustomListStore {
   CustomListStore._();
-    static final CustomListStore instance = CustomListStore._();
+  static final CustomListStore instance = CustomListStore._();
 
   static const List<String> governorates = [
     'القاهرة',
@@ -31,7 +31,7 @@ class CustomListStore {
     'شمال سيناء',
     'سوهاج',
   ];
-static const List<String> technicianCategories = [
+  static const List<String> technicianCategories = [
     'ميكانيكا',
     'كهرباء',
     'دهان',
@@ -41,7 +41,7 @@ static const List<String> technicianCategories = [
     'مكيفات',
     'فرامل',
   ];
- static const List<String> carBrands = [
+  static const List<String> carBrands = [
     'Acura',
     'Alfa Romeo',
     'Alpina',

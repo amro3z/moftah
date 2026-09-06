@@ -5,13 +5,14 @@ import 'package:moftah/data/store/vehicle_selection_store.dart';
 
 class SparePartsCubit extends Cubit<SparePartsState> {
   SparePartsCubit()
-      : super(
-          SparePartsState(
-            products: _demoProducts,
-            vehicles: VehicleSelectionStore.instance.userVehicles,
-            selectedVehicleId: VehicleSelectionStore.instance.selectedUserVehicle.id,
-          ),
-        );
+    : super(
+        SparePartsState(
+          products: _demoProducts,
+          vehicles: VehicleSelectionStore.instance.userVehicles,
+          selectedVehicleId:
+              VehicleSelectionStore.instance.selectedUserVehicle.id,
+        ),
+      );
 
   void syncVehiclesFromAccount() {
     final store = VehicleSelectionStore.instance;
@@ -90,7 +91,8 @@ class SparePartsCubit extends Cubit<SparePartsState> {
       seller: 'Auto Parts Store',
       location: 'مدينة نصر، القاهرة',
       warrantyMonths: 12,
-      imageUrl: 'https://images.unsplash.com/photo-1487754180451-c456f719a1fc?auto=format&fit=crop&w=900&q=80',
+      imageUrl:
+          'https://images.unsplash.com/photo-1487754180451-c456f719a1fc?auto=format&fit=crop&w=900&q=80',
       isOem: true,
       isOriginal: true,
       compatibleWithSelectedVehicle: true,

@@ -79,7 +79,8 @@ class _ObdDiagnosticsCardState extends State<ObdDiagnosticsCard> {
         }
       },
       builder: (context, state) {
-        final busy = state.status == ObdStatus.loadingDevices ||
+        final busy =
+            state.status == ObdStatus.loadingDevices ||
             state.status == ObdStatus.connecting ||
             state.status == ObdStatus.reading;
 
@@ -129,7 +130,8 @@ class _ObdDiagnosticsCardState extends State<ObdDiagnosticsCard> {
                 duration: const Duration(milliseconds: 420),
                 curve: Curves.easeInOutCubic,
                 alignment: Alignment.topCenter,
-                child: _expanded &&
+                child:
+                    _expanded &&
                         state.isConnected &&
                         !state.isConnectionFlowRunning
                     ? Padding(

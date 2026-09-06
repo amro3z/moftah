@@ -3,7 +3,7 @@ enum MaintenanceStatus { excellent, good, needsService, critical }
 class VehicleCardModel {
   final String carName;
   final int year;
-  final int mileage;
+  final int kilo;
   final int healthScore;
 
   final MaintenanceStatus maintenanceStatus;
@@ -12,11 +12,10 @@ class VehicleCardModel {
   final int nextMaintenance;
   final String lastMaintenance;
 
-
   VehicleCardModel({
     required this.carName,
     required this.year,
-    required this.mileage,
+    required this.kilo,
     required this.healthScore,
     required this.maintenanceStatus,
     required this.brand,

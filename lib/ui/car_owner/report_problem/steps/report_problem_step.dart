@@ -17,7 +17,11 @@ class ReportProblemStep extends StatelessWidget {
   });
 
   static const _items = <ReportProblemItem>[
-    ReportProblemItem('صوت غريب', 'صوت جديد أو طقطقة', Icons.graphic_eq_rounded),
+    ReportProblemItem(
+      'صوت غريب',
+      'صوت جديد أو طقطقة',
+      Icons.graphic_eq_rounded,
+    ),
     ReportProblemItem('رعشة', 'اهتزاز أثناء الحركة', Icons.vibration_rounded),
     ReportProblemItem(
       'لمبة المحرك',
@@ -29,7 +33,11 @@ class ReportProblemStep extends StatelessWidget {
       'ارتفاع حرارة المحرك',
       Icons.device_thermostat_rounded,
     ),
-    ReportProblemItem('فرامل', 'صوت أو ضعف في الفرامل', Icons.car_crash_rounded),
+    ReportProblemItem(
+      'فرامل',
+      'صوت أو ضعف في الفرامل',
+      Icons.car_crash_rounded,
+    ),
     ReportProblemItem(
       'كهرباء',
       'بطارية أو كهرباء السيارة',

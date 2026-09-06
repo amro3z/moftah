@@ -55,7 +55,6 @@ class ObdConnectionResult {
   });
 }
 
-
 class ObdProtocolProbeResult {
   final bool success;
   final bool busInitialized;

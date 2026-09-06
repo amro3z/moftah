@@ -6,7 +6,11 @@ class CarOwnerAppBarModel {
   final UserProfileModel userProfile;
   final VehicleCardModel car;
   final String phoneNumber;
-  CarOwnerAppBarModel({required this.userProfile, required this.car, required this.phoneNumber});
+  CarOwnerAppBarModel({
+    required this.userProfile,
+    required this.car,
+    required this.phoneNumber,
+  });
 }
 
 /// مودل موحد للهوم. وجود carOwner يعني هوم صاحب العربية،
@@ -16,7 +20,7 @@ class HomeAppBarModel {
   final TechnicianAppBarModel? technician;
 
   const HomeAppBarModel({this.carOwner, this.technician})
-      : assert(carOwner != null || technician != null);
+    : assert(carOwner != null || technician != null);
 
   bool get isCarOwner => carOwner != null;
   bool get isTechnician => carOwner == null && technician != null;

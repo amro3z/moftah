@@ -1,9 +1,7 @@
-
 import 'package:moftah/data/datasources/elm327_bluetooth_data_source.dart';
 import 'package:moftah/data/models/obd/obd_models.dart';
 import 'package:moftah/data/repos/obd_protocol_probe.dart';
 import 'package:moftah/ui/core/helper/obd_dtc_helper.dart';
-
 
 class ObdRepository {
   final Elm327BluetoothDataSource _dataSource;
@@ -14,7 +12,7 @@ class ObdRepository {
   String? get activeProtocolNumber => _activeProtocolNumber;
 
   ObdRepository({Elm327BluetoothDataSource? dataSource})
-      : _dataSource = dataSource ?? Elm327BluetoothDataSource();
+    : _dataSource = dataSource ?? Elm327BluetoothDataSource();
 
   Future<List<ObdDeviceModel>> getPairedDevices() {
     return _dataSource.getPairedDevices();
@@ -36,19 +34,13 @@ class ObdRepository {
   Future<ObdConnectionResult> connect(String address) async {
     final connected = await connectBluetooth(address);
     if (!connected) {
-      return const ObdConnectionResult(
-        connected: false,
-        adapterName: '',
-      );
+      return const ObdConnectionResult(connected: false, adapterName: '');
     }
 
     await initializeAdapter();
     final adapterName = await readAdapterName();
 
-    return ObdConnectionResult(
-      connected: true,
-      adapterName: adapterName,
-    );
+    return ObdConnectionResult(connected: true, adapterName: adapterName);
   }
 
   Future<void> disconnect() {
@@ -79,10 +71,7 @@ class ObdRepository {
     await _command('ATPC', onTrace: onTrace);
     await _command('ATSP0', onTrace: onTrace);
 
-    var probe = await _probeCurrentProtocol(
-      onTrace: onTrace,
-      label: 'Auto',
-    );
+    var probe = await _probeCurrentProtocol(onTrace: onTrace, label: 'Auto');
 
     if (!probe.success) {
       onTrace?.call(
@@ -98,10 +87,7 @@ class ObdRepository {
         'لو جهاز فحص احترافي يدخل على العربية في نفس اللحظة، '
         'فقد يكون يستخدم تشخيص الشركة المصنعة وليس Generic OBD-II فقط.',
       );
-      return ObdSnapshotModel(
-        ecuAvailable: false,
-        adapterVoltage: voltage,
-      );
+      return ObdSnapshotModel(ecuAvailable: false, adapterVoltage: voltage);
     }
 
     _ecuReady = true;
@@ -120,9 +106,7 @@ class ObdRepository {
       await _command('010D', onTrace: onTrace),
       pid: 0x0D,
     );
-    final coolant = _parseCoolant(
-      await _command('0105', onTrace: onTrace),
-    );
+    final coolant = _parseCoolant(await _command('0105', onTrace: onTrace));
     final intakeAirTemperature = _parseTemperature(
       await _command('010F', onTrace: onTrace),
       pid: 0x0F,
@@ -162,14 +146,22 @@ class ObdRepository {
 
     final rpm = _parseRpm(await _command('010C', onTrace: onTrace));
     final speed = _parseSingleBytePid(
-      await _command('010D', onTrace: onTrace), pid: 0x0D);
+      await _command('010D', onTrace: onTrace),
+      pid: 0x0D,
+    );
     final throttle = _parsePercentage(
-      await _command('0111', onTrace: onTrace), pid: 0x11);
+      await _command('0111', onTrace: onTrace),
+      pid: 0x11,
+    );
     final load = _parsePercentage(
-      await _command('0104', onTrace: onTrace), pid: 0x04);
+      await _command('0104', onTrace: onTrace),
+      pid: 0x04,
+    );
     final coolant = _parseCoolant(await _command('0105', onTrace: onTrace));
     final intake = _parseTemperature(
-      await _command('010F', onTrace: onTrace), pid: 0x0F);
+      await _command('010F', onTrace: onTrace),
+      pid: 0x0F,
+    );
     final voltage = _parseVoltage(await _command('ATRV', onTrace: onTrace));
 
     return ObdSnapshotModel(
@@ -217,7 +209,8 @@ class ObdRepository {
     final afterCodes = await _parseTroubleCodes(afterResponse);
 
     final responseUpper = afterResponse.toUpperCase();
-    final validEmptyRead = afterCodes.isEmpty &&
+    final validEmptyRead =
+        afterCodes.isEmpty &&
         !responseUpper.contains('UNABLE TO CONNECT') &&
         !responseUpper.contains('BUS ERROR') &&
         !responseUpper.contains('CAN ERROR') &&
@@ -251,9 +244,7 @@ class ObdRepository {
         : cleaned;
   }
 
-  Future<void> _initializeAdapter({
-    void Function(String)? onTrace,
-  }) async {
+  Future<void> _initializeAdapter({void Function(String)? onTrace}) async {
     await _command('ATZ', onTrace: onTrace);
     await Future<void>.delayed(const Duration(milliseconds: 1000));
 
@@ -274,10 +265,7 @@ class ObdRepository {
     void Function(String)? onTrace,
   }) {
     final scanner = ObdProtocolProbe(
-      sendCommand: (command) => _command(
-        command,
-        onTrace: onTrace,
-      ),
+      sendCommand: (command) => _command(command, onTrace: onTrace),
       onTrace: onTrace,
     );
 
@@ -289,10 +277,7 @@ class ObdRepository {
     void Function(String)? onTrace,
   }) {
     final scanner = ObdProtocolProbe(
-      sendCommand: (command) => _command(
-        command,
-        onTrace: onTrace,
-      ),
+      sendCommand: (command) => _command(command, onTrace: onTrace),
       onTrace: onTrace,
     );
 
@@ -336,7 +321,6 @@ class ObdRepository {
     return bytes[index + 2] - 40;
   }
 
-
   int? _parseSingleBytePid(String response, {required int pid}) {
     final bytes = _hexBytes(response);
     final index = _findPid(bytes, pid);
@@ -356,8 +340,10 @@ class ObdRepository {
   }
 
   double? _parseVoltage(String response) {
-    final match = RegExp(r'([0-9]+(?:\.[0-9]+)?)\s*V', caseSensitive: false)
-        .firstMatch(response);
+    final match = RegExp(
+      r'([0-9]+(?:\.[0-9]+)?)\s*V',
+      caseSensitive: false,
+    ).firstMatch(response);
     return double.tryParse(match?.group(1) ?? '');
   }
 
@@ -423,5 +409,4 @@ class ObdRepository {
         '${digit3.toRadixString(16).toUpperCase()}'
         '${digit4.toRadixString(16).toUpperCase()}';
   }
-
 }

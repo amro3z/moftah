@@ -224,49 +224,47 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       SizedBox(height: ResponsiveSize.height(context, 1)),
                     ],
                     _gap(context),
-
-                   widget.role == AppUserRole.technician
-                        ? CustomListField(
-                            icon: Icons.location_on_outlined,
-                            theme: 'المحافظة',
-                            list: CustomListStore.governorates,
-                            value: selectedGovernorate,
-                            onChanged: (value) {
-                              setState(() {
-                                selectedGovernorate = value;
-                              });
-                            },
-                          )
-                        :  widget.role == AppUserRole.driver
-                            ? CustomListField(
-                            carsLogos: true,
-                                theme: 'ماركة السيارة',
-                                list: CustomListStore.carBrands,
-                                value: selectedCarBrand,
-                                onChanged: (value) {
-                                  setState(() {
-                                    selectedCarBrand = value;
-                                  });
-                                },
-                              )
-                            : const SizedBox.shrink(),
-                    _gap(context),
-
                     CustomListField(
-                      icon: Icons.build_rounded,
-                      theme: 'التخصص',
-                      list: CustomListStore.technicianCategories,
-                      value: selectedCategory,
+                      icon: Icons.location_on_outlined,
+                      theme: 'المحافظة',
+                      list: CustomListStore.governorates,
+                      value: selectedGovernorate,
                       onChanged: (value) {
                         setState(() {
-                          selectedCategory = value;
+                          selectedGovernorate = value;
                         });
                       },
                     ),
+                    _gap(context),
+                    widget.role == AppUserRole.technician
+                        ? CustomListField(
+                            icon: Icons.build_rounded,
+                            theme: 'التخصص',
+                            list: CustomListStore.technicianCategories,
+                            value: selectedCategory,
+                            onChanged: (value) {
+                              setState(() {
+                                selectedCategory = value;
+                              });
+                            },
+                          )
+                        : widget.role == AppUserRole.driver
+                        ? CustomListField(
+                            carsLogos: true,
+                            theme: 'ماركة السيارة',
+                            list: CustomListStore.carBrands,
+                            value: selectedCarBrand,
+                            onChanged: (value) {
+                              setState(() {
+                                selectedCarBrand = value;
+                              });
+                            },
+                          )
+                        : const SizedBox.shrink(),
 
                     _gap(context),
 
-                    const Questions(),
+                    Questions(role: widget.role),
 
                     _gap(context),
 

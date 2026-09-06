@@ -11,10 +11,7 @@ import 'package:moftah/utils/responsive.dart';
 class ObdDeviceSelector extends StatelessWidget {
   final ObdState state;
 
-  const ObdDeviceSelector({
-    super.key,
-    required this.state,
-  });
+  const ObdDeviceSelector({super.key, required this.state});
 
   @override
   Widget build(BuildContext context) {
@@ -30,27 +27,19 @@ class ObdDeviceSelector extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: .055),
         borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: .08),
-        ),
+        border: Border.all(color: Colors.white.withValues(alpha: .08)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
             children: [
-              Icon(
-                Icons.bluetooth_searching_rounded,
-                color: AppColors.info,
-              ),
+              Icon(Icons.bluetooth_searching_rounded, color: AppColors.info),
               SizedBox(width: ResponsiveSize.width(context, 2)),
               Expanded(
                 child: customText(
                   text: 'أجهزة OBD المحتملة',
-                  fontSize: ResponsiveSize.width(
-                    context,
-                    AppSizes.fontSm,
-                  ),
+                  fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
                   color: Colors.white,
                   isBold: true,
                 ),
@@ -68,20 +57,14 @@ class ObdDeviceSelector extends StatelessWidget {
             text:
                 'بنظهر أول 5 أجهزة إحنا شايفين إن احتمال تكون OBD أعلى. '
                 'لو قطعتك مش موجودة افتح كل الأجهزة.',
-            fontSize: ResponsiveSize.width(
-              context,
-              AppSizes.fontXs,
-            ),
+            fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
             color: Colors.white70,
           ),
           if (suggested.isNotEmpty) ...[
             SizedBox(height: ResponsiveSize.height(context, 1)),
             ...suggested.map(
-              (device) => _deviceTile(
-                context,
-                device,
-                likelyObd: _score(device) > 0,
-              ),
+              (device) =>
+                  _deviceTile(context, device, likelyObd: _score(device) > 0),
             ),
           ],
           if (ranked.length > 5) ...[
@@ -89,9 +72,7 @@ class ObdDeviceSelector extends StatelessWidget {
             OutlinedButton(
               onPressed: () => _showAllDevices(context, ranked),
               style: OutlinedButton.styleFrom(
-                side: BorderSide(
-                  color: Colors.white.withValues(alpha: .16),
-                ),
+                side: BorderSide(color: Colors.white.withValues(alpha: .16)),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(AppSizes.radiusSm),
                 ),
@@ -99,17 +80,11 @@ class ObdDeviceSelector extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.expand_more_rounded,
-                    color: Colors.white70,
-                  ),
+                  Icon(Icons.expand_more_rounded, color: Colors.white70),
                   SizedBox(width: ResponsiveSize.width(context, 1.5)),
                   customText(
                     text: 'عرض المزيد',
-                    fontSize: ResponsiveSize.width(
-                      context,
-                      AppSizes.fontSm,
-                    ),
+                    fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
                     color: Colors.white,
                     isBold: true,
                   ),
@@ -122,10 +97,7 @@ class ObdDeviceSelector extends StatelessWidget {
     );
   }
 
-  void _showAllDevices(
-    BuildContext context,
-    List<ObdDeviceModel> devices,
-  ) {
+  void _showAllDevices(BuildContext context, List<ObdDeviceModel> devices) {
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.transparent,
@@ -145,9 +117,7 @@ class ObdDeviceSelector extends StatelessWidget {
             ),
             decoration: const BoxDecoration(
               color: Color(0xFF102747),
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(26),
-              ),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(26)),
             ),
             child: Column(
               children: [
@@ -159,18 +129,11 @@ class ObdDeviceSelector extends StatelessWidget {
                     borderRadius: BorderRadius.circular(AppSizes.radiusLg),
                   ),
                 ),
-                SizedBox(
-                  height: ResponsiveSize.height(sheetContext, 1.5),
-                ),
+                SizedBox(height: ResponsiveSize.height(sheetContext, 1.5)),
                 Row(
                   children: [
-                    Icon(
-                      Icons.devices_rounded,
-                      color: AppColors.info,
-                    ),
-                    SizedBox(
-                      width: ResponsiveSize.width(sheetContext, 2),
-                    ),
+                    Icon(Icons.devices_rounded, color: AppColors.info),
+                    SizedBox(width: ResponsiveSize.width(sheetContext, 2)),
                     Expanded(
                       child: customText(
                         text: 'كل الأجهزة المقترنة',
@@ -192,9 +155,7 @@ class ObdDeviceSelector extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: ResponsiveSize.height(sheetContext, 1),
-                ),
+                SizedBox(height: ResponsiveSize.height(sheetContext, 1)),
                 Expanded(
                   child: ListView.builder(
                     itemCount: devices.length,
@@ -227,39 +188,32 @@ class ObdDeviceSelector extends StatelessWidget {
     VoidCallback? onSelected,
   }) {
     return Padding(
-      padding: EdgeInsets.only(
-        bottom: ResponsiveSize.height(context, .7),
-      ),
+      padding: EdgeInsets.only(bottom: ResponsiveSize.height(context, .7)),
       child: Material(
         color: Colors.white.withValues(alpha: .06),
         borderRadius: BorderRadius.circular(AppSizes.radiusSm),
         child: InkWell(
-          onTap: onSelected ??
+          onTap:
+              onSelected ??
               () {
                 context.read<ObdCubit>().connect(device);
               },
           borderRadius: BorderRadius.circular(AppSizes.radiusSm),
           child: Padding(
-            padding: EdgeInsets.all(
-              ResponsiveSize.width(context, 2.6),
-            ),
+            padding: EdgeInsets.all(ResponsiveSize.width(context, 2.6)),
             child: Row(
               children: [
                 Container(
                   width: ResponsiveSize.width(context, 9.74),
                   height: ResponsiveSize.height(context, 4.5),
                   decoration: BoxDecoration(
-                    color: (likelyObd
-                            ? AppColors.success
-                            : AppColors.info)
+                    color: (likelyObd ? AppColors.success : AppColors.info)
                         .withValues(alpha: .14),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
                     Icons.bluetooth_rounded,
-                    color: likelyObd
-                        ? AppColors.success
-                        : AppColors.info,
+                    color: likelyObd ? AppColors.success : AppColors.info,
                   ),
                 ),
                 SizedBox(width: ResponsiveSize.width(context, 2.5)),
@@ -268,10 +222,7 @@ class ObdDeviceSelector extends StatelessWidget {
                     text: device.name.isEmpty
                         ? 'Bluetooth device'
                         : device.name,
-                    fontSize: ResponsiveSize.width(
-                      context,
-                      AppSizes.fontSm,
-                    ),
+                    fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
                     color: Colors.white,
                     isBold: true,
                   ),
@@ -288,20 +239,14 @@ class ObdDeviceSelector extends StatelessWidget {
                     ),
                     child: customText(
                       text: 'OBD محتمل',
-                      fontSize: ResponsiveSize.width(
-                        context,
-                        AppSizes.fontXs,
-                      ),
+                      fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
                       color: AppColors.success,
                       isBold: true,
                     ),
                   ),
                   SizedBox(width: ResponsiveSize.width(context, 1)),
                 ],
-                Icon(
-                  Icons.arrow_forward_rounded,
-                  color: Colors.white70,
-                ),
+                Icon(Icons.arrow_forward_rounded, color: Colors.white70),
               ],
             ),
           ),

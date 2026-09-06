@@ -57,7 +57,8 @@ class OpeningHoursHelper {
 
           hasValidRange = true;
 
-          if (days.contains(currentDay) && _isInsideRange(currentMinutes, start, end)) {
+          if (days.contains(currentDay) &&
+              _isInsideRange(currentMinutes, start, end)) {
             return true;
           }
         }
@@ -134,13 +135,5 @@ class OpeningHoursHelper {
     return _days[weekday - 1];
   }
 
-  static const List<String> _days = [
-    'Mo',
-    'Tu',
-    'We',
-    'Th',
-    'Fr',
-    'Sa',
-    'Su',
-  ];
+  static const List<String> _days = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
 }

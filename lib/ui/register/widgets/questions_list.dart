@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:moftah/data/models/app_user_role_enum.dart';
 import 'package:moftah/data/models/question_model.dart';
+import 'package:moftah/data/store/registration_questions.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
 import 'package:moftah/ui/register/widgets/questions_card.dart';
 import 'package:moftah/utils/responsive.dart';
 
 class Questions extends StatefulWidget {
-  const Questions({super.key});
-
+  const Questions({super.key, required this.role});
+  final AppUserRole role;
 
   @override
   State<Questions> createState() => _QuestionsState();
@@ -49,26 +51,24 @@ class _QuestionsState extends State<Questions> {
                 ],
               ),
               child: QuestionsCard(
-                questions: const [
-                  QuestionModel(
-                    question: 'هل ممكن تطلع بره الورشة؟',
-                    answerYes: 'نعم',
-                    answerNo: 'لا',
-                  ),
-                  QuestionModel(
-                    question: 'هل عندك أدوات فحص إلكترونية؟',
-                    answerYes: 'متوفر',
-                    answerNo: 'غير متوفر',
-                  ),
-                  QuestionModel(
-                    question: 'هل تستقبل حالات طوارئ؟',
-                    answerYes: 'نعم',
-                    answerNo: 'لا',
-                  ),
-                ],
+                yearPickerQuestions: widget.role == AppUserRole.driver
+                    ? const [1]
+                    : null,
+                datePickerQuestions: widget.role == AppUserRole.driver
+                    ? const [3, 5]
+                    : null,
+                optionsQuestions: widget.role == AppUserRole.driver
+                    ? const [4]
+                    : null,
+                numberQuestions: widget.role == AppUserRole.driver
+                    ? const [2]
+                    : null,
+                isWriteable: widget.role == AppUserRole.driver,
+                questions: widget.role == AppUserRole.driver
+                    ? RegistrationQuestions.driverQuestions
+                    : RegistrationQuestions.technicianQuestions,
                 onCompleted: (answers) {
-                  debugPrint('Answers: $answers');
-
+                  debugPrint('answers: $answers');
                   setState(() {
                     finished = true;
                   });

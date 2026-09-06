@@ -4,8 +4,5 @@ class MapRouteArguments {
   final HomeNearbyPlacesModel? selectedPlace;
   final List<HomeNearbyPlacesModel> nearbyPlaces;
 
-  const MapRouteArguments({
-    this.selectedPlace,
-    this.nearbyPlaces = const [],
-  });
+  const MapRouteArguments({this.selectedPlace, this.nearbyPlaces = const []});
 }

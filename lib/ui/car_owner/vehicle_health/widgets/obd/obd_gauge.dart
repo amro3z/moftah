@@ -56,8 +56,8 @@ class ObdGauge extends StatelessWidget {
                         value: animatedValue,
                         strokeWidth: ResponsiveSize.width(context, 1.54),
                         strokeCap: StrokeCap.round,
-                        backgroundColor:
-                            AppColors.progressBackground.withValues(alpha: .7),
+                        backgroundColor: AppColors.progressBackground
+                            .withValues(alpha: .7),
                         valueColor: AlwaysStoppedAnimation(accent),
                       ),
                     ),

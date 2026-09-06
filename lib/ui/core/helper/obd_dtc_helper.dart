@@ -10,14 +10,16 @@ class ObdDtcHelper {
     if (isManufacturerSpecific(normalized)) {
       return ObdDtcInfo(
         title: 'كود خاص بالشركة المصنعة',
-        description: 'الكود ده معناه بيتغير حسب ماركة وموديل وسنة العربية. هنحتفظ بالكود للتحليل بدل ما نخمن معناه.',
+        description:
+            'الكود ده معناه بيتغير حسب ماركة وموديل وسنة العربية. هنحتفظ بالكود للتحليل بدل ما نخمن معناه.',
         system: systemName(normalized),
       );
     }
 
     return ObdDtcInfo(
       title: subsystemName(normalized),
-      description: 'العربية سجلت عطل في ${systemName(normalized)}، لكن مفيش شرح تفصيلي للكود ده في القاعدة الحالية.',
+      description:
+          'العربية سجلت عطل في ${systemName(normalized)}، لكن مفيش شرح تفصيلي للكود ده في القاعدة الحالية.',
       system: systemName(normalized),
     );
   }

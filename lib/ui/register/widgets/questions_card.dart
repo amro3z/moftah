@@ -1,34 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:moftah/data/models/question_model.dart';
+import 'package:moftah/ui/auth/auth_widgets.dart';
+import 'package:moftah/ui/core/helper/custom_date_picker_field.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
 import 'package:moftah/ui/core/ui/custom_text.dart';
 import 'package:moftah/utils/responsive.dart';
 
 class QuestionsCard extends StatefulWidget {
-  const QuestionsCard({super.key, required this.questions, this.onCompleted});
+  const QuestionsCard({
+    super.key,
+    required this.questions,
+    this.onCompleted,
+    this.isWriteable = false,
+    this.datePickerQuestions,
+    this.yearPickerQuestions,
+    this.optionsQuestions,
+    this.numberQuestions,
+  });
 
+  final bool isWriteable;
   final List<QuestionModel> questions;
-  final ValueChanged<List<bool?>>? onCompleted;
+  final ValueChanged<List<dynamic>>? onCompleted;
+  final List<int>? datePickerQuestions;
+  final List<int>? yearPickerQuestions;
+  final List<int>? optionsQuestions;
+  final List<int>? numberQuestions;
 
   @override
   State<QuestionsCard> createState() => _QuestionsCardState();
 }
 
 class _QuestionsCardState extends State<QuestionsCard> {
-  final PageController _pageController = PageController();
-
   int currentIndex = 0;
-
-  late List<bool?> answers;
-
+  late List<dynamic> answers;
   bool completed = false;
 
   @override
   void initState() {
     super.initState();
-
-    answers = List<bool?>.filled(widget.questions.length, null);
+    answers = List<dynamic>.filled(widget.questions.length, null);
   }
 
   Future<void> _next() async {
@@ -44,11 +56,6 @@ class _QuestionsCardState extends State<QuestionsCard> {
     setState(() {
       currentIndex++;
     });
-
-    await _pageController.nextPage(
-      duration: const Duration(milliseconds: 320),
-      curve: Curves.easeOutCubic,
-    );
   }
 
   Future<void> _finishQuestions() async {
@@ -59,14 +66,7 @@ class _QuestionsCardState extends State<QuestionsCard> {
     await Future<void>.delayed(const Duration(milliseconds: 850));
 
     if (!mounted) return;
-
     widget.onCompleted?.call(answers);
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
   }
 
   @override
@@ -81,7 +81,6 @@ class _QuestionsCardState extends State<QuestionsCard> {
     final progress = (currentIndex + 1) / widget.questions.length;
 
     return Column(
-      key: const ValueKey('questions'),
       children: [
         Row(
           children: [
@@ -98,9 +97,7 @@ class _QuestionsCardState extends State<QuestionsCard> {
                 size: ResponsiveSize.width(context, 5.5),
               ),
             ),
-
             SizedBox(width: ResponsiveSize.width(context, 3)),
-
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,9 +119,7 @@ class _QuestionsCardState extends State<QuestionsCard> {
             ),
           ],
         ),
-
         SizedBox(height: ResponsiveSize.height(context, 1.2)),
-
         ClipRRect(
           borderRadius: BorderRadius.circular(100),
           child: LinearProgressIndicator(
@@ -137,73 +132,30 @@ class _QuestionsCardState extends State<QuestionsCard> {
             ),
           ),
         ),
-
         SizedBox(height: ResponsiveSize.height(context, 1.8)),
+        AnimatedSize(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOutCubic,
+          alignment: Alignment.topCenter,
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            switchInCurve: Curves.easeOutCubic,
+            switchOutCurve: Curves.easeInCubic,
+            transitionBuilder: (child, animation) {
+              final slideAnimation = Tween<Offset>(
+                begin: const Offset(.08, 0),
+                end: Offset.zero,
+              ).animate(animation);
 
-        SizedBox(
-          height: ResponsiveSize.height(context, 18),
-          child: PageView.builder(
-            controller: _pageController,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: widget.questions.length,
-            itemBuilder: (context, index) {
-              final question = widget.questions[index];
-
-              return Column(
-                children: [
-                  customText(
-                    text: question.question,
-                    fontSize: ResponsiveSize.width(context, AppSizes.fontLg),
-                    color: AppColors.primary,
-                    isBold: true,
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                  ),
-
-                  SizedBox(height: ResponsiveSize.height(context, 1.5)),
-
-                  RadioGroup<bool>(
-                    groupValue: answers[index],
-                    onChanged: (value) {
-                      if (value == null) return;
-
-                      setState(() {
-                        answers[index] = value;
-                      });
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _answerCard(
-                          context,
-                          title: question.answerYes,
-                          value: true,
-                          selected: answers[index] == true,
-                          color: AppColors.secondary,
-                          icon: Icons.check_circle_rounded,
-                        ),
-
-                        SizedBox(width: ResponsiveSize.width(context, 4)),
-
-                        _answerCard(
-                          context,
-                          title: question.answerNo,
-                          value: false,
-                          selected: answers[index] == false,
-                          color: AppColors.danger,
-                          icon: Icons.cancel_rounded,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+              return FadeTransition(
+                opacity: animation,
+                child: SlideTransition(position: slideAnimation, child: child),
               );
             },
+            child: _questionContent(context, currentIndex),
           ),
         ),
-
         SizedBox(height: ResponsiveSize.height(context, 1)),
-
         SizedBox(
           width: double.infinity,
           height: ResponsiveSize.height(context, 5.7),
@@ -234,7 +186,181 @@ class _QuestionsCardState extends State<QuestionsCard> {
     );
   }
 
-  Widget _answerCard(
+  Widget _questionContent(BuildContext context, int index) {
+    final question = widget.questions[index];
+
+    return Column(
+      key: ValueKey(index),
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        customText(
+          text: question.question,
+          fontSize: ResponsiveSize.width(context, AppSizes.fontLg),
+          color: AppColors.primary,
+          isBold: true,
+          textAlign: TextAlign.center,
+          maxLines: 3,
+        ),
+        SizedBox(height: ResponsiveSize.height(context, 1.2)),
+        if (widget.yearPickerQuestions?.contains(index) ?? false)
+          CustomDatePickerField(
+            theme: 'سنة التصنيع',
+            value: answers[index] as DateTime?,
+            mode: CustomDatePickerMode.yearOnly,
+            firstDate: DateTime(1980),
+            lastDate: DateTime.now(),
+            onChanged: (value) {
+              setState(() {
+                answers[index] = value;
+              });
+            },
+          )
+        else if (widget.datePickerQuestions?.contains(index) ?? false)
+          CustomDatePickerField(
+            theme: 'التاريخ',
+            value: answers[index] as DateTime?,
+            mode: CustomDatePickerMode.fullDate,
+            firstDate: DateTime(2000),
+            lastDate: DateTime.now(),
+            onChanged: (value) {
+              setState(() {
+                answers[index] = value;
+              });
+            },
+          )
+        else if (widget.optionsQuestions?.contains(index) ?? false)
+          _optionsAnswer(
+            context,
+            index: index,
+            options: question.options ?? const [],
+          )
+        else if (widget.isWriteable)
+          AuthField(
+            icon: widget.numberQuestions?.contains(index) ?? false
+                ? Icons.speed_rounded
+                : Icons.car_repair_rounded,
+            hint: widget.numberQuestions?.contains(index) ?? false
+                ? 'اكتب الرقم هنا'
+                : 'اكتب إجابتك هنا',
+            keyboardType: widget.numberQuestions?.contains(index) ?? false
+                ? TextInputType.number
+                : TextInputType.text,
+            inputFormatters: widget.numberQuestions?.contains(index) ?? false
+                ? [FilteringTextInputFormatter.digitsOnly]
+                : null,
+            onChanged: (value) {
+              setState(() {
+                answers[index] = value.trim().isEmpty ? null : value;
+              });
+            },
+          )
+        else
+          RadioGroup<bool>(
+            groupValue: answers[index] as bool?,
+            onChanged: (value) {
+              if (value == null) return;
+
+              setState(() {
+                answers[index] = value;
+              });
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _boolAnswerCard(
+                  context,
+                  title: question.answerYes!,
+                  value: true,
+                  selected: answers[index] == true,
+                  color: AppColors.secondary,
+                  icon: Icons.check_circle_rounded,
+                ),
+                SizedBox(width: ResponsiveSize.width(context, 4)),
+                _boolAnswerCard(
+                  context,
+                  title: question.answerNo!,
+                  value: false,
+                  selected: answers[index] == false,
+                  color: AppColors.danger,
+                  icon: Icons.cancel_rounded,
+                ),
+              ],
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _optionsAnswer(
+    BuildContext context, {
+    required int index,
+    required List<String> options,
+  }) {
+    if (options.isEmpty) {
+      return customText(
+        text: 'لا توجد اختيارات متاحة',
+        fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
+        color: AppColors.textMuted,
+      );
+    }
+
+    return Wrap(
+      alignment: WrapAlignment.center,
+      spacing: ResponsiveSize.width(context, 2),
+      runSpacing: ResponsiveSize.height(context, .8),
+      children: options.map((option) {
+        final selected = answers[index] == option;
+
+        return GestureDetector(
+          onTap: () {
+            setState(() {
+              answers[index] = option;
+            });
+          },
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+            padding: EdgeInsets.symmetric(
+              horizontal: ResponsiveSize.width(context, 4),
+              vertical: ResponsiveSize.height(context, 1.15),
+            ),
+            decoration: BoxDecoration(
+              color: selected
+                  ? AppColors.secondary.withValues(alpha: .10)
+                  : AppColors.surfaceLight,
+              borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+              border: Border.all(
+                color: selected
+                    ? AppColors.secondary
+                    : AppColors.border.withValues(alpha: .12),
+                width: selected ? 1.3 : 1,
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (selected) ...[
+                  Icon(
+                    Icons.check_circle_rounded,
+                    color: AppColors.secondary,
+                    size: ResponsiveSize.width(context, 4.5),
+                  ),
+                  SizedBox(width: ResponsiveSize.width(context, 1.5)),
+                ],
+                customText(
+                  text: option,
+                  fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
+                  color: selected ? AppColors.secondary : AppColors.primary,
+                  isBold: selected,
+                ),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _boolAnswerCard(
     BuildContext context, {
     required String title,
     required bool value,
@@ -251,10 +377,8 @@ class _QuestionsCardState extends State<QuestionsCard> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeOutCubic,
-
         width: ResponsiveSize.width(context, 27),
         height: ResponsiveSize.height(context, 12),
-
         padding: EdgeInsets.symmetric(
           horizontal: ResponsiveSize.width(context, 2),
           vertical: ResponsiveSize.height(context, .8),
@@ -286,9 +410,7 @@ class _QuestionsCardState extends State<QuestionsCard> {
               size: ResponsiveSize.width(context, 5.2),
               color: selected ? color : AppColors.textMuted,
             ),
-
             SizedBox(height: ResponsiveSize.height(context, .25)),
-
             customText(
               text: title,
               fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
@@ -296,9 +418,7 @@ class _QuestionsCardState extends State<QuestionsCard> {
               isBold: true,
               textAlign: TextAlign.center,
             ),
-
             SizedBox(height: ResponsiveSize.height(context, .1)),
-
             SizedBox(
               width: ResponsiveSize.width(context, 6),
               height: ResponsiveSize.width(context, 6),
@@ -339,9 +459,7 @@ class _QuestionsCardState extends State<QuestionsCard> {
                 ),
               ),
             ),
-
             SizedBox(height: ResponsiveSize.height(context, .7)),
-
             customText(
               text: 'تم حفظ الإجابات',
               fontSize: ResponsiveSize.width(context, AppSizes.fontMd),

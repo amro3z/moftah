@@ -14,70 +14,84 @@ class ObdCubit extends Cubit<ObdState> {
   void _trace(String line) {
     if (isClosed) return;
     final next = [...state.trace, line];
-    emit(state.copyWith(
-      trace: next.length > 100 ? next.sublist(next.length - 100) : next,
-    ));
+    emit(
+      state.copyWith(
+        trace: next.length > 100 ? next.sublist(next.length - 100) : next,
+      ),
+    );
   }
 
   Future<void> loadPairedDevices() async {
-    emit(state.copyWith(
-      status: ObdStatus.loadingDevices,
-      connectionStage: ObdConnectionStage.checkingPairedDevices,
-      trace: const [
-        'بنتأكد إن البلوتوث جاهز...',
-        'بندور على الأجهزة اللي معمولها اقتران...',
-      ],
-      clearMessage: true,
-    ));
+    emit(
+      state.copyWith(
+        status: ObdStatus.loadingDevices,
+        connectionStage: ObdConnectionStage.checkingPairedDevices,
+        trace: const [
+          'بنتأكد إن البلوتوث جاهز...',
+          'بندور على الأجهزة اللي معمولها اقتران...',
+        ],
+        clearMessage: true,
+      ),
+    );
     try {
       final devices = await repository.getPairedDevices();
       _trace('لقينا ${devices.length} جهاز معمول له اقتران.');
-      emit(state.copyWith(
-        status: ObdStatus.ready,
-        connectionStage: devices.isEmpty
-            ? ObdConnectionStage.idle
-            : ObdConnectionStage.waitingForDeviceSelection,
-        devices: devices,
-        message: devices.isEmpty
-            ? 'مفيش أجهزة مقترنة. اعمل اقتران للـ ELM327 من إعدادات الموبايل وجرب تاني.'
-            : 'اختار قطعة الفحص بتاعتك علشان نبدأ.',
-      ));
+      emit(
+        state.copyWith(
+          status: ObdStatus.ready,
+          connectionStage: devices.isEmpty
+              ? ObdConnectionStage.idle
+              : ObdConnectionStage.waitingForDeviceSelection,
+          devices: devices,
+          message: devices.isEmpty
+              ? 'مفيش أجهزة مقترنة. اعمل اقتران للـ ELM327 من إعدادات الموبايل وجرب تاني.'
+              : 'اختار قطعة الفحص بتاعتك علشان نبدأ.',
+        ),
+      );
     } catch (_) {
-      emit(state.copyWith(
-        status: ObdStatus.error,
-        connectionStage: ObdConnectionStage.idle,
-        message: 'مقدرناش نقرأ أجهزة البلوتوث المقترنة.',
-      ));
+      emit(
+        state.copyWith(
+          status: ObdStatus.error,
+          connectionStage: ObdConnectionStage.idle,
+          message: 'مقدرناش نقرأ أجهزة البلوتوث المقترنة.',
+        ),
+      );
     }
   }
 
   Future<void> connect(ObdDeviceModel device) async {
     final attempt = ++_connectionAttempt;
-    emit(state.copyWith(
-      status: ObdStatus.connecting,
-      connectionStage: ObdConnectionStage.connectingBluetooth,
-      trace: ['اخترت: ${device.name}', 'بنفتح اتصال مباشر مع قطعة الفحص...'],
-      clearMessage: true,
-      clearSnapshot: true,
-    ));
+    emit(
+      state.copyWith(
+        status: ObdStatus.connecting,
+        connectionStage: ObdConnectionStage.connectingBluetooth,
+        trace: ['اخترت: ${device.name}', 'بنفتح اتصال مباشر مع قطعة الفحص...'],
+        clearMessage: true,
+        clearSnapshot: true,
+      ),
+    );
     try {
       final connected = await repository.connectBluetooth(device.address);
       if (attempt != _connectionAttempt || isClosed) return;
       if (!connected) {
-        emit(state.copyWith(
-          status: ObdStatus.error,
-          connectionStage: ObdConnectionStage.idle,
-          message: 'الاتصال بالقطعة فشل. اقفل أي تطبيق OBD تاني وجرب.',
-        ));
+        emit(
+          state.copyWith(
+            status: ObdStatus.error,
+            connectionStage: ObdConnectionStage.idle,
+            message: 'الاتصال بالقطعة فشل. اقفل أي تطبيق OBD تاني وجرب.',
+          ),
+        );
         return;
       }
 
       _trace('اتصلنا بقطعة الفحص بنجاح.');
-      emit(state.copyWith(
-        status: ObdStatus.connecting,
-        connectionStage: ObdConnectionStage.initializingAdapter,
-        connectedDevice: device,
-      ));
+      emit(
+        state.copyWith(
+          status: ObdStatus.connecting,
+          connectionStage: ObdConnectionStage.initializingAdapter,
+          connectedDevice: device,
+        ),
+      );
 
       await repository.initializeAdapter(onTrace: _trace);
       if (attempt != _connectionAttempt || isClosed) return;
@@ -85,23 +99,27 @@ class ObdCubit extends Cubit<ObdState> {
       if (attempt != _connectionAttempt || isClosed) return;
       _trace('قطعة الفحص: $adapterName');
 
-      emit(state.copyWith(
-        status: ObdStatus.reading,
-        connectionStage: ObdConnectionStage.detectingProtocol,
-        connectedDevice: device,
-        adapterName: adapterName,
-      ));
+      emit(
+        state.copyWith(
+          status: ObdStatus.reading,
+          connectionStage: ObdConnectionStage.detectingProtocol,
+          connectedDevice: device,
+          adapterName: adapterName,
+        ),
+      );
 
       if (attempt != _connectionAttempt || isClosed) return;
       await _firstVehicleScan();
     } catch (error) {
       if (attempt != _connectionAttempt || isClosed) return;
       _trace('حصل خطأ أثناء الاتصال: $error');
-      emit(state.copyWith(
-        status: ObdStatus.error,
-        connectionStage: ObdConnectionStage.idle,
-        message: 'الاتصال مكملش. شوف سجل الفحص تحت لمعرفة آخر خطوة.',
-      ));
+      emit(
+        state.copyWith(
+          status: ObdStatus.error,
+          connectionStage: ObdConnectionStage.idle,
+          message: 'الاتصال مكملش. شوف سجل الفحص تحت لمعرفة آخر خطوة.',
+        ),
+      );
     }
   }
 
@@ -109,39 +127,53 @@ class ObdCubit extends Cubit<ObdState> {
     _trace('أول مرة بس: بندور على بروتوكول العربية المناسب...');
     final snapshot = await repository.readSnapshot(onTrace: _trace);
     if (!snapshot.ecuAvailable) {
-      emit(state.copyWith(
-        status: ObdStatus.connected,
-        connectionStage: ObdConnectionStage.ecuNotResponding,
-        snapshot: snapshot,
-        message: 'القطعة متصلة، بس كمبيوتر العربية مردش. خلي الكونتاكت ON وجرب تاني.',
-      ));
+      emit(
+        state.copyWith(
+          status: ObdStatus.connected,
+          connectionStage: ObdConnectionStage.ecuNotResponding,
+          snapshot: snapshot,
+          message:
+              'القطعة متصلة، بس كمبيوتر العربية مردش. خلي الكونتاكت ON وجرب تاني.',
+        ),
+      );
       return;
     }
 
-    _trace('تمام، لقينا بروتوكول العربية. هنفضل على نفس السيشن ونحدث القراءات مباشرة.');
-    emit(state.copyWith(
-      status: ObdStatus.connected,
-      connectionStage: ObdConnectionStage.done,
-      snapshot: snapshot,
-      clearMessage: true,
-    ));
+    _trace(
+      'تمام، لقينا بروتوكول العربية. هنفضل على نفس السيشن ونحدث القراءات مباشرة.',
+    );
+    emit(
+      state.copyWith(
+        status: ObdStatus.connected,
+        connectionStage: ObdConnectionStage.done,
+        snapshot: snapshot,
+        clearMessage: true,
+      ),
+    );
   }
 
   Future<void> refreshLiveData() async {
-    if (!state.isConnected || !repository.ecuReady || _liveReadRunning || _dtcReadRunning) return;
+    if (!state.isConnected ||
+        !repository.ecuReady ||
+        _liveReadRunning ||
+        _dtcReadRunning)
+      return;
     _liveReadRunning = true;
     try {
-      final oldCodes = state.snapshot?.troubleCodes ?? const <ObdTroubleCodeModel>[];
+      final oldCodes =
+          state.snapshot?.troubleCodes ?? const <ObdTroubleCodeModel>[];
       final snapshot = await repository.readLiveSnapshot(
         troubleCodes: oldCodes,
       );
       if (!isClosed) {
-        emit(state.copyWith(
-          status: ObdStatus.connected,
-          connectionStage: ObdConnectionStage.done,
-          snapshot: snapshot,
-          clearMessage: true,
-        ));
+        emit(
+          state.copyWith(
+            status: ObdStatus.connected,
+            connectionStage: ObdConnectionStage.done,
+            snapshot: snapshot,
+            clearMessage: true,
+          ),
+        );
       }
     } catch (error) {
       _trace('قراءة Live اتقطعت: $error');
@@ -152,10 +184,15 @@ class ObdCubit extends Cubit<ObdState> {
 
   /// تحديث الأعطال أثناء نفس السيشن ومقارنة اللي ظهر واللي اختفى.
   Future<void> refreshTroubleCodes() async {
-    if (!state.isConnected || !repository.ecuReady || _dtcReadRunning || _liveReadRunning) return;
+    if (!state.isConnected ||
+        !repository.ecuReady ||
+        _dtcReadRunning ||
+        _liveReadRunning)
+      return;
     _dtcReadRunning = true;
     try {
-      final before = state.snapshot?.troubleCodes ?? const <ObdTroubleCodeModel>[];
+      final before =
+          state.snapshot?.troubleCodes ?? const <ObdTroubleCodeModel>[];
       final after = await repository.readTroubleCodes();
       final beforeCodes = before.map((e) => e.code).toSet();
       final afterCodes = after.map((e) => e.code).toSet();
@@ -169,17 +206,21 @@ class ObdCubit extends Cubit<ObdState> {
 
       final current = state.snapshot;
       if (current != null && !isClosed) {
-        emit(state.copyWith(snapshot: ObdSnapshotModel(
-          ecuAvailable: current.ecuAvailable,
-          rpm: current.rpm,
-          speedKmh: current.speedKmh,
-          coolantTemperature: current.coolantTemperature,
-          intakeAirTemperature: current.intakeAirTemperature,
-          engineLoadPercent: current.engineLoadPercent,
-          throttlePositionPercent: current.throttlePositionPercent,
-          adapterVoltage: current.adapterVoltage,
-          troubleCodes: after,
-        )));
+        emit(
+          state.copyWith(
+            snapshot: ObdSnapshotModel(
+              ecuAvailable: current.ecuAvailable,
+              rpm: current.rpm,
+              speedKmh: current.speedKmh,
+              coolantTemperature: current.coolantTemperature,
+              intakeAirTemperature: current.intakeAirTemperature,
+              engineLoadPercent: current.engineLoadPercent,
+              throttlePositionPercent: current.throttlePositionPercent,
+              adapterVoltage: current.adapterVoltage,
+              troubleCodes: after,
+            ),
+          ),
+        );
       }
     } finally {
       _dtcReadRunning = false;
@@ -190,7 +231,9 @@ class ObdCubit extends Cubit<ObdState> {
   Future<void> refreshDiagnostics({bool showConnectionStage = false}) async {
     if (!state.isConnected) return;
     if (repository.ecuReady) {
-      _trace('تحديث يدوي: بنقرأ الداتا الجديدة من العربية على نفس السيشن والبروتوكول...');
+      _trace(
+        'تحديث يدوي: بنقرأ الداتا الجديدة من العربية على نفس السيشن والبروتوكول...',
+      );
       await refreshLiveData();
       await refreshTroubleCodes();
       _trace('التحديث خلص من غير إعادة بحث عن البروتوكول.');
@@ -220,14 +263,16 @@ class ObdCubit extends Cubit<ObdState> {
       await repository.disconnect();
     } finally {
       if (!isClosed) {
-        emit(state.copyWith(
-          status: ObdStatus.ready,
-          connectionStage: ObdConnectionStage.waitingForDeviceSelection,
-          clearConnectedDevice: true,
-          clearSnapshot: true,
-          adapterName: '',
-          message: 'اختار قطعة فحص تانية وجرب.',
-        ));
+        emit(
+          state.copyWith(
+            status: ObdStatus.ready,
+            connectionStage: ObdConnectionStage.waitingForDeviceSelection,
+            clearConnectedDevice: true,
+            clearSnapshot: true,
+            adapterName: '',
+            message: 'اختار قطعة فحص تانية وجرب.',
+          ),
+        );
       }
     }
   }
@@ -236,15 +281,17 @@ class ObdCubit extends Cubit<ObdState> {
     try {
       await repository.disconnect();
     } finally {
-      emit(state.copyWith(
-        status: ObdStatus.ready,
-        connectionStage: ObdConnectionStage.waitingForDeviceSelection,
-        clearConnectedDevice: true,
-        clearSnapshot: true,
-        adapterName: '',
-        trace: const [],
-        clearMessage: true,
-      ));
+      emit(
+        state.copyWith(
+          status: ObdStatus.ready,
+          connectionStage: ObdConnectionStage.waitingForDeviceSelection,
+          clearConnectedDevice: true,
+          clearSnapshot: true,
+          adapterName: '',
+          trace: const [],
+          clearMessage: true,
+        ),
+      );
     }
   }
 

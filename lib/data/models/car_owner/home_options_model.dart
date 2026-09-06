@@ -11,4 +11,3 @@ class HomeOptionItemModel {
     required this.path,
   });
 }
-

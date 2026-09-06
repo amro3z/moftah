@@ -10,14 +10,14 @@ enum RoadsideAssistanceType {
 
 extension RoadsideAssistanceTypeX on RoadsideAssistanceType {
   String get label => switch (this) {
-        RoadsideAssistanceType.tow => 'ونش',
-        RoadsideAssistanceType.battery => 'بطارية',
-        RoadsideAssistanceType.tire => 'كاوتش',
-        RoadsideAssistanceType.mobileMechanic => 'ميكانيكي متنقل',
-        RoadsideAssistanceType.overheating => 'ارتفاع حرارة',
-        RoadsideAssistanceType.accident => 'حادث',
-        RoadsideAssistanceType.other => 'أخرى',
-      };
+    RoadsideAssistanceType.tow => 'ونش',
+    RoadsideAssistanceType.battery => 'بطارية',
+    RoadsideAssistanceType.tire => 'كاوتش',
+    RoadsideAssistanceType.mobileMechanic => 'ميكانيكي متنقل',
+    RoadsideAssistanceType.overheating => 'ارتفاع حرارة',
+    RoadsideAssistanceType.accident => 'حادث',
+    RoadsideAssistanceType.other => 'أخرى',
+  };
 }
 
 class TowServiceModel {
@@ -77,7 +77,6 @@ class RoadsideChatModel {
     );
   }
 }
-
 
 class TowTrackingArguments {
   final TowServiceModel service;

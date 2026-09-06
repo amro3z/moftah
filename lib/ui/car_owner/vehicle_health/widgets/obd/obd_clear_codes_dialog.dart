@@ -90,7 +90,9 @@ Future<void> showObdClearCodesDialog(BuildContext context) async {
                           vertical: ResponsiveSize.height(context, 1.1),
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+                          borderRadius: BorderRadius.circular(
+                            AppSizes.radiusMd,
+                          ),
                         ),
                       ),
                       child: customText(
@@ -114,7 +116,9 @@ Future<void> showObdClearCodesDialog(BuildContext context) async {
                           vertical: ResponsiveSize.height(context, 1.1),
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+                          borderRadius: BorderRadius.circular(
+                            AppSizes.radiusMd,
+                          ),
                         ),
                       ),
                       child: customText(

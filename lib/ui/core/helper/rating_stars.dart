@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:moftah/utils/responsive.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
 
-Widget ratingStars({required BuildContext context, required double numberOfStars}) {
+Widget ratingStars({
+  required BuildContext context,
+  required double numberOfStars,
+}) {
   final fullStars = numberOfStars.floor();
   final hasHalfStar = (numberOfStars - fullStars) >= 0.5;
   final emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);

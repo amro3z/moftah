@@ -8,7 +8,6 @@ class VehicleCardInfo extends StatelessWidget {
   final String nextMaintenance;
   final String lastMaintenance;
 
-
   const VehicleCardInfo({
     super.key,
     required this.nextMaintenance,

@@ -18,7 +18,7 @@ class CustomListField extends StatelessWidget {
     required this.onChanged,
     required this.list,
     required this.theme,
-     this.icon,
+    this.icon,
     this.carsLogos = false,
   });
 
@@ -133,7 +133,7 @@ class _ListBottomSheet extends StatefulWidget {
     required this.currentValue,
     required this.list,
     required this.theme,
-     this.icon,
+    this.icon,
     required this.carsLogos,
   });
 
@@ -327,12 +327,12 @@ class _ListBottomSheetState extends State<_ListBottomSheet> {
                                     showContainer: false,
                                   )
                                 : Icon(
-                              widget.icon ?? Icons.circle_outlined,
-                              color: selected
-                                  ? AppColors.textSecondary
-                                  : AppColors.secondary,
-                              size: ResponsiveSize.width(context, 4),
-                            ),
+                                    widget.icon ?? Icons.circle_outlined,
+                                    color: selected
+                                        ? AppColors.textSecondary
+                                        : AppColors.secondary,
+                                    size: ResponsiveSize.width(context, 4),
+                                  ),
                           ),
 
                           SizedBox(width: ResponsiveSize.width(context, 3)),

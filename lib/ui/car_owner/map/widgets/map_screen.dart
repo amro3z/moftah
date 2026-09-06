@@ -152,10 +152,7 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
         return;
       }
 
-      final currentLocation = LatLng(
-        position.latitude,
-        position.longitude,
-      );
+      final currentLocation = LatLng(position.latitude, position.longitude);
 
       if (!mounted) return;
       setState(() {
@@ -293,10 +290,7 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
       final position = await LocationService.getNavigationPosition();
       if (position == null || !mounted) return;
 
-      final newLocation = LatLng(
-        position.latitude,
-        position.longitude,
-      );
+      final newLocation = LatLng(position.latitude, position.longitude);
 
       final previousLocation = _currentLocation;
       final movedMeters = previousLocation == null
@@ -375,12 +369,7 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
 
       if (fitRoute && _isMapReady && !_isNavigationMode) {
         final routePoints = route.points
-            .map(
-              (point) => LatLng(
-                point.latitude,
-                point.longitude,
-              ),
-            )
+            .map((point) => LatLng(point.latitude, point.longitude))
             .toList();
 
         if (routePoints.isNotEmpty) {
@@ -418,10 +407,7 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
 
       if (position != null && mounted) {
         setState(() {
-          _currentLocation = LatLng(
-            position.latitude,
-            position.longitude,
-          );
+          _currentLocation = LatLng(position.latitude, position.longitude);
           _currentHeading = _normalizedHeading(position.heading);
         });
       }
@@ -444,10 +430,7 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
       _routeError = null;
     });
 
-    await _loadFastestRoute(
-      fitRoute: false,
-      showLoading: _activeRoute == null,
-    );
+    await _loadFastestRoute(fitRoute: false, showLoading: _activeRoute == null);
 
     _focusNavigationCamera();
     _startNavigationTimer();
@@ -490,11 +473,7 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
     final heading = _currentHeading > 0 ? _currentHeading : routeBearing;
     final mapRotation = (360 - heading) % 360;
 
-    _mapController.moveAndRotate(
-      _currentLocation!,
-      17.0,
-      mapRotation,
-    );
+    _mapController.moveAndRotate(_currentLocation!, 17.0, mapRotation);
   }
 
   double _normalizedHeading(double heading) {
@@ -532,8 +511,7 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
       );
 
       final minimumMovement = radiusMeters * 0.30;
-      if (movedMeters < minimumMovement &&
-          (previousZoom - zoom).abs() < 0.8) {
+      if (movedMeters < minimumMovement && (previousZoom - zoom).abs() < 0.8) {
         return;
       }
     }
@@ -621,49 +599,47 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
     _pendingMapAreaZoom = null;
 
     if (pendingCenter != null && pendingZoom != null && mounted) {
-      _scheduleMapAreaSearch(
-        pendingCenter,
-        pendingZoom,
-        force: true,
-      );
+      _scheduleMapAreaSearch(pendingCenter, pendingZoom, force: true);
     }
   }
 
   List<Marker> _buildWorkshopMarkers() {
     return _nearbyPlaces
         .where(_hasValidCoordinates)
-        .where(
-          (place) => _selectedPlace?.externalId != place.externalId,
-        )
+        .where((place) => _selectedPlace?.externalId != place.externalId)
         .map((place) {
-      return Marker(
-        point: LatLng(place.latitude, place.longitude),
-        width: ResponsiveSize.width(context, 11.28),
-        height: ResponsiveSize.height(context, 5.21),
-        child: GestureDetector(
-          onTap: () => _selectPlace(place),
-          child: Container(
-            decoration: BoxDecoration(
-              color: AppColors.primary,
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: ResponsiveSize.width(context, 0.77)),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.18),
-                  blurRadius: 7,
-                  offset: const Offset(0, 3),
+          return Marker(
+            point: LatLng(place.latitude, place.longitude),
+            width: ResponsiveSize.width(context, 11.28),
+            height: ResponsiveSize.height(context, 5.21),
+            child: GestureDetector(
+              onTap: () => _selectPlace(place),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Colors.white,
+                    width: ResponsiveSize.width(context, 0.77),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.18),
+                      blurRadius: 7,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
                 ),
-              ],
+                child: Icon(
+                  Icons.car_repair_rounded,
+                  color: Colors.white,
+                  size: ResponsiveSize.width(context, 5.64),
+                ),
+              ),
             ),
-            child: Icon(
-              Icons.car_repair_rounded,
-              color: Colors.white,
-              size: ResponsiveSize.width(context, 5.64),
-            ),
-          ),
-        ),
-      );
-    }).toList();
+          );
+        })
+        .toList();
   }
 
   List<Marker> _buildDestinationMarker() {
@@ -680,7 +656,10 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
           decoration: BoxDecoration(
             color: AppColors.danger,
             shape: BoxShape.circle,
-            border: Border.all(color: Colors.white, width: ResponsiveSize.width(context, 0.77)),
+            border: Border.all(
+              color: Colors.white,
+              width: ResponsiveSize.width(context, 0.77),
+            ),
             boxShadow: [
               BoxShadow(
                 color: AppColors.danger.withValues(alpha: 0.28),
@@ -714,7 +693,10 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
             decoration: BoxDecoration(
               color: AppColors.secondary,
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: ResponsiveSize.width(context, 0.77)),
+              border: Border.all(
+                color: Colors.white,
+                width: ResponsiveSize.width(context, 0.77),
+              ),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.22),
@@ -742,7 +724,10 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
           decoration: BoxDecoration(
             color: AppColors.secondary,
             shape: BoxShape.circle,
-            border: Border.all(color: Colors.white, width: ResponsiveSize.width(context, 1.03)),
+            border: Border.all(
+              color: Colors.white,
+              width: ResponsiveSize.width(context, 1.03),
+            ),
             boxShadow: [
               BoxShadow(
                 color: AppColors.secondary.withValues(alpha: 0.25),
@@ -762,12 +747,7 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
     return [
       Polyline(
         points: route.points
-            .map(
-              (point) => LatLng(
-                point.latitude,
-                point.longitude,
-              ),
-            )
+            .map((point) => LatLng(point.latitude, point.longitude))
             .toList(),
         color: AppColors.secondary,
         strokeWidth: ResponsiveSize.width(context, 1.28),
@@ -803,19 +783,12 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
                 _moveToCurrentLocationIfNeeded();
 
                 if (widget.selectedPlace == null && _currentLocation != null) {
-                  _scheduleMapAreaSearch(
-                    _currentLocation!,
-                    11,
-                    force: true,
-                  );
+                  _scheduleMapAreaSearch(_currentLocation!, 11, force: true);
                 }
               },
               onPositionChanged: (camera, hasGesture) {
                 if (hasGesture && !_isNavigationMode) {
-                  _scheduleMapAreaSearch(
-                    camera.center,
-                    camera.zoom,
-                  );
+                  _scheduleMapAreaSearch(camera.center, camera.zoom);
                 }
               },
               onTap: (tapPosition, point) {
@@ -832,9 +805,7 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
                 panBuffer: 0,
               ),
               if (_activeRoute != null)
-                PolylineLayer(
-                  polylines: _buildRoutePolylines(),
-                ),
+                PolylineLayer(polylines: _buildRoutePolylines()),
               MarkerLayer(
                 markers: [
                   if (!_isNavigationMode) ..._buildWorkshopMarkers(),
@@ -852,11 +823,7 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
           if (!_isNavigationMode) _backButton(context),
           if (_isNavigationMode) _navigationInstructionCard(context),
           if (_isLoadingLocation)
-            Center(
-              child: AppLoadingIndicator(
-                message: 'بنحدد موقعك...',
-              ),
-            ),
+            Center(child: AppLoadingIndicator(message: 'بنحدد موقعك...')),
           if (_isSearchingPlaces)
             Center(
               child: AppLoadingIndicator(
@@ -916,10 +883,7 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
               Flexible(
                 child: customText(
                   text: 'بنحدّث الورش في المنطقة دي...',
-                  fontSize: ResponsiveSize.width(
-                    context,
-                    AppSizes.fontSm,
-                  ),
+                  fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
                   color: AppColors.primary,
                   isBold: true,
                 ),
@@ -971,10 +935,7 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
             borderRadius: BorderRadius.circular(AppSizes.radiusSm),
             child: IconButton(
               onPressed: () => Navigator.pop(context),
-              icon: Icon(
-                Icons.arrow_back_rounded,
-                color: AppColors.primary,
-              ),
+              icon: Icon(Icons.arrow_back_rounded, color: AppColors.primary),
             ),
           ),
         ),
@@ -984,10 +945,7 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
 
   Widget _errorMessage(BuildContext context) {
     return Center(
-      child: AppRetryIndicator(
-        message: _mapError!,
-        onRetry: _initializeMap,
-      ),
+      child: AppRetryIndicator(message: _mapError!, onRetry: _initializeMap),
     );
   }
 
@@ -1005,9 +963,7 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
           customBorder: const CircleBorder(),
           onTap: _goToMyLocation,
           child: Padding(
-            padding: EdgeInsets.all(
-              ResponsiveSize.width(context, 3.5),
-            ),
+            padding: EdgeInsets.all(ResponsiveSize.width(context, 3.5)),
             child: Icon(
               Icons.my_location_rounded,
               color: Colors.white,
@@ -1019,10 +975,7 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
     );
   }
 
-  Widget _placeCard(
-    BuildContext context,
-    HomeNearbyPlacesModel place,
-  ) {
+  Widget _placeCard(BuildContext context, HomeNearbyPlacesModel place) {
     return Positioned(
       left: ResponsiveSize.width(context, 5),
       right: ResponsiveSize.width(context, 5),
@@ -1051,10 +1004,7 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
                   Expanded(
                     child: customText(
                       text: place.name,
-                      fontSize: ResponsiveSize.width(
-                        context,
-                        AppSizes.fontLg,
-                      ),
+                      fontSize: ResponsiveSize.width(context, AppSizes.fontLg),
                       color: AppColors.primary,
                       isBold: true,
                     ),
@@ -1186,8 +1136,7 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
           SizedBox(width: ResponsiveSize.width(context, 1.5)),
           Expanded(
             child: customText(
-              text:
-                  'أسرع طريق • $minutes دقيقة • تحديث تلقائي كل 5 ثواني',
+              text: 'أسرع طريق • $minutes دقيقة • تحديث تلقائي كل 5 ثواني',
               fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
               color: AppColors.primary,
               isBold: true,
@@ -1199,9 +1148,8 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
   }
 
   Widget _startNavigationButton(BuildContext context) {
-    final canStart = _activeRoute != null &&
-        _currentLocation != null &&
-        !_isLoadingRoute;
+    final canStart =
+        _activeRoute != null && _currentLocation != null && !_isLoadingRoute;
 
     return SizedBox(
       width: double.infinity,
@@ -1297,9 +1245,7 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
                         color: AppColors.info,
                         isBold: true,
                       ),
-                      SizedBox(
-                        height: ResponsiveSize.height(context, 0.3),
-                      ),
+                      SizedBox(height: ResponsiveSize.height(context, 0.3)),
                       customText(
                         text: step == null
                             ? 'جاري تحديث تعليمات الطريق...'
@@ -1358,19 +1304,13 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
                   children: [
                     customText(
                       text: '$minutes دقيقة',
-                      fontSize: ResponsiveSize.width(
-                        context,
-                        AppSizes.fontLg,
-                      ),
+                      fontSize: ResponsiveSize.width(context, AppSizes.fontLg),
                       color: AppColors.secondary,
                       isBold: true,
                     ),
                     customText(
                       text: '${distanceKm.toStringAsFixed(1)} كم • تحديث مباشر',
-                      fontSize: ResponsiveSize.width(
-                        context,
-                        AppSizes.fontXs,
-                      ),
+                      fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
                       color: AppColors.progressBackground,
                     ),
                   ],
@@ -1404,14 +1344,14 @@ class _MapScreenState extends State<MapScreen> with WidgetsBindingObserver {
     final text = isOpen == true
         ? 'مفتوح الآن'
         : isOpen == false
-            ? 'مغلق الآن'
-            : 'غير مؤكد';
+        ? 'مغلق الآن'
+        : 'غير مؤكد';
 
     final color = isOpen == true
         ? AppColors.success
         : isOpen == false
-            ? AppColors.danger
-            : AppColors.progressBackground;
+        ? AppColors.danger
+        : AppColors.progressBackground;
 
     return Container(
       padding: EdgeInsets.symmetric(

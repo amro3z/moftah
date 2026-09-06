@@ -119,7 +119,11 @@ class ReportVehicleStep extends StatelessWidget {
         ),
       ),
       child: selected
-          ? Icon(Icons.check_rounded, color: Colors.white, size: ResponsiveSize.width(context, 4.62))
+          ? Icon(
+              Icons.check_rounded,
+              color: Colors.white,
+              size: ResponsiveSize.width(context, 4.62),
+            )
           : null,
     );
   }

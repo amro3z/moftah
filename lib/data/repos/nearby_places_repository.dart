@@ -9,9 +9,9 @@ class NearbyPlacesRepository {
   NearbyPlacesRepository({
     OverpassNearbyPlacesDataSource? dataSource,
     WorkshopRatingRepository? ratingRepository,
-  })  : _dataSource = dataSource ?? OverpassNearbyPlacesDataSource(),
-        _ratingRepository =
-            ratingRepository ?? WorkshopRatingRepository.instance;
+  }) : _dataSource = dataSource ?? OverpassNearbyPlacesDataSource(),
+       _ratingRepository =
+           ratingRepository ?? WorkshopRatingRepository.instance;
 
   final OverpassNearbyPlacesDataSource _dataSource;
   final WorkshopRatingRepository _ratingRepository;
@@ -202,7 +202,6 @@ class NearbyPlacesRepository {
   List<HomeNearbyPlacesModel> _sortedByDistance(
     Iterable<HomeNearbyPlacesModel> places,
   ) {
-    return places.toList()
-      ..sort((a, b) => a.distance.compareTo(b.distance));
+    return places.toList()..sort((a, b) => a.distance.compareTo(b.distance));
   }
 }

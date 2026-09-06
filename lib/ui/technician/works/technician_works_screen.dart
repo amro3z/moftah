@@ -22,7 +22,7 @@ class TechnicianWorksScreen extends StatelessWidget {
         child: Scaffold(
           backgroundColor: AppColors.background,
           appBar: AppBar(
-          automaticallyImplyLeading: false,
+            automaticallyImplyLeading: false,
             scrolledUnderElevation: 0,
             elevation: 0,
             backgroundColor: AppColors.background,
@@ -83,14 +83,8 @@ class TechnicianWorksScreen extends StatelessWidget {
           ),
           body: TabBarView(
             children: [
-              _WorksList(
-                items: store.currentJobs,
-                isCurrent: true,
-              ),
-              _WorksList(
-                items: store.previousJobs,
-                isCurrent: false,
-              ),
+              _WorksList(items: store.currentJobs, isCurrent: true),
+              _WorksList(items: store.previousJobs, isCurrent: false),
             ],
           ),
           bottomNavigationBar: const TechnicianBottomNav(current: 2),
@@ -104,10 +98,7 @@ class _WorksList extends StatelessWidget {
   final List<TechnicianRequestModel> items;
   final bool isCurrent;
 
-  const _WorksList({
-    required this.items,
-    required this.isCurrent,
-  });
+  const _WorksList({required this.items, required this.isCurrent});
 
   @override
   Widget build(BuildContext context) {
@@ -172,9 +163,7 @@ class _WorkCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: AppColors.textSecondary,
             borderRadius: BorderRadius.circular(AppSizes.radiusLg),
-            border: Border.all(
-              color: AppColors.border.withValues(alpha: .08),
-            ),
+            border: Border.all(color: AppColors.border.withValues(alpha: .08)),
             boxShadow: [
               BoxShadow(
                 color: AppColors.primary.withValues(alpha: .06),
@@ -213,8 +202,7 @@ class _WorkCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         customText(
-                          text:
-                              '${request.vehicleName} ${request.vehicleYear}',
+                          text: '${request.vehicleName} ${request.vehicleYear}',
                           fontSize: ResponsiveSize.width(
                             context,
                             AppSizes.fontMd,
@@ -222,9 +210,7 @@ class _WorkCard extends StatelessWidget {
                           color: AppColors.primary,
                           isBold: true,
                         ),
-                        SizedBox(
-                          height: ResponsiveSize.height(context, .25),
-                        ),
+                        SizedBox(height: ResponsiveSize.height(context, .25)),
                         customText(
                           text: request.issueTitle,
                           fontSize: ResponsiveSize.width(
@@ -244,18 +230,13 @@ class _WorkCard extends StatelessWidget {
                       vertical: ResponsiveSize.height(context, .45),
                     ),
                     decoration: BoxDecoration(
-                      color: (isCurrent
-                              ? AppColors.success
-                              : AppColors.info)
+                      color: (isCurrent ? AppColors.success : AppColors.info)
                           .withValues(alpha: .10),
                       borderRadius: BorderRadius.circular(100),
                     ),
                     child: customText(
                       text: isCurrent ? 'جاري التنفيذ' : 'مكتمل',
-                      fontSize: ResponsiveSize.width(
-                        context,
-                        AppSizes.fontXs,
-                      ),
+                      fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
                       color: isCurrent ? AppColors.success : AppColors.info,
                       isBold: true,
                     ),
@@ -303,10 +284,7 @@ class _WorkCard extends StatelessWidget {
                       text: isCurrent
                           ? 'اضغط لمتابعة تفاصيل الشغل والمحادثة'
                           : 'اضغط لمراجعة تفاصيل الطلب والشات القديم',
-                      fontSize: ResponsiveSize.width(
-                        context,
-                        AppSizes.fontXs,
-                      ),
+                      fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
                       color: AppColors.textMuted,
                     ),
                   ),
@@ -329,10 +307,7 @@ class _Meta extends StatelessWidget {
   final IconData icon;
   final String label;
 
-  const _Meta({
-    required this.icon,
-    required this.label,
-  });
+  const _Meta({required this.icon, required this.label});
 
   @override
   Widget build(BuildContext context) {

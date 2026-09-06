@@ -31,83 +31,84 @@ class VehicleHealthScreen extends StatelessWidget {
               child: CustomScrollView(
                 slivers: [
                   SliverPadding(
-              padding: EdgeInsets.fromLTRB(
-                ResponsiveSize.width(context, 5),
-                ResponsiveSize.height(context, 2),
-                ResponsiveSize.width(context, 5),
-                ResponsiveSize.height(context, 5),
-              ),
-              sliver: SliverList(
-                delegate: SliverChildListDelegate([
-                  Row(
-                    children: [
-                      Expanded(
-                        child: customText(
-                          text: 'تفاصيل حالة السيارة',
-                          fontSize: ResponsiveSize.width(
-                            context,
-                            AppSizes.fontXl,
-                          ),
-                          color: AppColors.primary,
-                          isBold: true,
-                        ),
-                      ),
-                      _confidenceBadge(context, data.overallConfidence),
-                    ],
-                  ),
-                  SizedBox(height: ResponsiveSize.height(context, .8)),
-                  const VehicleHealthInfoNote(),
-                  SizedBox(height: ResponsiveSize.height(context, 1.5)),
-                  const ObdDiagnosticsCard(),
-                  SizedBox(height: ResponsiveSize.height(context, 1.5)),
-                  BlocBuilder<ObdCubit, ObdState>(
-                    buildWhen: (previous, current) =>
-                        previous.snapshot != current.snapshot ||
-                        previous.status != current.status,
-                    builder: (context, obdState) {
-                      return Column(
-                        children: [
-                          for (final item in data.items) ...[
-                            HealthItemCard(
-                              item: item,
-                              obdSnapshot: obdState.snapshot,
+                    padding: EdgeInsets.fromLTRB(
+                      ResponsiveSize.width(context, 5),
+                      ResponsiveSize.height(context, 2),
+                      ResponsiveSize.width(context, 5),
+                      ResponsiveSize.height(context, 5),
+                    ),
+                    sliver: SliverList(
+                      delegate: SliverChildListDelegate([
+                        Row(
+                          children: [
+                            Expanded(
+                              child: customText(
+                                text: 'تفاصيل حالة السيارة',
+                                fontSize: ResponsiveSize.width(
+                                  context,
+                                  AppSizes.fontXl,
+                                ),
+                                color: AppColors.primary,
+                                isBold: true,
+                              ),
                             ),
-                            SizedBox(
-                              height: ResponsiveSize.height(context, 1.2),
-                            ),
+                            _confidenceBadge(context, data.overallConfidence),
                           ],
-                        ],
-                      );
-                    },
-                  ),
-                  SizedBox(height: ResponsiveSize.height(context, .5)),
-                  SizedBox(
-                    height: ResponsiveSize.height(context, 6.5),
-                    child: FilledButton.icon(
-                      style: FilledButton.styleFrom(
-                        backgroundColor: AppColors.secondary,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                            AppSizes.radiusMd,
+                        ),
+                        SizedBox(height: ResponsiveSize.height(context, .8)),
+                        const VehicleHealthInfoNote(),
+                        SizedBox(height: ResponsiveSize.height(context, 1.5)),
+                        const ObdDiagnosticsCard(),
+                        SizedBox(height: ResponsiveSize.height(context, 1.5)),
+                        BlocBuilder<ObdCubit, ObdState>(
+                          buildWhen: (previous, current) =>
+                              previous.snapshot != current.snapshot ||
+                              previous.status != current.status,
+                          builder: (context, obdState) {
+                            return Column(
+                              children: [
+                                for (final item in data.items) ...[
+                                  HealthItemCard(
+                                    item: item,
+                                    obdSnapshot: obdState.snapshot,
+                                  ),
+                                  SizedBox(
+                                    height: ResponsiveSize.height(context, 1.2),
+                                  ),
+                                ],
+                              ],
+                            );
+                          },
+                        ),
+                        SizedBox(height: ResponsiveSize.height(context, .5)),
+                        SizedBox(
+                          height: ResponsiveSize.height(context, 6.5),
+                          child: FilledButton.icon(
+                            style: FilledButton.styleFrom(
+                              backgroundColor: AppColors.secondary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                  AppSizes.radiusMd,
+                                ),
+                              ),
+                            ),
+                            onPressed: () =>
+                                Navigator.pushNamed(context, '/report-problem'),
+                            icon: const Icon(Icons.report_problem_outlined),
+                            label: customText(
+                              text: 'بلّغ عن مشكلة في السيارة',
+                              fontSize: ResponsiveSize.width(
+                                context,
+                                AppSizes.fontMd,
+                              ),
+                              color: Colors.white,
+                              isBold: true,
+                            ),
                           ),
                         ),
-                      ),
-                      onPressed: () => Navigator.pushNamed(context, '/report-problem'),
-                      icon: const Icon(Icons.report_problem_outlined),
-                      label: customText(
-                        text: 'بلّغ عن مشكلة في السيارة',
-                        fontSize: ResponsiveSize.width(
-                          context,
-                          AppSizes.fontMd,
-                        ),
-                        color: Colors.white,
-                        isBold: true,
-                      ),
+                      ]),
                     ),
                   ),
-                ]),
-              ),
-            ),
                 ],
               ),
             ),
@@ -160,10 +161,7 @@ class VehicleHealthScreen extends StatelessWidget {
           SizedBox(height: ResponsiveSize.height(context, 2)),
           Row(
             children: [
-              VehicleBrandLogo(
-                brand: data.brand,
-                sizePercent: 18,
-              ),
+              VehicleBrandLogo(brand: data.brand, sizePercent: 18),
               SizedBox(width: ResponsiveSize.width(context, 4)),
               Expanded(
                 child: Column(
@@ -177,7 +175,8 @@ class VehicleHealthScreen extends StatelessWidget {
                     ),
                     SizedBox(height: ResponsiveSize.height(context, .35)),
                     customText(
-                      text: '${data.year}  •  ${_formatNumber(data.mileage)} كم',
+                      text:
+                          '${data.year}  •  ${_formatNumber(data.mileage)} كم',
                       fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
                       color: Colors.white70,
                     ),
@@ -206,19 +205,19 @@ class VehicleHealthScreen extends StatelessWidget {
   }
 
   Widget _confidenceBadge(BuildContext context, int value) => Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: ResponsiveSize.width(context, 2.5),
-          vertical: ResponsiveSize.height(context, .6),
-        ),
-        decoration: BoxDecoration(
-          color: AppColors.secondary.withValues(alpha: .09),
-          borderRadius: BorderRadius.circular(AppSizes.radiusXl),
-        ),
-        child: customText(
-          text: 'دقة التقييم $value%',
-          fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
-          color: AppColors.secondary,
-          isBold: true,
-        ),
-      );
+    padding: EdgeInsets.symmetric(
+      horizontal: ResponsiveSize.width(context, 2.5),
+      vertical: ResponsiveSize.height(context, .6),
+    ),
+    decoration: BoxDecoration(
+      color: AppColors.secondary.withValues(alpha: .09),
+      borderRadius: BorderRadius.circular(AppSizes.radiusXl),
+    ),
+    child: customText(
+      text: 'دقة التقييم $value%',
+      fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
+      color: AppColors.secondary,
+      isBold: true,
+    ),
+  );
 }

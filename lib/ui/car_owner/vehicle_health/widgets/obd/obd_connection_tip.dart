@@ -19,10 +19,7 @@ class ObdConnectionTip extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(
-            Icons.tips_and_updates_outlined,
-            color: AppColors.warning,
-          ),
+          const Icon(Icons.tips_and_updates_outlined, color: AppColors.warning),
           SizedBox(width: ResponsiveSize.width(context, 2)),
           Expanded(
             child: customText(

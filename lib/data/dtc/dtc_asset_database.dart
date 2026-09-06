@@ -16,7 +16,7 @@ class DtcAssetDatabase {
 
   Future<void> _load() async {
     final bytes = await rootBundle.load(_assetPath);
-    final decodedBytes =  GZipCodec().decode(bytes.buffer.asUint8List());
+    final decodedBytes = GZipCodec().decode(bytes.buffer.asUint8List());
     _codes = jsonDecode(utf8.decode(decodedBytes)) as Map<String, dynamic>;
   }
 
@@ -31,7 +31,12 @@ class DtcAssetDatabase {
     final arabicTitle = map['ar_t']?.toString().trim() ?? '';
     final arabicDescription = map['ar_d']?.toString().trim() ?? '';
     final arabicSystem = map['ar_s']?.toString().trim() ?? '';
-    final causes = (map['a'] as List?)?.map((e) => e.toString()).where((e) => e.isNotEmpty).toList() ?? const <String>[];
+    final causes =
+        (map['a'] as List?)
+            ?.map((e) => e.toString())
+            .where((e) => e.isNotEmpty)
+            .toList() ??
+        const <String>[];
 
     return ObdDtcInfo(
       title: arabicTitle.isNotEmpty
@@ -48,10 +53,10 @@ class DtcAssetDatabase {
   }
 
   String _systemName(String? category) => switch (category) {
-        'powertrain' => 'المحرك والفتيس ونقل الحركة',
-        'body' => 'جسم العربية وأنظمة الأمان والراحة',
-        'chassis' => 'الشاسيه والفرامل والتوجيه',
-        'network' => 'شبكة الاتصال بين كمبيوترات العربية',
-        _ => 'نظام العربية',
-      };
+    'powertrain' => 'المحرك والفتيس ونقل الحركة',
+    'body' => 'جسم العربية وأنظمة الأمان والراحة',
+    'chassis' => 'الشاسيه والفرامل والتوجيه',
+    'network' => 'شبكة الاتصال بين كمبيوترات العربية',
+    _ => 'نظام العربية',
+  };
 }

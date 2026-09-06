@@ -6,10 +6,7 @@ import 'package:moftah/utils/responsive.dart';
 class HomeNearbyPlacesList extends StatelessWidget {
   final List<HomeNearbyPlacesModel> nearbyPlaces;
 
-  const HomeNearbyPlacesList({
-    super.key,
-    required this.nearbyPlaces,
-  });
+  const HomeNearbyPlacesList({super.key, required this.nearbyPlaces});
 
   @override
   Widget build(BuildContext context) {

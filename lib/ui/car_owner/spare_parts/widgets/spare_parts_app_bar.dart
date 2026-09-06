@@ -25,7 +25,6 @@ class SparePartsAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      
       scrolledUnderElevation: 0,
       shadowColor: Colors.transparent,
       automaticallyImplyLeading: false,
@@ -105,7 +104,11 @@ class _TopIcon extends StatelessWidget {
             child: SizedBox(
               width: ResponsiveSize.width(context, 10.26),
               height: ResponsiveSize.height(context, 4.74),
-              child: Icon(icon, color: Colors.white, size: ResponsiveSize.width(context, 5.38)),
+              child: Icon(
+                icon,
+                color: Colors.white,
+                size: ResponsiveSize.width(context, 5.38),
+              ),
             ),
           ),
         ),
@@ -114,8 +117,13 @@ class _TopIcon extends StatelessWidget {
             top: -5,
             left: -4,
             child: Container(
-              constraints: BoxConstraints(minWidth: ResponsiveSize.width(context, 4.36), minHeight: ResponsiveSize.height(context, 2.01)),
-              padding: EdgeInsets.symmetric(horizontal: ResponsiveSize.width(context, 1.03)),
+              constraints: BoxConstraints(
+                minWidth: ResponsiveSize.width(context, 4.36),
+                minHeight: ResponsiveSize.height(context, 2.01),
+              ),
+              padding: EdgeInsets.symmetric(
+                horizontal: ResponsiveSize.width(context, 1.03),
+              ),
               alignment: Alignment.center,
               decoration: const BoxDecoration(
                 color: AppColors.secondary,

@@ -74,8 +74,7 @@ class _ReportLocationStepState extends State<ReportLocationStep> {
   void didUpdateWidget(covariant ReportLocationStep oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    final latitudeChanged =
-        widget.initialLatitude != oldWidget.initialLatitude;
+    final latitudeChanged = widget.initialLatitude != oldWidget.initialLatitude;
     final longitudeChanged =
         widget.initialLongitude != oldWidget.initialLongitude;
 
@@ -148,9 +147,7 @@ class _ReportLocationStepState extends State<ReportLocationStep> {
               urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
               userAgentPackageName: 'com.example.moftah',
             ),
-            MarkerLayer(
-              markers: _buildMarkers(),
-            ),
+            MarkerLayer(markers: _buildMarkers()),
           ],
         ),
       ),
@@ -264,7 +261,9 @@ class _ReportLocationStepState extends State<ReportLocationStep> {
               SizedBox(
                 width: ResponsiveSize.width(context, 5),
                 height: ResponsiveSize.width(context, 5),
-                child: CircularProgressIndicator(strokeWidth: ResponsiveSize.width(context, 0.62)),
+                child: CircularProgressIndicator(
+                  strokeWidth: ResponsiveSize.width(context, 0.62),
+                ),
               )
             else
               Icon(
@@ -306,9 +305,7 @@ class _ReportLocationStepState extends State<ReportLocationStep> {
       child: Row(
         children: [
           Icon(
-            _hasLocation
-                ? Icons.check_circle_rounded
-                : Icons.touch_app_rounded,
+            _hasLocation ? Icons.check_circle_rounded : Icons.touch_app_rounded,
             color: _hasLocation ? AppColors.success : AppColors.secondary,
           ),
           SizedBox(width: ResponsiveSize.width(context, 2)),
@@ -317,8 +314,8 @@ class _ReportLocationStepState extends State<ReportLocationStep> {
               text: _hasLocation
                   ? 'تم تحديد مكان العربية'
                   : _manualMode
-                      ? 'اضغط على المكان المطلوب داخل الخريطة'
-                      : 'اضغط «استخدم موقعي» أو اختر المكان يدويًا',
+                  ? 'اضغط على المكان المطلوب داخل الخريطة'
+                  : 'اضغط «استخدم موقعي» أو اختر المكان يدويًا',
               fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
               color: AppColors.primary,
               isBold: true,
@@ -372,39 +369,24 @@ class _ReportLocationStepState extends State<ReportLocationStep> {
     setState(() => _locating = false);
 
     if (position == null) {
-      _showMessage(
-        'مقدرناش نثبت موقعك. جرّب تاني أو حدده من الخريطة.',
-      );
+      _showMessage('مقدرناش نثبت موقعك. جرّب تاني أو حدده من الخريطة.');
       return;
     }
 
-    _setLocation(
-      position.latitude,
-      position.longitude,
-    );
+    _setLocation(position.latitude, position.longitude);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      _moveCamera(
-        position.latitude,
-        position.longitude,
-      );
+      _moveCamera(position.latitude, position.longitude);
     });
   }
 
   void _selectManualLocation(LatLng point) {
-    _setLocation(
-      point.latitude,
-      point.longitude,
-    );
+    _setLocation(point.latitude, point.longitude);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      _moveCamera(
-        point.latitude,
-        point.longitude,
-        zoom: 16,
-      );
+      _moveCamera(point.latitude, point.longitude, zoom: 16);
     });
   }
 
@@ -414,29 +396,16 @@ class _ReportLocationStepState extends State<ReportLocationStep> {
       _longitude = longitude;
     });
 
-    NearbyPlacesCache.instance.saveLocation(
-      latitude,
-      longitude,
-    );
+    NearbyPlacesCache.instance.saveLocation(latitude, longitude);
 
-    widget.onLocationChanged(
-      latitude,
-      longitude,
-    );
+    widget.onLocationChanged(latitude, longitude);
   }
 
-  void _moveCamera(
-    double latitude,
-    double longitude, {
-    double zoom = 16,
-  }) {
+  void _moveCamera(double latitude, double longitude, {double zoom = 16}) {
     if (!_mapReady) return;
 
     try {
-      _mapController.move(
-        LatLng(latitude, longitude),
-        zoom,
-      );
+      _mapController.move(LatLng(latitude, longitude), zoom);
     } catch (_) {
       // The map may be detaching during a route transition.
     }
@@ -448,9 +417,7 @@ class _ReportLocationStepState extends State<ReportLocationStep> {
   }) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          'محتاجين صلاحية الموقع وتشغيل GPS لتحديد مكان العربية.',
-        ),
+        content: Text('محتاجين صلاحية الموقع وتشغيل GPS لتحديد مكان العربية.'),
         action: SnackBarAction(
           label: 'الإعدادات',
           onPressed: () {
@@ -466,10 +433,8 @@ class _ReportLocationStepState extends State<ReportLocationStep> {
   }
 
   void _showMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 }

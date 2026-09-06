@@ -17,5 +17,4 @@ class GetWorkshopDirectoryUseCase {
       maxPlaces: maxPlaces,
     );
   }
-  
 }

@@ -6,8 +6,6 @@ import 'package:moftah/data/models/map/overpass_dto.dart';
 import 'package:moftah/ui/core/helper/map.dart';
 import 'package:moftah/utils/opening_hours_helper.dart';
 
-
-
 class OverpassNearbyPlacesDataSource {
   static final List<Uri> _endpoints = [
     Uri.parse('https://overpass-api.de/api/interpreter'),
@@ -20,7 +18,8 @@ class OverpassNearbyPlacesDataSource {
     required double longitude,
     required int radiusMeters,
   }) async {
-    final query = '''
+    final query =
+        '''
 [out:json][timeout:30];
 (
   nwr(around:$radiusMeters,$latitude,$longitude)["shop"="car_repair"];
@@ -33,10 +32,7 @@ out center tags;
 
     for (final endpoint in _endpoints) {
       try {
-        return await _requestEndpoint(
-          endpoint: endpoint,
-          query: query,
-        );
+        return await _requestEndpoint(endpoint: endpoint, query: query);
       } catch (error) {
         lastError = error;
         await Future<void>.delayed(const Duration(milliseconds: 250));
@@ -62,10 +58,7 @@ out center tags;
         'x-www-form-urlencoded',
         charset: 'utf-8',
       );
-      request.headers.set(
-        HttpHeaders.userAgentHeader,
-        'Moftah/1.0 Flutter',
-      );
+      request.headers.set(HttpHeaders.userAgentHeader, 'Moftah/1.0 Flutter');
       request.write('data=${Uri.encodeQueryComponent(query)}');
 
       final response = await request.close().timeout(
@@ -98,10 +91,12 @@ out center tags;
         final lon = coordinates.$2;
         if (!isValidCoordinate(lat, lon)) continue;
 
-        final tags = (rawElement['tags'] as Map?)?.cast<String, dynamic>() ??
+        final tags =
+            (rawElement['tags'] as Map?)?.cast<String, dynamic>() ??
             const <String, dynamic>{};
 
-        final name = _firstNonEmpty([
+        final name =
+            _firstNonEmpty([
               tags['name'],
               tags['name:ar'],
               tags['operator'],
@@ -109,7 +104,8 @@ out center tags;
             ]) ??
             'ورشة سيارات';
 
-        final details = _firstNonEmpty([
+        final details =
+            _firstNonEmpty([
               tags['description'],
               tags['service'],
               tags['brand'],

@@ -13,11 +13,9 @@ class NearbyPlacesCubit extends Cubit<NearbyPlacesState> {
   final NearbyPlacesRepository repository;
   final NearbyPlacesCache cache;
 
-  NearbyPlacesCubit({
-    required this.repository,
-    NearbyPlacesCache? cache,
-  })  : cache = cache ?? NearbyPlacesCache.instance,
-        super(const NearbyPlacesInitial());
+  NearbyPlacesCubit({required this.repository, NearbyPlacesCache? cache})
+    : cache = cache ?? NearbyPlacesCache.instance,
+      super(const NearbyPlacesInitial());
 
   Future<void> loadNearestWorkshops() async {
     // لو سبق وحددنا الموقع والورش في نفس جلسة التطبيق، نعرضهم فورًا
@@ -184,11 +182,7 @@ class NearbyPlacesCubit extends Cubit<NearbyPlacesState> {
         ),
       );
     } else {
-      emit(
-        const NearbyPlacesLoading(
-          step: NearbyLoadingStep.checkingInternet,
-        ),
-      );
+      emit(const NearbyPlacesLoading(step: NearbyLoadingStep.checkingInternet));
     }
 
     // لو الـHome بدأ بالفعل تحميل الـ50 في الخلفية، ما نعملش Request مكرر.
@@ -316,11 +310,7 @@ class NearbyPlacesCubit extends Cubit<NearbyPlacesState> {
   }
 
   Future<Position?> _prepareLocationAndInternet() async {
-    emit(
-      const NearbyPlacesLoading(
-        step: NearbyLoadingStep.checkingPermission,
-      ),
-    );
+    emit(const NearbyPlacesLoading(step: NearbyLoadingStep.checkingPermission));
 
     final permissionReadiness =
         await LocationService.ensureLocationPermission();
@@ -350,8 +340,7 @@ class NearbyPlacesCubit extends Cubit<NearbyPlacesState> {
       ),
     );
 
-    final locationEnabled =
-        await LocationService.isLocationServiceEnabled();
+    final locationEnabled = await LocationService.isLocationServiceEnabled();
 
     if (!locationEnabled) {
       emit(
@@ -363,11 +352,7 @@ class NearbyPlacesCubit extends Cubit<NearbyPlacesState> {
       return null;
     }
 
-    emit(
-      const NearbyPlacesLoading(
-        step: NearbyLoadingStep.locatingUser,
-      ),
-    );
+    emit(const NearbyPlacesLoading(step: NearbyLoadingStep.locatingUser));
 
     final position = await LocationService.getCurrentPosition(
       forceRefresh: true,
@@ -395,11 +380,7 @@ class NearbyPlacesCubit extends Cubit<NearbyPlacesState> {
       cache.saveLocation(position.latitude, position.longitude);
     }
 
-    emit(
-      const NearbyPlacesLoading(
-        step: NearbyLoadingStep.checkingInternet,
-      ),
-    );
+    emit(const NearbyPlacesLoading(step: NearbyLoadingStep.checkingInternet));
 
     final hasInternet = await InternetService.hasInternetAccess();
 

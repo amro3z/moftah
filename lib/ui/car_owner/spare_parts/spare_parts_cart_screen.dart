@@ -37,7 +37,12 @@ class SparePartsCartScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: ListView.builder(
-                    padding: EdgeInsets.fromLTRB(ResponsiveSize.width(context, 3.08), ResponsiveSize.height(context, 1.66), ResponsiveSize.width(context, 3.08), ResponsiveSize.height(context, 1.42)),
+                    padding: EdgeInsets.fromLTRB(
+                      ResponsiveSize.width(context, 3.08),
+                      ResponsiveSize.height(context, 1.66),
+                      ResponsiveSize.width(context, 3.08),
+                      ResponsiveSize.height(context, 1.42),
+                    ),
                     itemCount: products.length,
                     itemBuilder: (_, index) {
                       final part = products[index];
@@ -48,18 +53,30 @@ class SparePartsCartScreen extends StatelessWidget {
                         imageUrl: part.imageUrl,
                         price: part.price,
                         quantity: quantity,
-                        onIncrease: () => context.read<SparePartsCubit>().addToCart(part.id),
-                        onDecrease: () => context.read<SparePartsCubit>().decreaseCart(part.id),
-                        onDelete: () => context.read<SparePartsCubit>().removeFromCart(part.id),
+                        onIncrease: () =>
+                            context.read<SparePartsCubit>().addToCart(part.id),
+                        onDecrease: () => context
+                            .read<SparePartsCubit>()
+                            .decreaseCart(part.id),
+                        onDelete: () => context
+                            .read<SparePartsCubit>()
+                            .removeFromCart(part.id),
                       );
                     },
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.fromLTRB(ResponsiveSize.width(context, 3.59), ResponsiveSize.height(context, 1.54), ResponsiveSize.width(context, 3.59), ResponsiveSize.height(context, 1.66)),
+                  padding: EdgeInsets.fromLTRB(
+                    ResponsiveSize.width(context, 3.59),
+                    ResponsiveSize.height(context, 1.54),
+                    ResponsiveSize.width(context, 3.59),
+                    ResponsiveSize.height(context, 1.66),
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(24),
+                    ),
                     boxShadow: [
                       BoxShadow(
                         color: AppColors.primary.withValues(alpha: .08),
@@ -74,10 +91,15 @@ class SparePartsCartScreen extends StatelessWidget {
                       children: [
                         if (delivery > 0) ...[
                           Container(
-                            padding: EdgeInsets.symmetric(horizontal: ResponsiveSize.width(context, 2.82), vertical: ResponsiveSize.height(context, 1.07)),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: ResponsiveSize.width(context, 2.82),
+                              vertical: ResponsiveSize.height(context, 1.07),
+                            ),
                             decoration: BoxDecoration(
                               color: AppColors.secondary.withValues(alpha: .08),
-                              borderRadius: BorderRadius.circular(AppSizes.radiusSm),
+                              borderRadius: BorderRadius.circular(
+                                AppSizes.radiusSm,
+                              ),
                             ),
                             child: Row(
                               children: [
@@ -86,12 +108,17 @@ class SparePartsCartScreen extends StatelessWidget {
                                   color: AppColors.secondary,
                                   size: ResponsiveSize.width(context, 4.87),
                                 ),
-                                SizedBox(width: ResponsiveSize.width(context, 2.05)),
+                                SizedBox(
+                                  width: ResponsiveSize.width(context, 2.05),
+                                ),
                                 Expanded(
                                   child: customText(
                                     text:
                                         'أضف ${(1500 - state.cartSubtotal).clamp(0, 1500).toStringAsFixed(0)} جنيه للحصول على توصيل مجاني',
-                                    fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
+                                    fontSize: ResponsiveSize.width(
+                                      context,
+                                      AppSizes.fontXs,
+                                    ),
                                     isBold: true,
                                     color: AppColors.secondary,
                                   ),
@@ -103,16 +130,22 @@ class SparePartsCartScreen extends StatelessWidget {
                         ],
                         _SummaryRow(
                           label: 'الإجمالي الفرعي',
-                          value: '${state.cartSubtotal.toStringAsFixed(0)} جنيه',
+                          value:
+                              '${state.cartSubtotal.toStringAsFixed(0)} جنيه',
                         ),
                         SizedBox(height: ResponsiveSize.height(context, 0.71)),
                         _SummaryRow(
                           label: 'التوصيل',
-                          value: delivery == 0 ? 'مجاني' : '${delivery.toStringAsFixed(0)} جنيه',
+                          value: delivery == 0
+                              ? 'مجاني'
+                              : '${delivery.toStringAsFixed(0)} جنيه',
                           valueColor: delivery == 0 ? AppColors.success : null,
                         ),
                         SizedBox(height: ResponsiveSize.height(context, 1.18)),
-                        Divider(height: ResponsiveSize.height(context, 0.12), color: AppColors.border.withValues(alpha: .12)),
+                        Divider(
+                          height: ResponsiveSize.height(context, 0.12),
+                          color: AppColors.border.withValues(alpha: .12),
+                        ),
                         SizedBox(height: ResponsiveSize.height(context, 1.18)),
                         _SummaryRow(
                           label: 'الإجمالي',
@@ -126,13 +159,21 @@ class SparePartsCartScreen extends StatelessWidget {
                             backgroundColor: AppColors.secondary,
                             minimumSize: const Size.fromHeight(51),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(AppSizes.radiusSm),
+                              borderRadius: BorderRadius.circular(
+                                AppSizes.radiusSm,
+                              ),
                             ),
                           ),
-                          icon: Icon(Icons.lock_outline_rounded, size: ResponsiveSize.width(context, 4.62)),
+                          icon: Icon(
+                            Icons.lock_outline_rounded,
+                            size: ResponsiveSize.width(context, 4.62),
+                          ),
                           label: customText(
                             text: 'إتمام الطلب',
-                            fontSize: ResponsiveSize.width(context, AppSizes.fontMd),
+                            fontSize: ResponsiveSize.width(
+                              context,
+                              AppSizes.fontMd,
+                            ),
                             isBold: true,
                             color: Colors.white,
                           ),
@@ -159,9 +200,7 @@ class SparePartsCartScreen extends StatelessWidget {
 
     final cubit = context.read<SparePartsCubit>();
     final products = cubit.state.cartProducts;
-    final quantities = Map<String, int>.from(
-      cubit.state.cartQuantities,
-    );
+    final quantities = Map<String, int>.from(cubit.state.cartQuantities);
 
     ProfileHistoryStore.instance.addSparePartOrder(
       products: products,
@@ -216,7 +255,10 @@ class _CartItem extends StatelessWidget {
       ),
       child: Row(
         children: [
-          SparePartImage(imageUrl: imageUrl, size: ResponsiveSize.width(context, 17.95)),
+          SparePartImage(
+            imageUrl: imageUrl,
+            size: ResponsiveSize.width(context, 17.95),
+          ),
           SizedBox(width: ResponsiveSize.width(context, 2.56)),
           Expanded(
             child: Column(
@@ -246,12 +288,20 @@ class _CartItem extends StatelessWidget {
                       color: AppColors.primary,
                     ),
                     const Spacer(),
-                    _QuantityButton(icon: Icons.remove_rounded, onTap: onDecrease),
+                    _QuantityButton(
+                      icon: Icons.remove_rounded,
+                      onTap: onDecrease,
+                    ),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: ResponsiveSize.width(context, 2.56)),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: ResponsiveSize.width(context, 2.56),
+                      ),
                       child: customText(
                         text: '$quantity',
-                        fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
+                        fontSize: ResponsiveSize.width(
+                          context,
+                          AppSizes.fontSm,
+                        ),
                         isBold: true,
                         color: AppColors.primary,
                       ),
@@ -265,7 +315,11 @@ class _CartItem extends StatelessWidget {
           SizedBox(width: ResponsiveSize.width(context, 2.05)),
           IconButton(
             onPressed: onDelete,
-            icon: Icon(Icons.delete_outline_rounded, color: AppColors.danger, size: ResponsiveSize.width(context, 5.13)),
+            icon: Icon(
+              Icons.delete_outline_rounded,
+              color: AppColors.danger,
+              size: ResponsiveSize.width(context, 5.13),
+            ),
             style: IconButton.styleFrom(
               backgroundColor: AppColors.danger.withValues(alpha: .08),
             ),
@@ -294,7 +348,11 @@ class _QuantityButton extends StatelessWidget {
           color: AppColors.secondary.withValues(alpha: .08),
           borderRadius: BorderRadius.circular(AppSizes.radiusXs),
         ),
-        child: Icon(icon, color: AppColors.secondary, size: ResponsiveSize.width(context, 4.36)),
+        child: Icon(
+          icon,
+          color: AppColors.secondary,
+          size: ResponsiveSize.width(context, 4.36),
+        ),
       ),
     );
   }
@@ -376,7 +434,9 @@ class _EmptyCart extends StatelessWidget {
             SizedBox(height: ResponsiveSize.height(context, 2.01)),
             FilledButton.icon(
               onPressed: () => Navigator.pop(context),
-              style: FilledButton.styleFrom(backgroundColor: AppColors.secondary),
+              style: FilledButton.styleFrom(
+                backgroundColor: AppColors.secondary,
+              ),
               icon: Icon(Icons.storefront_rounded),
               label: customText(
                 text: 'تصفح قطع الغيار',

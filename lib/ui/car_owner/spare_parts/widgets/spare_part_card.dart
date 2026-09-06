@@ -47,7 +47,10 @@ class SparePartCard extends StatelessWidget {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SparePartImage(imageUrl: part.imageUrl, size: ResponsiveSize.width(context, 21.03)),
+                  SparePartImage(
+                    imageUrl: part.imageUrl,
+                    size: ResponsiveSize.width(context, 21.03),
+                  ),
                   SizedBox(width: ResponsiveSize.width(context, 2.56)),
                   Expanded(
                     child: Column(
@@ -56,28 +59,49 @@ class SparePartCard extends StatelessWidget {
                         Row(
                           children: [
                             InkWell(
-                              onTap: () => context.read<SparePartsCubit>().toggleFavorite(part.id),
-                              borderRadius: BorderRadius.circular(AppSizes.radiusXl),
+                              onTap: () => context
+                                  .read<SparePartsCubit>()
+                                  .toggleFavorite(part.id),
+                              borderRadius: BorderRadius.circular(
+                                AppSizes.radiusXl,
+                              ),
                               child: Padding(
-                                padding: EdgeInsets.all(ResponsiveSize.width(context, 1.03)),
+                                padding: EdgeInsets.all(
+                                  ResponsiveSize.width(context, 1.03),
+                                ),
                                 child: Icon(
-                                  favorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                                  favorite
+                                      ? Icons.favorite_rounded
+                                      : Icons.favorite_border_rounded,
                                   size: ResponsiveSize.width(context, 5.13),
-                                  color: favorite ? AppColors.danger : AppColors.textMuted,
+                                  color: favorite
+                                      ? AppColors.danger
+                                      : AppColors.textMuted,
                                 ),
                               ),
                             ),
                             const Spacer(),
-                            if (compatible) const _Tag(label: 'متوافق مع سيارتك', success: true),
-                            if (compatible) SizedBox(width: ResponsiveSize.width(context, 1.28)),
+                            if (compatible)
+                              const _Tag(
+                                label: 'متوافق مع سيارتك',
+                                success: true,
+                              ),
+                            if (compatible)
+                              SizedBox(
+                                width: ResponsiveSize.width(context, 1.28),
+                              ),
                             if (part.isOem) const _Tag(label: 'OEM'),
-                            if (part.isOriginal && !part.isOem) const _Tag(label: 'أصلي'),
+                            if (part.isOriginal && !part.isOem)
+                              const _Tag(label: 'أصلي'),
                           ],
                         ),
                         SizedBox(height: ResponsiveSize.height(context, 0.83)),
                         customText(
                           text: part.name,
-                          fontSize: ResponsiveSize.width(context, AppSizes.fontMd),
+                          fontSize: ResponsiveSize.width(
+                            context,
+                            AppSizes.fontMd,
+                          ),
                           isBold: true,
                           color: AppColors.primary,
                           maxLines: 2,
@@ -86,7 +110,10 @@ class SparePartCard extends StatelessWidget {
                         SizedBox(height: ResponsiveSize.height(context, 0.24)),
                         customText(
                           text: '${part.brand} · ${part.seller}',
-                          fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
+                          fontSize: ResponsiveSize.width(
+                            context,
+                            AppSizes.fontXs,
+                          ),
                           color: AppColors.textMuted,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -96,19 +123,32 @@ class SparePartCard extends StatelessWidget {
                           children: [
                             customText(
                               text: '${part.distanceKm.toStringAsFixed(1)} كم',
-                              fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
+                              fontSize: ResponsiveSize.width(
+                                context,
+                                AppSizes.fontXs,
+                              ),
                               isBold: true,
                               color: AppColors.secondary,
                             ),
-                            SizedBox(width: ResponsiveSize.width(context, 2.05)),
+                            SizedBox(
+                              width: ResponsiveSize.width(context, 2.05),
+                            ),
                             customText(
                               text: part.rating.toStringAsFixed(1),
-                              fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
+                              fontSize: ResponsiveSize.width(
+                                context,
+                                AppSizes.fontXs,
+                              ),
                               isBold: true,
                               color: AppColors.primary,
                             ),
-                            SizedBox(width: ResponsiveSize.width(context, 1.03)),
-                            ratingStars(context: context, numberOfStars: part.rating),
+                            SizedBox(
+                              width: ResponsiveSize.width(context, 1.03),
+                            ),
+                            ratingStars(
+                              context: context,
+                              numberOfStars: part.rating,
+                            ),
                           ],
                         ),
                       ],
@@ -117,20 +157,34 @@ class SparePartCard extends StatelessWidget {
                 ],
               ),
               SizedBox(height: ResponsiveSize.height(context, 1.18)),
-              Divider(height: ResponsiveSize.height(context, 0.12), color: AppColors.border.withValues(alpha: .12)),
+              Divider(
+                height: ResponsiveSize.height(context, 0.12),
+                color: AppColors.border.withValues(alpha: .12),
+              ),
               SizedBox(height: ResponsiveSize.height(context, 1.07)),
               Row(
                 children: [
                   FilledButton.icon(
-                    onPressed: () => context.read<SparePartsCubit>().addToCart(part.id),
+                    onPressed: () =>
+                        context.read<SparePartsCubit>().addToCart(part.id),
                     style: FilledButton.styleFrom(
                       backgroundColor: AppColors.secondary,
-                      padding: EdgeInsets.symmetric(horizontal: ResponsiveSize.width(context, 3.08), vertical: ResponsiveSize.height(context, 1.07)),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSizes.radiusSm)),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: ResponsiveSize.width(context, 3.08),
+                        vertical: ResponsiveSize.height(context, 1.07),
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppSizes.radiusSm),
+                      ),
                     ),
-                    icon: Icon(Icons.shopping_cart_outlined, size: ResponsiveSize.width(context, 4.1)),
+                    icon: Icon(
+                      Icons.shopping_cart_outlined,
+                      size: ResponsiveSize.width(context, 4.1),
+                    ),
                     label: customText(
-                      text: quantity > 0 ? 'في السلة ($quantity)' : 'إضافة للسلة',
+                      text: quantity > 0
+                          ? 'في السلة ($quantity)'
+                          : 'إضافة للسلة',
                       fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
                       isBold: true,
                       color: Colors.white,
@@ -145,9 +199,16 @@ class SparePartCard extends StatelessWidget {
                     ),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.primary,
-                      side: BorderSide(color: AppColors.border.withValues(alpha: .20)),
-                      padding: EdgeInsets.symmetric(horizontal: ResponsiveSize.width(context, 3.85), vertical: ResponsiveSize.height(context, 1.07)),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSizes.radiusSm)),
+                      side: BorderSide(
+                        color: AppColors.border.withValues(alpha: .20),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: ResponsiveSize.width(context, 3.85),
+                        vertical: ResponsiveSize.height(context, 1.07),
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppSizes.radiusSm),
+                      ),
                     ),
                     child: customText(
                       text: 'عرض',
@@ -162,13 +223,19 @@ class SparePartCard extends StatelessWidget {
                     children: [
                       customText(
                         text: part.price.toStringAsFixed(0),
-                        fontSize: ResponsiveSize.width(context, AppSizes.fontXl),
+                        fontSize: ResponsiveSize.width(
+                          context,
+                          AppSizes.fontXl,
+                        ),
                         isBold: true,
                         color: AppColors.secondary,
                       ),
                       customText(
                         text: 'جنيه',
-                        fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
+                        fontSize: ResponsiveSize.width(
+                          context,
+                          AppSizes.fontXs,
+                        ),
                         color: AppColors.textMuted,
                       ),
                     ],
@@ -193,7 +260,10 @@ class _Tag extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = success ? AppColors.success : AppColors.secondary;
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: ResponsiveSize.width(context, 1.79), vertical: ResponsiveSize.height(context, 0.36)),
+      padding: EdgeInsets.symmetric(
+        horizontal: ResponsiveSize.width(context, 1.79),
+        vertical: ResponsiveSize.height(context, 0.36),
+      ),
       decoration: BoxDecoration(
         color: color.withValues(alpha: .10),
         borderRadius: BorderRadius.circular(AppSizes.radiusMd),

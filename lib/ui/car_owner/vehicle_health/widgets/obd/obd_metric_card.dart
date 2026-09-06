@@ -60,10 +60,7 @@ class ObdMetricCard extends StatelessWidget {
                   alignment: Alignment.centerRight,
                   child: customText(
                     text: title,
-                    fontSize: ResponsiveSize.width(
-                      context,
-                      AppSizes.fontXs,
-                    ),
+                    fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
                     color: Colors.white60,
                   ),
                 ),

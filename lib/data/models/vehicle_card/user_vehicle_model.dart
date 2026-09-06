@@ -3,14 +3,12 @@ class UserVehicleModel {
   final String brand;
   final String model;
   final int year;
-  final String? imageUrl;
 
   const UserVehicleModel({
     required this.id,
     required this.brand,
     required this.model,
     required this.year,
-    this.imageUrl,
   });
 
   String get displayName => '$brand $model $year';
@@ -27,7 +25,6 @@ class UserVehicleModel {
       brand: brand ?? this.brand,
       model: model ?? this.model,
       year: year ?? this.year,
-      imageUrl: imageUrl ?? this.imageUrl,
     );
   }
 
@@ -37,15 +34,13 @@ class UserVehicleModel {
       brand: json['brand']?.toString() ?? '',
       model: json['model']?.toString() ?? '',
       year: int.tryParse(json['year']?.toString() ?? '') ?? 0,
-      imageUrl: json['imageUrl']?.toString(),
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'brand': brand,
-        'model': model,
-        'year': year,
-        'imageUrl': imageUrl,
-      };
+    'id': id,
+    'brand': brand,
+    'model': model,
+    'year': year,
+  };
 }

@@ -254,7 +254,6 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
       );
   }
 
-
   @override
   Widget build(BuildContext context) {
     final vehicleStore = VehicleSelectionStore.instance;
@@ -465,7 +464,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
                         subtitle: customText(
                           text:
                               '${vehicle.card.year} • '
-                              '${vehicle.card.mileage} كم',
+                              '${vehicle.card.kilo} كم',
                           fontSize: ResponsiveSize.width(
                             context,
                             AppSizes.fontSm,

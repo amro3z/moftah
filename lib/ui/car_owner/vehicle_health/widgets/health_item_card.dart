@@ -10,11 +10,7 @@ class HealthItemCard extends StatelessWidget {
   final VehicleHealthItemModel item;
   final ObdSnapshotModel? obdSnapshot;
 
-  const HealthItemCard({
-    super.key,
-    required this.item,
-    this.obdSnapshot,
-  });
+  const HealthItemCard({super.key, required this.item, this.obdSnapshot});
 
   @override
   Widget build(BuildContext context) {
@@ -70,17 +66,12 @@ class HealthItemCard extends StatelessWidget {
                   children: [
                     customText(
                       text: effectiveItem.title,
-                      fontSize: ResponsiveSize.width(
-                        context,
-                        AppSizes.fontLg,
-                      ),
+                      fontSize: ResponsiveSize.width(context, AppSizes.fontLg),
                       color: AppColors.primary,
                       isBold: true,
                     ),
                     if (hasLiveObd) ...[
-                      SizedBox(
-                        height: ResponsiveSize.height(context, .25),
-                      ),
+                      SizedBox(height: ResponsiveSize.height(context, .25)),
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -163,10 +154,7 @@ class HealthItemCard extends StatelessWidget {
                   Expanded(
                     child: customText(
                       text: effectiveItem.actionText!,
-                      fontSize: ResponsiveSize.width(
-                        context,
-                        AppSizes.fontSm,
-                      ),
+                      fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
                       color: color,
                       isBold: true,
                     ),
@@ -209,7 +197,9 @@ class HealthItemCard extends StatelessWidget {
       reason: hasWarnings
           ? 'قراءة OBD الحالية فيها ${engineCodes.length} كود أعطال للمحرك${hasOverheat ? ' وحرارة مرتفعة' : ''}.'
           : 'OBD متصل مباشرة بالسيارة، ولا توجد مؤشرات أعطال للمحرك في القراءة الحالية.',
-      actionText: hasWarnings ? 'راجع أكواد الأعطال وبيانات المحرك بالأسفل' : null,
+      actionText: hasWarnings
+          ? 'راجع أكواد الأعطال وبيانات المحرك بالأسفل'
+          : null,
       clearActionText: !hasWarnings,
     );
   }
@@ -220,8 +210,10 @@ class HealthItemCard extends StatelessWidget {
     final electricalCodes = snapshot.troubleCodes.where((code) {
       final value = code.code.toUpperCase();
       return value.startsWith('U') ||
-          value == 'P0560' || value == 'P0561' ||
-          value == 'P0562' || value == 'P0563';
+          value == 'P0560' ||
+          value == 'P0561' ||
+          value == 'P0562' ||
+          value == 'P0563';
     }).toList();
 
     bool voltageWarning = false;
@@ -235,15 +227,19 @@ class HealthItemCard extends StatelessWidget {
     final reason = voltage == null
         ? 'OBD متصل، لكن قراءة الجهد غير متاحة من القطعة حالياً.'
         : hasWarning
-            ? 'قراءة الجهد الحالية ${voltage.toStringAsFixed(1)}V${electricalCodes.isNotEmpty ? ' مع وجود ${electricalCodes.length} كود كهرباء/اتصال' : ''} وتحتاج مراجعة.'
-            : 'قراءة الجهد الحالية ${voltage.toStringAsFixed(1)}V ضمن النطاق المتوقع ${engineRunning ? 'أثناء تشغيل المحرك' : 'في الحالة الحالية'}. ';
+        ? 'قراءة الجهد الحالية ${voltage.toStringAsFixed(1)}V${electricalCodes.isNotEmpty ? ' مع وجود ${electricalCodes.length} كود كهرباء/اتصال' : ''} وتحتاج مراجعة.'
+        : 'قراءة الجهد الحالية ${voltage.toStringAsFixed(1)}V ضمن النطاق المتوقع ${engineRunning ? 'أثناء تشغيل المحرك' : 'في الحالة الحالية'}. ';
 
     return item.copyWith(
       confidence: voltage == null ? 70 : 92,
       source: VehicleHealthSource.obd,
-      status: hasWarning ? VehicleHealthStatus.attention : VehicleHealthStatus.good,
+      status: hasWarning
+          ? VehicleHealthStatus.attention
+          : VehicleHealthStatus.good,
       reason: reason,
-      actionText: hasWarning ? 'راجع الجهد وأكواد الكهرباء قبل الاعتماد على التقييم' : null,
+      actionText: hasWarning
+          ? 'راجع الجهد وأكواد الكهرباء قبل الاعتماد على التقييم'
+          : null,
       clearActionText: !hasWarning,
     );
   }
@@ -296,17 +292,16 @@ class HealthItemCard extends StatelessWidget {
     );
   }
 
-  Widget _electricalLiveData(
-    BuildContext context,
-    ObdSnapshotModel snapshot,
-  ) {
+  Widget _electricalLiveData(BuildContext context, ObdSnapshotModel snapshot) {
     final voltage = snapshot.adapterVoltage;
     final running = (snapshot.rpm ?? 0) > 0;
     final electricalCodes = snapshot.troubleCodes.where((code) {
       final value = code.code.toUpperCase();
       return value.startsWith('U') ||
-          value == 'P0560' || value == 'P0561' ||
-          value == 'P0562' || value == 'P0563';
+          value == 'P0560' ||
+          value == 'P0561' ||
+          value == 'P0562' ||
+          value == 'P0563';
     }).length;
 
     return Container(
@@ -393,69 +388,63 @@ class HealthItemCard extends StatelessWidget {
     BuildContext context,
     VehicleHealthItemModel effectiveItem,
     Color color,
-  ) =>
-      Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: ResponsiveSize.width(context, 2.5),
-          vertical: ResponsiveSize.height(context, .55),
-        ),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: .1),
-          borderRadius: BorderRadius.circular(AppSizes.radiusXl),
-        ),
-        child: customText(
-          text: effectiveItem.score == null
-              ? 'غير مؤكد'
-              : '${effectiveItem.score}/100',
-          fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
-          color: color,
-          isBold: true,
-        ),
-      );
+  ) => Container(
+    padding: EdgeInsets.symmetric(
+      horizontal: ResponsiveSize.width(context, 2.5),
+      vertical: ResponsiveSize.height(context, .55),
+    ),
+    decoration: BoxDecoration(
+      color: color.withValues(alpha: .1),
+      borderRadius: BorderRadius.circular(AppSizes.radiusXl),
+    ),
+    child: customText(
+      text: effectiveItem.score == null
+          ? 'غير مؤكد'
+          : '${effectiveItem.score}/100',
+      fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
+      color: color,
+      isBold: true,
+    ),
+  );
 
-  Widget _pill(
-    BuildContext context,
-    String text,
-    Color color,
-  ) =>
-      Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: ResponsiveSize.width(context, 2),
-          vertical: ResponsiveSize.height(context, .45),
-        ),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: .08),
-          borderRadius: BorderRadius.circular(AppSizes.radiusXl),
-        ),
-        child: customText(
-          text: text,
-          fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
-          color: color,
-          isBold: true,
-        ),
-      );
+  Widget _pill(BuildContext context, String text, Color color) => Container(
+    padding: EdgeInsets.symmetric(
+      horizontal: ResponsiveSize.width(context, 2),
+      vertical: ResponsiveSize.height(context, .45),
+    ),
+    decoration: BoxDecoration(
+      color: color.withValues(alpha: .08),
+      borderRadius: BorderRadius.circular(AppSizes.radiusXl),
+    ),
+    child: customText(
+      text: text,
+      fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
+      color: color,
+      isBold: true,
+    ),
+  );
 
   Color _statusColor(VehicleHealthStatus status) => switch (status) {
-        VehicleHealthStatus.excellent => AppColors.success,
-        VehicleHealthStatus.good => AppColors.secondary,
-        VehicleHealthStatus.attention => AppColors.warning,
-        VehicleHealthStatus.critical => AppColors.danger,
-        VehicleHealthStatus.unknown => AppColors.textMuted,
-      };
+    VehicleHealthStatus.excellent => AppColors.success,
+    VehicleHealthStatus.good => AppColors.secondary,
+    VehicleHealthStatus.attention => AppColors.warning,
+    VehicleHealthStatus.critical => AppColors.danger,
+    VehicleHealthStatus.unknown => AppColors.textMuted,
+  };
 
   Color _confidenceColor(int value) => value >= 80
       ? AppColors.success
       : value >= 55
-          ? AppColors.warning
-          : AppColors.danger;
+      ? AppColors.warning
+      : AppColors.danger;
 
   String _sourceText(VehicleHealthSource source) => switch (source) {
-        VehicleHealthSource.obd => 'OBD',
-        VehicleHealthSource.maintenanceHistory => 'سجل الصيانة',
-        VehicleHealthSource.technicianInspection => 'فحص فني',
-        VehicleHealthSource.userInput => 'بياناتك',
-        VehicleHealthSource.estimated => 'تقديري',
-      };
+    VehicleHealthSource.obd => 'OBD',
+    VehicleHealthSource.maintenanceHistory => 'سجل الصيانة',
+    VehicleHealthSource.technicianInspection => 'فحص فني',
+    VehicleHealthSource.userInput => 'بياناتك',
+    VehicleHealthSource.estimated => 'تقديري',
+  };
 
   IconData _icon(String title) {
     if (title.contains('محرك')) return Icons.settings_rounded;

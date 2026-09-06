@@ -11,10 +11,7 @@ import 'package:moftah/utils/responsive.dart';
 class ObdConnectionProgress extends StatelessWidget {
   final ObdState state;
 
-  const ObdConnectionProgress({
-    super.key,
-    required this.state,
-  });
+  const ObdConnectionProgress({super.key, required this.state});
 
   @override
   Widget build(BuildContext context) {
@@ -90,8 +87,8 @@ class ObdConnectionProgress extends StatelessWidget {
                     color: completed
                         ? AppColors.success
                         : current
-                            ? AppColors.info
-                            : Colors.white.withValues(alpha: .12),
+                        ? AppColors.info
+                        : Colors.white.withValues(alpha: .12),
                     borderRadius: BorderRadius.circular(AppSizes.radiusLg),
                   ),
                 ),

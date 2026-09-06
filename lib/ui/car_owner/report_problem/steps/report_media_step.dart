@@ -77,9 +77,8 @@ class _ReportMediaStepState extends State<ReportMediaStep> {
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: _attachments.length,
-                separatorBuilder: (_, __) => SizedBox(
-                  width: ResponsiveSize.width(context, 2),
-                ),
+                separatorBuilder: (_, __) =>
+                    SizedBox(width: ResponsiveSize.width(context, 2)),
                 itemBuilder: (context, index) =>
                     _attachmentPreview(context, index),
               ),
@@ -105,11 +104,11 @@ class _ReportMediaStepState extends State<ReportMediaStep> {
         ),
         TextButton.icon(
           onPressed: () => widget.onChanged(const []),
-          icon: Icon(Icons.delete_outline_rounded, size: ResponsiveSize.width(context, 4.62)),
-          label: Text(
-            'مسح الكل',
-            style: TextStyle(fontFamily: 'Cairo'),
+          icon: Icon(
+            Icons.delete_outline_rounded,
+            size: ResponsiveSize.width(context, 4.62),
           ),
+          label: Text('مسح الكل', style: TextStyle(fontFamily: 'Cairo')),
         ),
       ],
     );
@@ -131,9 +130,7 @@ class _ReportMediaStepState extends State<ReportMediaStep> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-          border: Border.all(
-            color: AppColors.border.withValues(alpha: .14),
-          ),
+          border: Border.all(color: AppColors.border.withValues(alpha: .14)),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: .12),
@@ -200,7 +197,11 @@ class _ReportMediaStepState extends State<ReportMediaStep> {
             child: CircleAvatar(
               radius: ResponsiveSize.width(context, 3.08),
               backgroundColor: Colors.black54,
-              child: Icon(Icons.close_rounded, color: Colors.white, size: ResponsiveSize.width(context, 3.85)),
+              child: Icon(
+                Icons.close_rounded,
+                color: Colors.white,
+                size: ResponsiveSize.width(context, 3.85),
+              ),
             ),
           ),
         ),
@@ -278,7 +279,9 @@ class _ReportMediaStepState extends State<ReportMediaStep> {
       final remaining = 6 - _attachments.length;
       final next = [
         ..._attachments,
-        ...files.take(remaining).map(
+        ...files
+            .take(remaining)
+            .map(
               (file) => ProblemAttachmentModel(
                 path: file.path,
                 type: ProblemAttachmentType.image,
@@ -326,10 +329,7 @@ class _ReportMediaStepState extends State<ReportMediaStep> {
               onTap: () => Navigator.pop(context, ProblemAttachmentType.image),
             ),
             ListTile(
-              leading: Icon(
-                Icons.videocam_rounded,
-                color: AppColors.secondary,
-              ),
+              leading: Icon(Icons.videocam_rounded, color: AppColors.secondary),
               title: Text(
                 'فيديو حتى 30 ثانية',
                 style: TextStyle(
@@ -347,9 +347,9 @@ class _ReportMediaStepState extends State<ReportMediaStep> {
 
   void _addAttachment(String path, ProblemAttachmentType type) {
     if (_attachments.length >= 6) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('الحد الأقصى 6 مرفقات')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('الحد الأقصى 6 مرفقات')));
       return;
     }
     widget.onChanged(

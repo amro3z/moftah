@@ -112,12 +112,12 @@ PreferredSizeWidget customAppBar(
 
               VehicleCard(
                 data: data,
-                onTap: (){
-                   Navigator.pushNamed(
-                      context,
-                      '/vehicle-health',
-                      arguments: selectedVehicle.health,
-                    );
+                onTap: () {
+                  Navigator.pushNamed(
+                    context,
+                    '/vehicle-health',
+                    arguments: selectedVehicle.health,
+                  );
                 },
                 onSwitchTap: onVehicleSwitchTap,
               ),

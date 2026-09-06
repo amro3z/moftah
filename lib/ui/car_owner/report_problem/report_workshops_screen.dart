@@ -31,8 +31,8 @@ class ReportWorkshopsScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: AppColors.background,
         appBar: AppBar(
-      scrolledUnderElevation: 0,
-      shadowColor: Colors.transparent,
+          scrolledUnderElevation: 0,
+          shadowColor: Colors.transparent,
           backgroundColor: Colors.white,
           elevation: 0,
           automaticallyImplyLeading: false,
@@ -54,7 +54,8 @@ class ReportWorkshopsScreen extends StatelessWidget {
                       isBold: true,
                     ),
                     customText(
-                      text: 'نعرض الأقرب فورًا ونكمل تحميل باقي النتائج في الخلفية',
+                      text:
+                          'نعرض الأقرب فورًا ونكمل تحميل باقي النتائج في الخلفية',
                       fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
                       color: AppColors.textMuted,
                     ),
@@ -69,9 +70,15 @@ class ReportWorkshopsScreen extends StatelessWidget {
             if (state is NearbyPlacesLoading || state is NearbyPlacesInitial) {
               final loading = state is NearbyPlacesLoading
                   ? state
-                  : const NearbyPlacesLoading(step: NearbyLoadingStep.searchingWorkshops, searchRadiusMeters: 15000);
+                  : const NearbyPlacesLoading(
+                      step: NearbyLoadingStep.searchingWorkshops,
+                      searchRadiusMeters: 15000,
+                    );
               return SingleChildScrollView(
-                child: NearbyPlacesLoadingIndicator(state: loading, directoryMode: true),
+                child: NearbyPlacesLoadingIndicator(
+                  state: loading,
+                  directoryMode: true,
+                ),
               );
             }
 
@@ -82,22 +89,34 @@ class ReportWorkshopsScreen extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.cloud_off_rounded, size: ResponsiveSize.width(context, 11.79), color: AppColors.textMuted),
+                      Icon(
+                        Icons.cloud_off_rounded,
+                        size: ResponsiveSize.width(context, 11.79),
+                        color: AppColors.textMuted,
+                      ),
                       SizedBox(height: ResponsiveSize.height(context, 1)),
                       customText(
                         text: state.message,
-                        fontSize: ResponsiveSize.width(context, AppSizes.fontMd),
+                        fontSize: ResponsiveSize.width(
+                          context,
+                          AppSizes.fontMd,
+                        ),
                         color: AppColors.primary,
                         isBold: true,
                       ),
                       SizedBox(height: ResponsiveSize.height(context, 1.5)),
                       FilledButton(
-                        onPressed: () => context.read<NearbyPlacesCubit>().loadWorkshopDirectoryFromPosition(
+                        onPressed: () => context
+                            .read<NearbyPlacesCubit>()
+                            .loadWorkshopDirectoryFromPosition(
                               userLatitude: userLatitude,
                               userLongitude: userLongitude,
                               maxPlaces: 50,
                             ),
-                        child: Text('حاول مرة أخرى', style: TextStyle(fontFamily: 'Cairo')),
+                        child: Text(
+                          'حاول مرة أخرى',
+                          style: TextStyle(fontFamily: 'Cairo'),
+                        ),
                       ),
                     ],
                   ),
@@ -138,13 +157,19 @@ class ReportWorkshopsScreen extends StatelessWidget {
                         SizedBox(
                           width: ResponsiveSize.width(context, 5),
                           height: ResponsiveSize.width(context, 5),
-                          child: CircularProgressIndicator(strokeWidth: ResponsiveSize.width(context, 0.64)),
+                          child: CircularProgressIndicator(
+                            strokeWidth: ResponsiveSize.width(context, 0.64),
+                          ),
                         ),
                         SizedBox(width: ResponsiveSize.width(context, 2.5)),
                         Expanded(
                           child: customText(
-                            text: 'عرضنا لك أقرب ${places.length} ورش الآن، وبنكمل تحميل باقي الورش حتى 50 بدون طلب موقعك مرة ثانية.',
-                            fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
+                            text:
+                                'عرضنا لك أقرب ${places.length} ورش الآن، وبنكمل تحميل باقي الورش حتى 50 بدون طلب موقعك مرة ثانية.',
+                            fontSize: ResponsiveSize.width(
+                              context,
+                              AppSizes.fontSm,
+                            ),
                             color: AppColors.primary,
                             isBold: true,
                           ),
@@ -156,10 +181,13 @@ class ReportWorkshopsScreen extends StatelessWidget {
                   child: ListView.separated(
                     padding: EdgeInsets.all(ResponsiveSize.width(context, 5)),
                     itemCount: places.length,
-                    separatorBuilder: (_, __) => SizedBox(height: ResponsiveSize.height(context, 1.2)),
+                    separatorBuilder: (_, __) =>
+                        SizedBox(height: ResponsiveSize.height(context, 1.2)),
                     itemBuilder: (context, index) {
                       return AnimatedSlide(
-                        duration: Duration(milliseconds: 260 + (index.clamp(0, 8) as int) * 40),
+                        duration: Duration(
+                          milliseconds: 260 + (index.clamp(0, 8) as int) * 40,
+                        ),
                         offset: Offset.zero,
                         child: WorkshopDirectoryCard(
                           place: places[index],
@@ -185,13 +213,16 @@ class ReportWorkshopsScreen extends StatelessWidget {
                         style: FilledButton.styleFrom(
                           backgroundColor: AppColors.secondary,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+                            borderRadius: BorderRadius.circular(
+                              AppSizes.radiusMd,
+                            ),
                           ),
                         ),
                         onPressed: places.isEmpty
                             ? null
                             : () async {
-                                await ServiceRequestStore.instance.submitRequest(report);
+                                await ServiceRequestStore.instance
+                                    .submitRequest(report);
                                 if (!context.mounted) return;
                                 Navigator.pushNamedAndRemoveUntil(
                                   context,
@@ -202,7 +233,10 @@ class ReportWorkshopsScreen extends StatelessWidget {
                         icon: Icon(Icons.campaign_rounded),
                         label: Text(
                           'إرسال البلاغ وانتظار العروض',
-                          style: TextStyle(fontFamily: 'Cairo', fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            fontFamily: 'Cairo',
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),

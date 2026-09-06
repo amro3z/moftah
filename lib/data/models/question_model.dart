@@ -1,11 +1,15 @@
 class QuestionModel {
   final String question;
-  final String answerYes;
-  final String answerNo;
+  final String? answerYes;
+  final String? answerNo;
+  final String? answer;
+  final List<String>? options;
 
   const QuestionModel({
     required this.question,
-    required this.answerYes,
-    required this.answerNo,
+    this.answerYes,
+    this.answerNo,
+    this.answer,
+    this.options,
   });
 }

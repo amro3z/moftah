@@ -15,7 +15,9 @@ Future<bool?> showSparePartsCheckoutDialog({
       textDirection: TextDirection.rtl,
       child: Dialog(
         backgroundColor: Colors.transparent,
-        insetPadding: EdgeInsets.symmetric(horizontal: ResponsiveSize.width(context, 6.15)),
+        insetPadding: EdgeInsets.symmetric(
+          horizontal: ResponsiveSize.width(context, 6.15),
+        ),
         child: Container(
           padding: EdgeInsets.all(ResponsiveSize.width(context, 5.13)),
           decoration: BoxDecoration(
@@ -54,7 +56,8 @@ Future<bool?> showSparePartsCheckoutDialog({
               ),
               SizedBox(height: ResponsiveSize.height(context, 0.83)),
               customText(
-                text: 'راجع إجمالي الطلب قبل التأكيد. بعد الإرسال هنجهز الطلب للمتابعة.',
+                text:
+                    'راجع إجمالي الطلب قبل التأكيد. بعد الإرسال هنجهز الطلب للمتابعة.',
                 fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
                 color: AppColors.textMuted,
                 textAlign: TextAlign.center,
@@ -62,11 +65,16 @@ Future<bool?> showSparePartsCheckoutDialog({
               SizedBox(height: ResponsiveSize.height(context, 1.78)),
               Container(
                 width: double.infinity,
-                padding: EdgeInsets.symmetric(horizontal: ResponsiveSize.width(context, 3.59), vertical: ResponsiveSize.height(context, 1.42)),
+                padding: EdgeInsets.symmetric(
+                  horizontal: ResponsiveSize.width(context, 3.59),
+                  vertical: ResponsiveSize.height(context, 1.42),
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.surfaceLight,
                   borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-                  border: Border.all(color: AppColors.border.withValues(alpha: .10)),
+                  border: Border.all(
+                    color: AppColors.border.withValues(alpha: .10),
+                  ),
                 ),
                 child: Row(
                   children: [
@@ -93,14 +101,21 @@ Future<bool?> showSparePartsCheckoutDialog({
                       onPressed: () => Navigator.pop(dialogContext, false),
                       style: OutlinedButton.styleFrom(
                         minimumSize: const Size.fromHeight(48),
-                        side: BorderSide(color: AppColors.border.withValues(alpha: .20)),
+                        side: BorderSide(
+                          color: AppColors.border.withValues(alpha: .20),
+                        ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppSizes.radiusSm),
+                          borderRadius: BorderRadius.circular(
+                            AppSizes.radiusSm,
+                          ),
                         ),
                       ),
                       child: customText(
                         text: 'إلغاء',
-                        fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
+                        fontSize: ResponsiveSize.width(
+                          context,
+                          AppSizes.fontSm,
+                        ),
                         isBold: true,
                         color: AppColors.textMuted,
                       ),
@@ -115,13 +130,21 @@ Future<bool?> showSparePartsCheckoutDialog({
                         backgroundColor: AppColors.secondary,
                         minimumSize: const Size.fromHeight(48),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppSizes.radiusSm),
+                          borderRadius: BorderRadius.circular(
+                            AppSizes.radiusSm,
+                          ),
                         ),
                       ),
-                      icon: Icon(Icons.check_rounded, size: ResponsiveSize.width(context, 4.62)),
+                      icon: Icon(
+                        Icons.check_rounded,
+                        size: ResponsiveSize.width(context, 4.62),
+                      ),
                       label: customText(
                         text: 'تأكيد الطلب',
-                        fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
+                        fontSize: ResponsiveSize.width(
+                          context,
+                          AppSizes.fontSm,
+                        ),
                         isBold: true,
                         color: Colors.white,
                       ),
@@ -146,7 +169,9 @@ Future<void> showSparePartsOrderSuccessDialog(BuildContext context) {
       textDirection: TextDirection.rtl,
       child: Dialog(
         backgroundColor: Colors.transparent,
-        insetPadding: EdgeInsets.symmetric(horizontal: ResponsiveSize.width(context, 6.15)),
+        insetPadding: EdgeInsets.symmetric(
+          horizontal: ResponsiveSize.width(context, 6.15),
+        ),
         child: Container(
           padding: EdgeInsets.all(ResponsiveSize.width(context, 5.64)),
           decoration: BoxDecoration(
@@ -178,7 +203,8 @@ Future<void> showSparePartsOrderSuccessDialog(BuildContext context) {
               ),
               SizedBox(height: ResponsiveSize.height(context, 0.83)),
               customText(
-                text: 'طلبك اتسجل، وهتقدر تتابع حالته بعد ربط الطلبات بالحساب والباك إند.',
+                text:
+                    'طلبك اتسجل، وهتقدر تتابع حالته بعد ربط الطلبات بالحساب والباك إند.',
                 fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
                 color: AppColors.textMuted,
                 textAlign: TextAlign.center,

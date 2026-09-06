@@ -8,10 +8,6 @@ import 'package:moftah/ui/core/ui/custom_text.dart';
 import 'package:moftah/ui/onboarding/widgets/role_selection_widgets.dart';
 import 'package:moftah/utils/responsive.dart';
 
-
-
-
-
 class RoleSelectionScreen extends StatefulWidget {
   const RoleSelectionScreen({super.key});
 
@@ -22,13 +18,11 @@ class RoleSelectionScreen extends StatefulWidget {
 class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
   AppUserRole? selectedRole;
 
-
-
   void _continue() {
     if (selectedRole == null) return;
     String path = '';
     switch (selectedRole) {
-      case AppUserRole.driver :
+      case AppUserRole.driver:
         path = '/register';
         break;
       case AppUserRole.technician:
@@ -262,4 +256,3 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
     );
   }
 }
-

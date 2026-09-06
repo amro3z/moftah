@@ -22,8 +22,9 @@ class AnimatedEntrance extends StatelessWidget {
         final delayedValue = delay.inMilliseconds == 0
             ? value
             : ((value * (420 + delay.inMilliseconds) - delay.inMilliseconds) /
-                    420)
-                .clamp(0.0, 1.0).toDouble();
+                      420)
+                  .clamp(0.0, 1.0)
+                  .toDouble();
         return Opacity(
           opacity: delayedValue,
           child: Transform.translate(

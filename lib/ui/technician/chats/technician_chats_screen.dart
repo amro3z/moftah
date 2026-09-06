@@ -19,7 +19,14 @@ class TechnicianChatsScreen extends StatelessWidget {
           scrolledUnderElevation: 0,
           elevation: 0,
           backgroundColor: Colors.white,
-          title: const Text('المحادثات', style: TextStyle(fontFamily: 'Cairo', fontWeight: FontWeight.bold, color: AppColors.primary)),
+          title: const Text(
+            'المحادثات',
+            style: TextStyle(
+              fontFamily: 'Cairo',
+              fontWeight: FontWeight.bold,
+              color: AppColors.primary,
+            ),
+          ),
         ),
         body: ListView.separated(
           padding: const EdgeInsets.all(16),
@@ -32,14 +39,48 @@ class TechnicianChatsScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(18),
-                boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: .05), blurRadius: 14)],
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: .05),
+                    blurRadius: 14,
+                  ),
+                ],
               ),
               child: ListTile(
-                onTap: () => Navigator.pushNamed(context, '/chat', arguments: conversation.toChat(request)),
-                leading: const CircleAvatar(backgroundColor: Color(0x141976D2), child: Icon(Icons.person_rounded, color: AppColors.secondary)),
-                title: Text(conversation.customerName, style: const TextStyle(fontFamily: 'Cairo', fontWeight: FontWeight.bold, color: AppColors.primary)),
-                subtitle: Text('${request.vehicleName} • ${conversation.lastMessage}', maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontFamily: 'Cairo', color: AppColors.textMuted)),
-                trailing: Text(conversation.time, style: const TextStyle(fontFamily: 'Cairo', fontSize: 11, color: AppColors.textMuted)),
+                onTap: () => Navigator.pushNamed(
+                  context,
+                  '/chat',
+                  arguments: conversation.toChat(request),
+                ),
+                leading: const CircleAvatar(
+                  backgroundColor: Color(0x141976D2),
+                  child: Icon(Icons.person_rounded, color: AppColors.secondary),
+                ),
+                title: Text(
+                  conversation.customerName,
+                  style: const TextStyle(
+                    fontFamily: 'Cairo',
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primary,
+                  ),
+                ),
+                subtitle: Text(
+                  '${request.vehicleName} • ${conversation.lastMessage}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontFamily: 'Cairo',
+                    color: AppColors.textMuted,
+                  ),
+                ),
+                trailing: Text(
+                  conversation.time,
+                  style: const TextStyle(
+                    fontFamily: 'Cairo',
+                    fontSize: 11,
+                    color: AppColors.textMuted,
+                  ),
+                ),
               ),
             );
           },

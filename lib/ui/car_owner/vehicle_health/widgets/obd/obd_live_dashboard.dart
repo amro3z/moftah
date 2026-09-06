@@ -12,10 +12,7 @@ import 'package:moftah/utils/responsive.dart';
 class ObdLiveDashboard extends StatelessWidget {
   final ObdSnapshotModel snapshot;
 
-  const ObdLiveDashboard({
-    super.key,
-    required this.snapshot,
-  });
+  const ObdLiveDashboard({super.key, required this.snapshot});
 
   @override
   Widget build(BuildContext context) {
@@ -115,8 +112,9 @@ class _Gauges extends StatelessWidget {
           child: ObdGauge(
             title: 'السرعة',
             value: snapshot.speedKmh?.toDouble(),
-            displayValue:
-                snapshot.speedKmh == null ? '--' : '${snapshot.speedKmh}',
+            displayValue: snapshot.speedKmh == null
+                ? '--'
+                : '${snapshot.speedKmh}',
             unit: 'كم/س',
             maxValue: 240,
             icon: Icons.directions_car_filled_rounded,

@@ -1,6 +1,14 @@
 import 'package:moftah/data/models/obd/obd_models.dart';
 
-enum ObdStatus { initial, loadingDevices, ready, connecting, connected, reading, error }
+enum ObdStatus {
+  initial,
+  loadingDevices,
+  ready,
+  connecting,
+  connected,
+  reading,
+  error,
+}
 
 enum ObdConnectionStage {
   idle,
@@ -59,7 +67,9 @@ class ObdState {
       status: status ?? this.status,
       connectionStage: connectionStage ?? this.connectionStage,
       devices: devices ?? this.devices,
-      connectedDevice: clearConnectedDevice ? null : connectedDevice ?? this.connectedDevice,
+      connectedDevice: clearConnectedDevice
+          ? null
+          : connectedDevice ?? this.connectedDevice,
       adapterName: adapterName ?? this.adapterName,
       snapshot: clearSnapshot ? null : snapshot ?? this.snapshot,
       trace: trace ?? this.trace,

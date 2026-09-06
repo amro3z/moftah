@@ -2,8 +2,7 @@ import 'package:bluetooth_serial_android/bluetooth_serial_android.dart';
 import 'package:moftah/data/models/obd/obd_models.dart';
 
 class Elm327BluetoothDataSource {
-  static const String _sppUuid =
-      '00001101-0000-1000-8000-00805F9B34FB';
+  static const String _sppUuid = '00001101-0000-1000-8000-00805F9B34FB';
   static const int _readTimeoutMs = 10000;
 
   Future<bool> ensurePermissions() {
@@ -45,16 +44,10 @@ class Elm327BluetoothDataSource {
 
     final response = await FlutterBluetoothSerial.readLine('>');
 
-    return _cleanResponse(
-      response ?? '',
-      command: normalized,
-    );
+    return _cleanResponse(response ?? '', command: normalized);
   }
 
-  String _cleanResponse(
-    String response, {
-    required String command,
-  }) {
+  String _cleanResponse(String response, {required String command}) {
     return response
         .replaceAll('>', '')
         .replaceAll('\u0000', '')

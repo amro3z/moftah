@@ -67,9 +67,7 @@ class ChatScreenModel {
     );
   }
 
-  factory ChatScreenModel.fromEmergencyTow(
-    EmergencyTowProviderModel provider,
-  ) {
+  factory ChatScreenModel.fromEmergencyTow(EmergencyTowProviderModel provider) {
     return ChatScreenModel(
       participantId: provider.id,
       participantName: provider.driverName,

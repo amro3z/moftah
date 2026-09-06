@@ -4,10 +4,7 @@ class ObdProtocolProbe {
   final Future<String> Function(String command) sendCommand;
   final void Function(String message)? onTrace;
 
-  const ObdProtocolProbe({
-    required this.sendCommand,
-    this.onTrace,
-  });
+  const ObdProtocolProbe({required this.sendCommand, this.onTrace});
 
   static const Map<String, String> protocols = {
     '6': 'ISO 15765-4 CAN 11-bit 500k',
@@ -73,9 +70,7 @@ class ObdProtocolProbe {
 
     final rpm = await sendCommand('010C');
     if (_hasMode01Response(rpm)) {
-      onTrace?.call(
-        '$label رد على PID 010C رغم عدم وجود رد صالح على 0100.',
-      );
+      onTrace?.call('$label رد على PID 010C رغم عدم وجود رد صالح على 0100.');
       return ObdProtocolProbeResult(
         success: true,
         response: rpm,
@@ -96,9 +91,8 @@ class ObdProtocolProbe {
     return ObdProtocolProbeResult(
       success: false,
       response: supportedPids,
-      busInitialized: initialized ||
-          _busInitialized(rpm) ||
-          _busInitialized(monitorStatus),
+      busInitialized:
+          initialized || _busInitialized(rpm) || _busInitialized(monitorStatus),
     );
   }
 

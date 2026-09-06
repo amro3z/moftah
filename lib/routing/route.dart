@@ -5,7 +5,6 @@ import 'package:moftah/data/models/car_owner/nerbay_places_model.dart';
 import 'package:moftah/data/models/vehicle_card/vehicle_health_model.dart';
 import 'package:moftah/data/repos/nearby_places_repository.dart';
 import 'package:moftah/data/repos/obd_repository.dart';
-import 'package:moftah/ui/register/register_screen.dart';
 import 'package:moftah/ui/auth/login_screen.dart';
 import 'package:moftah/ui/onboarding/onboarding_screen.dart';
 import 'package:moftah/ui/onboarding/role_selection_screen.dart';
@@ -45,6 +44,7 @@ import 'package:moftah/ui/car_owner/profile/spare_part_order_details_screen.dart
 import 'package:moftah/ui/car_owner/profile/worker_requests_screen.dart';
 import 'package:moftah/ui/car_owner/profile/worker_request_details_screen.dart';
 import 'package:moftah/ui/car_owner/profile/chat_history_screen.dart';
+import 'package:moftah/ui/register/register_screen.dart';
 import 'package:moftah/ui/technician/home/technician_home.dart';
 import 'package:moftah/data/models/technician/technician_models.dart';
 import 'package:moftah/data/store/technician_store.dart';
@@ -147,7 +147,7 @@ class AppRoute {
 
       case '/register':
         final arguments = settings.arguments as AppUserRole;
-        return _animatedRoute(RegisterScreen( role: arguments,));
+        return _animatedRoute(RegisterScreen(role: arguments));
 
       case '/chat':
         final arguments = settings.arguments;

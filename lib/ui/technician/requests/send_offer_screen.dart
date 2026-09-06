@@ -10,10 +10,7 @@ import 'package:moftah/utils/responsive.dart';
 class SendOfferScreen extends StatefulWidget {
   final TechnicianRequestModel request;
 
-  const SendOfferScreen({
-    super.key,
-    required this.request,
-  });
+  const SendOfferScreen({super.key, required this.request});
 
   @override
   State<SendOfferScreen> createState() => _SendOfferScreenState();
@@ -314,9 +311,7 @@ class _SendOfferScreenState extends State<SendOfferScreen> {
       decoration: BoxDecoration(
         color: AppColors.secondary.withValues(alpha: .06),
         borderRadius: BorderRadius.circular(AppSizes.radiusLg),
-        border: Border.all(
-          color: AppColors.secondary.withValues(alpha: .12),
-        ),
+        border: Border.all(color: AppColors.secondary.withValues(alpha: .12)),
       ),
       child: Row(
         children: [

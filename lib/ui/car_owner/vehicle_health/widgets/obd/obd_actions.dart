@@ -12,11 +12,7 @@ class ObdActions extends StatelessWidget {
   final ObdState state;
   final bool busy;
 
-  const ObdActions({
-    super.key,
-    required this.state,
-    required this.busy,
-  });
+  const ObdActions({super.key, required this.state, required this.busy});
 
   @override
   Widget build(BuildContext context) {
@@ -89,9 +85,7 @@ class ObdActions extends StatelessWidget {
           onPressed: busy ? null : () => showObdClearCodesDialog(context),
           style: OutlinedButton.styleFrom(
             foregroundColor: AppColors.warning,
-            side: BorderSide(
-              color: AppColors.warning.withValues(alpha: .45),
-            ),
+            side: BorderSide(color: AppColors.warning.withValues(alpha: .45)),
             padding: EdgeInsets.symmetric(
               horizontal: ResponsiveSize.width(context, 3),
               vertical: ResponsiveSize.height(context, 1.1),

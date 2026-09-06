@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
 import 'package:moftah/ui/core/ui/custom_text.dart';
@@ -20,6 +21,7 @@ class AppTextField extends StatelessWidget {
   final String? Function(String?)? validator;
   final Widget? suffixIcon;
   final FocusNode? focusNode;
+  final List<TextInputFormatter>? inputFormatters;
   const AppTextField({
     super.key,
     this.controller,
@@ -37,6 +39,7 @@ class AppTextField extends StatelessWidget {
     this.validator,
     this.focusNode,
     this.suffixIcon,
+    this.inputFormatters,
   });
 
   @override
@@ -59,6 +62,7 @@ class AppTextField extends StatelessWidget {
           obscureText: obscureText,
           readOnly: readOnly,
           keyboardType: keyboardType,
+          inputFormatters: inputFormatters,
           maxLines: obscureText ? 1 : maxLines,
           minLines: obscureText ? 1 : minLines,
           onChanged: onChanged,

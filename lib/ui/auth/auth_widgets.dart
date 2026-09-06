@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
 import 'package:moftah/ui/core/ui/custom_text.dart';
@@ -15,6 +16,7 @@ class AuthField extends StatelessWidget {
   final Function(String)? onChanged;
   final String? Function(String?)? validator;
   final Widget? suffixIcon;
+  final List<TextInputFormatter>? inputFormatters;
   const AuthField({
     super.key,
     required this.hint,
@@ -26,6 +28,7 @@ class AuthField extends StatelessWidget {
     this.onChanged,
     this.validator,
     this.suffixIcon,
+    this.inputFormatters,
   });
 
   @override
@@ -40,6 +43,7 @@ class AuthField extends StatelessWidget {
       obscureText: obscureText,
       suffixIcon: suffixIcon,
       keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
     );
   }
 }
