@@ -19,12 +19,9 @@ class VehicleSelectionStore extends ChangeNotifier {
         mileage: 100008,
         healthScore: 85,
         maintenanceStatus: MaintenanceStatus.good,
-        documentStatus: DocumentStatus.verified,
         brand: 'Toyota',
-        brandLogoUrl: null,
         nextMaintenance: 1000,
         lastMaintenance: '15 مارس',
-        repairStatus: RepairStatus.good,
       ),
       health: const VehicleHealthCalculator().calculateDemo(
         vehicleName: 'Toyota Corolla',
@@ -41,12 +38,9 @@ class VehicleSelectionStore extends ChangeNotifier {
         mileage: 124500,
         healthScore: 78,
         maintenanceStatus: MaintenanceStatus.needsService,
-        documentStatus: DocumentStatus.verified,
         brand: 'Hyundai',
-        brandLogoUrl: null,
         nextMaintenance: 700,
         lastMaintenance: '2 فبراير',
-        repairStatus: RepairStatus.pending,
       ),
       health: const VehicleHealthModel(
         vehicleName: 'Hyundai Tuscany',
@@ -120,7 +114,6 @@ class VehicleSelectionStore extends ChangeNotifier {
             '',
           ),
           year: vehicle.card.year,
-          imageUrl: vehicle.card.brandLogoUrl,
         ),
       )
       .toList(growable: false);

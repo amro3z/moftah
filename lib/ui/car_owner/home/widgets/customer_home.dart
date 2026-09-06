@@ -451,7 +451,6 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
                         ),
                         leading: VehicleBrandLogo(
                           brand: vehicle.card.brand,
-                          logoUrl: vehicle.card.brandLogoUrl,
                           sizePercent: 11,
                         ),
                         title: customText(

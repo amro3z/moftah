@@ -171,7 +171,6 @@ Future<String?> showSparePartsVehicleSheet({
                               ),
                               VehicleBrandLogo(
                                 brand: vehicle.brand,
-                                logoUrl: vehicle.imageUrl,
                                 sizePercent: 12,
                                 showContainer: false,
                               ),

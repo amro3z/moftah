@@ -65,7 +65,6 @@ class ReportVehicleStep extends StatelessWidget {
                     children: [
                       VehicleBrandLogo(
                         brand: vehicle.card.brand,
-                        logoUrl: vehicle.card.brandLogoUrl,
                         sizePercent: 13,
                       ),
                       SizedBox(width: ResponsiveSize.width(context, 3)),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:moftah/data/models/app_user_role_enum.dart';
 import 'package:moftah/data/models/role_data.dart';
-import 'package:moftah/ui/onboarding/role_selection_screen.dart';
 
 const roles = [
     RoleData(

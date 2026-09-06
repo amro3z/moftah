@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
 import 'package:moftah/ui/core/ui/custom_text.dart';
@@ -7,14 +7,12 @@ import 'package:moftah/utils/responsive.dart';
 
 class VehicleBrandLogo extends StatelessWidget {
   final String brand;
-  final String? logoUrl;
   final double sizePercent;
   final bool showContainer;
 
   const VehicleBrandLogo({
     super.key,
     required this.brand,
-    this.logoUrl,
     this.sizePercent = 14,
     this.showContainer = true,
   });
@@ -22,6 +20,7 @@ class VehicleBrandLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = ResponsiveSize.width(context, sizePercent);
+
     final logo = _buildLogo(context);
 
     if (!showContainer) {
@@ -49,37 +48,29 @@ class VehicleBrandLogo extends StatelessWidget {
   }
 
   Widget _buildLogo(BuildContext context) {
-    final url = logoUrl?.trim().isNotEmpty == true
-        ? logoUrl!.trim()
-        : VehicleBrandLogoResolver.urlFor(brand);
+    final path = VehicleBrandLogoResolver.assetFor(brand);
 
-    if (url == null) return _fallback(context);
-
-    if (url.toLowerCase().endsWith('.svg')) {
-      return SvgPicture.network(
-        url,
-        fit: BoxFit.contain,
-        placeholderBuilder: (context) => Center(
-          child: SizedBox(
-            width: ResponsiveSize.width(context, 4.62),
-            height: ResponsiveSize.height(context, 2.13),
-            child: CircularProgressIndicator(
-              strokeWidth: ResponsiveSize.width(context, .51),
-            ),
-          ),
-        ),
-      );
+    if (path == null) {
+      return _fallback(context);
     }
 
-    return Image.network(
-      url,
+    return Image.asset(
+      path,
       fit: BoxFit.contain,
-      errorBuilder: (_, __, ___) => _fallback(context),
+      filterQuality: FilterQuality.medium,
+      errorBuilder: (context, error, stackTrace) {
+        debugPrint('Car logo not found: $brand -> $path');
+
+        return _fallback(context);
+      },
     );
   }
 
   Widget _fallback(BuildContext context) {
-    final letter = brand.trim().isEmpty ? 'M' : brand.trim()[0].toUpperCase();
+    final trimmedBrand = brand.trim();
+
+    final letter = trimmedBrand.isEmpty ? 'M' : trimmedBrand[0].toUpperCase();
+
     return Center(
       child: customText(
         text: letter,
@@ -94,29 +85,27 @@ class VehicleBrandLogo extends StatelessWidget {
 class VehicleBrandLogoResolver {
   VehicleBrandLogoResolver._();
 
-  static const String _base =
-      'https://cdn.jsdelivr.net/gh/vehiclespecs/brand-logos@v1.0.0';
+  static const String _base = 'assets/cars';
 
   static const Map<String, String> _aliases = {
-    'mercedes': 'mercedes-benz',
-    'mercedes benz': 'mercedes-benz',
-    'vw': 'volkswagen',
-    'land rover': 'land-rover',
     'alfa romeo': 'alfa-romeo',
     'aston martin': 'aston-martin',
+    'gardner douglas': 'gardner-douglas',
+    'king long': 'king-long',
+    'land rover': 'land-rover',
     'rolls royce': 'rolls-royce',
+    'vw': 'volkswagen',
   };
 
-  static const Set<String> _pngBrands = {
-    'chevrolet', 'ford', 'honda', 'lexus', 'mg', 'gmc', 'chery', 'jac',
-    'dodge', 'haval', 'lamborghini', 'maserati', 'subaru', 'tata', 'xpeng',
-  };
-
-  static String? urlFor(String brand) {
+  static String? assetFor(String brand) {
     var key = brand.trim().toLowerCase();
-    if (key.isEmpty) return null;
+
+    if (key.isEmpty) {
+      return null;
+    }
+
     key = _aliases[key] ?? key.replaceAll(RegExp(r'\s+'), '-');
-    final extension = _pngBrands.contains(key) ? 'png' : 'svg';
-    return '$_base/$key-logo.$extension';
+
+    return '$_base/$key.png';
   }
 }

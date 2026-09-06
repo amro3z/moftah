@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:moftah/data/models/app_user_role_enum.dart';
+
 import 'package:moftah/ui/core/constant/role.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
@@ -6,7 +8,7 @@ import 'package:moftah/ui/core/ui/custom_text.dart';
 import 'package:moftah/ui/onboarding/widgets/role_selection_widgets.dart';
 import 'package:moftah/utils/responsive.dart';
 
-enum AppUserRole { driver, technician, workshopOwner, towOperator }
+
 
 
 
@@ -27,10 +29,10 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
     String path = '';
     switch (selectedRole) {
       case AppUserRole.driver :
-        path = '/customer_home';
+        path = '/register';
         break;
       case AppUserRole.technician:
-        path = '/technician/register';
+        path = '/register';
         break;
       case AppUserRole.workshopOwner:
         path = '/workshop_owner_home';

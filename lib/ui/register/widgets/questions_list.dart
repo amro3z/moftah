@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:moftah/data/models/question_model.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
-import 'package:moftah/ui/technician/register/widgets/questions_card.dart';
+import 'package:moftah/ui/register/widgets/questions_card.dart';
 import 'package:moftah/utils/responsive.dart';
 
 class Questions extends StatefulWidget {

@@ -7,15 +7,12 @@ import 'package:moftah/utils/responsive.dart';
 class VehicleCardInfo extends StatelessWidget {
   final String nextMaintenance;
   final String lastMaintenance;
-  final String repairText;
-  final Color repairColor;
+
 
   const VehicleCardInfo({
     super.key,
     required this.nextMaintenance,
     required this.lastMaintenance,
-    required this.repairText,
-    required this.repairColor,
   });
 
   @override
@@ -49,15 +46,6 @@ class VehicleCardInfo extends StatelessWidget {
           ),
 
           _divider(context),
-
-          Expanded(
-            child: _infoItem(
-              context,
-              title: 'الإصلاحات',
-              value: repairText,
-              valueColor: repairColor,
-            ),
-          ),
         ],
       ),
     );

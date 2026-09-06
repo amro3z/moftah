@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:moftah/ui/onboarding/role_selection_screen.dart';
+import 'package:moftah/data/models/app_user_role_enum.dart';
+
 
 class RoleData {
   final AppUserRole role;

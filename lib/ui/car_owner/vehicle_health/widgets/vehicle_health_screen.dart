@@ -162,7 +162,6 @@ class VehicleHealthScreen extends StatelessWidget {
             children: [
               VehicleBrandLogo(
                 brand: data.brand,
-                logoUrl: data.brandLogoUrl,
                 sizePercent: 18,
               ),
               SizedBox(width: ResponsiveSize.width(context, 4)),

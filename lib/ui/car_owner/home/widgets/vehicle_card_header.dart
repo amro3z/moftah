@@ -20,8 +20,6 @@ class VehicleCardHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final maintenanceUi = VehicleStatusUi.maintenance(data.maintenanceStatus);
 
-    final documentUi = VehicleStatusUi.document(data.documentStatus);
-
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -46,14 +44,7 @@ class VehicleCardHeader extends StatelessWidget {
 
               SizedBox(height: ResponsiveSize.height(context, .8)),
 
-              Wrap(
-                spacing: ResponsiveSize.width(context, 1.5),
-                runSpacing: ResponsiveSize.height(context, .4),
-                children: [
-                  _statusChip(context, data: maintenanceUi),
-                  _statusChip(context, data: documentUi),
-                ],
-              ),
+              _statusChip(context, data: maintenanceUi),
             ],
           ),
         ),

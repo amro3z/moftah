@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:moftah/data/models/app_user_role_enum.dart';
 import 'package:moftah/data/models/car_owner/nerbay_places_model.dart';
 import 'package:moftah/data/models/vehicle_card/vehicle_health_model.dart';
 import 'package:moftah/data/repos/nearby_places_repository.dart';
 import 'package:moftah/data/repos/obd_repository.dart';
-import 'package:moftah/ui/technician/register/register_screen.dart';
+import 'package:moftah/ui/register/register_screen.dart';
 import 'package:moftah/ui/auth/login_screen.dart';
 import 'package:moftah/ui/onboarding/onboarding_screen.dart';
 import 'package:moftah/ui/onboarding/role_selection_screen.dart';
@@ -60,17 +61,21 @@ class AppRoute {
   Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case '/customer_home':
-        return _animatedRoute(BlocProvider(
+        return _animatedRoute(
+          BlocProvider(
             create: (_) => _createNearbyPlacesCubit()..loadNearestWorkshops(),
             child: const CustomerHomeScreen(),
-          ));
+          ),
+        );
 
       case '/nearby-workshops':
         final arguments = settings.arguments;
-        final workshopArguments =
-            arguments is WorkshopsRouteArguments ? arguments : null;
+        final workshopArguments = arguments is WorkshopsRouteArguments
+            ? arguments
+            : null;
 
-        return _animatedRoute(BlocProvider(
+        return _animatedRoute(
+          BlocProvider(
             create: (_) {
               final cubit = _createNearbyPlacesCubit();
 
@@ -89,7 +94,8 @@ class AppRoute {
               userLatitude: workshopArguments?.userLatitude,
               userLongitude: workshopArguments?.userLongitude,
             ),
-          ));
+          ),
+        );
       case '/technician_home':
         return _animatedRoute(const TechnicianHome());
       case '/technician/requests':
@@ -99,13 +105,27 @@ class AppRoute {
         TechnicianRequestModel? request;
         if (arg is TechnicianRequestModel) request = arg;
         if (arg is String) {
-          try { request = TechnicianStore.instance.byId(arg); } catch (_) {}
+          try {
+            request = TechnicianStore.instance.byId(arg);
+          } catch (_) {}
         }
-        if (request == null) return _animatedRoute(const Scaffold(body: Center(child: Text('Request data is required'))));
+        if (request == null) {
+          return _animatedRoute(
+            const Scaffold(
+              body: Center(child: Text('Request data is required')),
+            ),
+          );
+        }
         return _animatedRoute(TechnicianRequestDetailsScreen(request: request));
       case '/technician/send-offer':
         final arg = settings.arguments;
-        if (arg is! TechnicianRequestModel) return _animatedRoute(const Scaffold(body: Center(child: Text('Request data is required'))));
+        if (arg is! TechnicianRequestModel) {
+          return _animatedRoute(
+            const Scaffold(
+              body: Center(child: Text('Request data is required')),
+            ),
+          );
+        }
         return _animatedRoute(SendOfferScreen(request: arg));
       case '/technician/works':
         return _animatedRoute(const TechnicianWorksScreen());
@@ -115,7 +135,7 @@ class AppRoute {
         return _animatedRoute(const TechnicianProfileScreen());
       case '/emergency':
         return _animatedRoute(const EmergencyScreen());
-      
+
       case '/onboarding':
         return _animatedRoute(const OnboardingScreen());
 
@@ -125,21 +145,18 @@ class AppRoute {
       case '/login':
         return _animatedRoute(LoginScreen());
 
-      case '/technician/register':
-        return _animatedRoute(const TechnicianRegisterScreen());
+      case '/register':
+        final arguments = settings.arguments as AppUserRole;
+        return _animatedRoute(RegisterScreen( role: arguments,));
 
       case '/chat':
         final arguments = settings.arguments;
         if (arguments is! ChatScreenModel) {
-          return _animatedRoute(const Scaffold(
-              body: Center(
-                child: Text('Chat data is required'),
-              ),
-            ));
+          return _animatedRoute(
+            const Scaffold(body: Center(child: Text('Chat data is required'))),
+          );
         }
-        return _animatedRoute(
-          RepairChatScreen(data: arguments),
-        );
+        return _animatedRoute(RepairChatScreen(data: arguments));
 
       case '/profile':
         return _animatedRoute(const ProfileScreen());
@@ -150,15 +167,13 @@ class AppRoute {
       case '/profile/spare-order-details':
         final arguments = settings.arguments;
         if (arguments is! SparePartOrderModel) {
-          return _animatedRoute(const Scaffold(
-              body: Center(
-                child: Text('Spare part order data is required'),
-              ),
-            ));
+          return _animatedRoute(
+            const Scaffold(
+              body: Center(child: Text('Spare part order data is required')),
+            ),
+          );
         }
-        return _animatedRoute(
-          SparePartOrderDetailsScreen(order: arguments),
-        );
+        return _animatedRoute(SparePartOrderDetailsScreen(order: arguments));
 
       case '/profile/worker-requests':
         return _animatedRoute(const WorkerRequestsScreen());
@@ -166,15 +181,13 @@ class AppRoute {
       case '/profile/worker-request-details':
         final arguments = settings.arguments;
         if (arguments is! WorkerRequestHistoryModel) {
-          return _animatedRoute(const Scaffold(
-              body: Center(
-                child: Text('Worker request data is required'),
-              ),
-            ));
+          return _animatedRoute(
+            const Scaffold(
+              body: Center(child: Text('Worker request data is required')),
+            ),
+          );
         }
-        return _animatedRoute(
-          WorkerRequestDetailsScreen(request: arguments),
-        );
+        return _animatedRoute(WorkerRequestDetailsScreen(request: arguments));
 
       case '/profile/chats':
         return _animatedRoute(const ChatHistoryScreen());
@@ -185,27 +198,31 @@ class AppRoute {
       case '/problem-analysis':
         final arguments = settings.arguments;
         if (arguments is! ProblemReportModel) {
-          return _animatedRoute(const Scaffold(
+          return _animatedRoute(
+            const Scaffold(
               body: Center(child: Text('Problem report data is required')),
-            ));
+            ),
+          );
         }
         return _animatedRoute(ProblemAnalysisScreen(report: arguments));
 
       case '/report-workshops':
         final arguments = settings.arguments;
         if (arguments is! ReportWorkshopsRouteArguments) {
-          return _animatedRoute(const Scaffold(
+          return _animatedRoute(
+            const Scaffold(
               body: Center(child: Text('Report workshop data is required')),
-            ));
+            ),
+          );
         }
         return _animatedRoute(
           BlocProvider(
-            create: (_) => _createNearbyPlacesCubit()
-              ..loadWorkshopDirectoryFromPosition(
-                userLatitude: arguments.userLatitude,
-                userLongitude: arguments.userLongitude,
-                maxPlaces: 50,
-              ),
+            create: (_) =>
+                _createNearbyPlacesCubit()..loadWorkshopDirectoryFromPosition(
+                  userLatitude: arguments.userLatitude,
+                  userLongitude: arguments.userLongitude,
+                  maxPlaces: 50,
+                ),
             child: ReportWorkshopsScreen(
               report: arguments.report,
               userLatitude: arguments.userLatitude,
@@ -217,13 +234,13 @@ class AppRoute {
       case '/report-technicians':
         final arguments = settings.arguments;
         if (arguments is! ProblemReportModel) {
-          return _animatedRoute(const Scaffold(
+          return _animatedRoute(
+            const Scaffold(
               body: Center(child: Text('Problem report data is required')),
-            ));
+            ),
+          );
         }
         return _animatedRoute(ReportTechniciansScreen(report: arguments));
-
-
 
       case '/spare-parts':
         return _animatedRoute(
@@ -236,9 +253,11 @@ class AppRoute {
       case '/spare-part-details':
         final arguments = settings.arguments;
         if (arguments is! String) {
-          return _animatedRoute(const Scaffold(
+          return _animatedRoute(
+            const Scaffold(
               body: Center(child: Text('Spare part id is required')),
-            ));
+            ),
+          );
         }
         return _animatedRoute(
           BlocProvider.value(
@@ -272,26 +291,28 @@ class AppRoute {
       case '/offer-details':
         final arguments = settings.arguments;
         if (arguments is! ServiceOfferModel) {
-          return _animatedRoute(const Scaffold(
-              body: Center(child: Text('Offer data is required')),
-            ));
+          return _animatedRoute(
+            const Scaffold(body: Center(child: Text('Offer data is required'))),
+          );
         }
         return _animatedRoute(OfferDetailsScreen(offer: arguments));
 
       case '/vehicle-health':
         final arguments = settings.arguments;
         if (arguments is! VehicleHealthModel) {
-          return _animatedRoute(const Scaffold(
+          return _animatedRoute(
+            const Scaffold(
               body: Center(child: Text('Vehicle health data is required')),
-            ));
+            ),
+          );
         }
-        return _animatedRoute(BlocProvider(
-            create: (_) => ObdCubit(
-              repository: ObdRepository(),
-            )..loadPairedDevices(),
+        return _animatedRoute(
+          BlocProvider(
+            create: (_) =>
+                ObdCubit(repository: ObdRepository())..loadPairedDevices(),
             child: VehicleHealthScreen(data: arguments),
-          ));
-
+          ),
+        );
 
       case '/repair-details':
         final arguments = settings.arguments;
@@ -308,20 +329,24 @@ class AppRoute {
       case '/repair-chat':
         final arguments = settings.arguments;
         if (arguments is! CurrentRepairModel) {
-          return _animatedRoute(const Scaffold(
+          return _animatedRoute(
+            const Scaffold(
               body: Center(child: Text('Repair data is required')),
-            ));
+            ),
+          );
         }
-        return _animatedRoute(RepairChatScreen(
-            data: ChatScreenModel.fromRepair(arguments),
-          ));
+        return _animatedRoute(
+          RepairChatScreen(data: ChatScreenModel.fromRepair(arguments)),
+        );
 
       case '/repair-offer':
         final arguments = settings.arguments;
         if (arguments is! CurrentRepairModel) {
-          return _animatedRoute(const Scaffold(
+          return _animatedRoute(
+            const Scaffold(
               body: Center(child: Text('Repair offer data is required')),
-            ));
+            ),
+          );
         }
         return _animatedRoute(RepairOfferScreen(data: arguments));
 
@@ -339,20 +364,21 @@ class AppRoute {
           nearbyPlaces = [arguments];
         }
 
-        return _animatedRoute(MapScreen(
+        return _animatedRoute(
+          MapScreen(
             selectedPlace: selectedPlace,
             initialNearbyPlaces: nearbyPlaces,
-          ));
+          ),
+        );
 
       default:
-        return _animatedRoute(Scaffold(
-            body: Center(
-              child: Text('No route defined for ${settings.name}'),
-            ),
-          ));
+        return _animatedRoute(
+          Scaffold(
+            body: Center(child: Text('No route defined for ${settings.name}')),
+          ),
+        );
     }
   }
-
 
   Route<dynamic> _animatedRoute(Widget child) {
     return PageRouteBuilder<dynamic>(
@@ -360,11 +386,17 @@ class AppRoute {
       reverseTransitionDuration: const Duration(milliseconds: 280),
       pageBuilder: (_, animation, __) => child,
       transitionsBuilder: (_, animation, __, page) {
-        final curved = CurvedAnimation(parent: animation, curve: Curves.easeOutCubic);
+        final curved = CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutCubic,
+        );
         return FadeTransition(
           opacity: curved,
           child: SlideTransition(
-            position: Tween<Offset>(begin: const Offset(.045, 0), end: Offset.zero).animate(curved),
+            position: Tween<Offset>(
+              begin: const Offset(.045, 0),
+              end: Offset.zero,
+            ).animate(curved),
             child: page,
           ),
         );
@@ -373,8 +405,6 @@ class AppRoute {
   }
 
   NearbyPlacesCubit _createNearbyPlacesCubit() {
-    return NearbyPlacesCubit(
-      repository: NearbyPlacesRepository(),
-    );
+    return NearbyPlacesCubit(repository: NearbyPlacesRepository());
   }
 }

@@ -28,7 +28,6 @@ class VehicleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final repairUi = VehicleStatusUi.repair(data.repairStatus);
 
     final formattedMileage = _formatNumber(data.mileage);
 
@@ -62,7 +61,6 @@ class VehicleCard extends StatelessWidget {
                   children: [
                     VehicleBrandLogo(
                       brand: data.brand,
-                      logoUrl: data.brandLogoUrl,
                       sizePercent: 15,
                     ),
 
@@ -126,8 +124,7 @@ class VehicleCard extends StatelessWidget {
                 VehicleCardInfo(
                   nextMaintenance: '${_formatNumber(data.nextMaintenance)} كم',
                   lastMaintenance: data.lastMaintenance,
-                  repairText: repairUi.text,
-                  repairColor: repairUi.color,
+               
                 ),
               ],
             ),

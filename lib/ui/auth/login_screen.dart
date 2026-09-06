@@ -4,7 +4,7 @@ import 'package:moftah/ui/core/helper/text_filed_validator.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
 import 'package:moftah/ui/core/ui/custom_text.dart';
-import 'package:moftah/ui/technician/register/widgets/register_widgets.dart';
+import 'package:moftah/ui/register/widgets/register_widgets.dart';
 import 'package:moftah/utils/responsive.dart';
 
 class LoginScreen extends StatefulWidget {

@@ -1,26 +1,28 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:moftah/data/models/app_user_role_enum.dart';
 import 'package:moftah/data/store/custom_list.dart';
 import 'package:moftah/ui/auth/auth_widgets.dart';
 import 'package:moftah/ui/core/helper/custom_list.dart';
 import 'package:moftah/ui/core/helper/text_filed_validator.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
-import 'package:moftah/ui/technician/register/widgets/pass_instructions.dart';
-import 'package:moftah/ui/technician/register/widgets/questions_list.dart';
-import 'package:moftah/ui/technician/register/widgets/register_widgets.dart';
+import 'package:moftah/ui/register/widgets/pass_instructions.dart';
+import 'package:moftah/ui/register/widgets/questions_list.dart';
+import 'package:moftah/ui/register/widgets/register_widgets.dart';
 import 'package:moftah/utils/responsive.dart';
 
-class TechnicianRegisterScreen extends StatefulWidget {
-  const TechnicianRegisterScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key, required this.role});
+  final AppUserRole role;
 
   @override
-  State<TechnicianRegisterScreen> createState() => _RegisterScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _RegisterScreenState extends State<TechnicianRegisterScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   String? selectedGovernorate;
   String? selectedCategory;
-
+  String? selectedCarBrand;
   final FocusNode passwordFocusNode = FocusNode();
   bool obscurePassword = true;
   bool obscureConfirmPassword = true;
@@ -164,7 +166,6 @@ class _RegisterScreenState extends State<TechnicianRegisterScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-
                     header(context: context),
 
                     SizedBox(height: ResponsiveSize.height(context, 2.5)),
@@ -224,18 +225,31 @@ class _RegisterScreenState extends State<TechnicianRegisterScreen> {
                     ],
                     _gap(context),
 
-                    CustomListField(
-                      icon: Icons.location_on_rounded,
-                      theme: 'المحافظة',
-                      list: CustomListStore.governorates,
-                      value: selectedGovernorate,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedGovernorate = value;
-                        });
-                      },
-                    ),
-
+                   widget.role == AppUserRole.technician
+                        ? CustomListField(
+                            icon: Icons.location_on_outlined,
+                            theme: 'المحافظة',
+                            list: CustomListStore.governorates,
+                            value: selectedGovernorate,
+                            onChanged: (value) {
+                              setState(() {
+                                selectedGovernorate = value;
+                              });
+                            },
+                          )
+                        :  widget.role == AppUserRole.driver
+                            ? CustomListField(
+                            carsLogos: true,
+                                theme: 'ماركة السيارة',
+                                list: CustomListStore.carBrands,
+                                value: selectedCarBrand,
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedCarBrand = value;
+                                  });
+                                },
+                              )
+                            : const SizedBox.shrink(),
                     _gap(context),
 
                     CustomListField(

@@ -3,20 +3,23 @@ import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
 import 'package:moftah/ui/core/ui/custom_text.dart';
 import 'package:moftah/utils/responsive.dart';
+import 'package:moftah/utils/vehicle_brand_logo.dart';
 
 class CustomListField extends StatelessWidget {
   final String? value;
   final ValueChanged<String?> onChanged;
   final List<String> list;
   final String theme;
-  final IconData icon;
+  final IconData? icon;
+  final bool carsLogos;
   const CustomListField({
     super.key,
     required this.value,
     required this.onChanged,
     required this.list,
     required this.theme,
-    required this.icon,
+     this.icon,
+    this.carsLogos = false,
   });
 
   @override
@@ -51,7 +54,7 @@ class CustomListField extends StatelessWidget {
                 borderRadius: BorderRadius.circular(AppSizes.radiusSm),
               ),
               child: Icon(
-                icon,
+                carsLogos ? Icons.local_car_wash_outlined : icon,
                 color: AppColors.primary,
                 size: ResponsiveSize.width(context, 5),
               ),
@@ -108,6 +111,7 @@ class CustomListField extends StatelessWidget {
           currentValue: value,
           list: list,
           theme: theme,
+          carsLogos: carsLogos,
           icon: icon,
         );
       },
@@ -123,12 +127,14 @@ class _ListBottomSheet extends StatefulWidget {
   final String? currentValue;
   final List<String> list;
   final String theme;
-  final IconData icon;
+  final bool carsLogos;
+  final IconData? icon;
   const _ListBottomSheet({
     required this.currentValue,
     required this.list,
     required this.theme,
-    required this.icon,
+     this.icon,
+    required this.carsLogos,
   });
 
   @override
@@ -269,13 +275,13 @@ class _ListBottomSheetState extends State<_ListBottomSheet> {
                     SizedBox(height: ResponsiveSize.height(context, .7)),
 
                 itemBuilder: (context, index) {
-                  final governorate = filteredList[index];
+                  final item = filteredList[index];
 
-                  final selected = governorate == widget.currentValue;
+                  final selected = item == widget.currentValue;
 
                   return InkWell(
                     onTap: () {
-                      Navigator.pop(context, governorate);
+                      Navigator.pop(context, item);
                     },
                     borderRadius: BorderRadius.circular(AppSizes.radiusMd),
                     child: AnimatedContainer(
@@ -314,8 +320,14 @@ class _ListBottomSheetState extends State<_ListBottomSheet> {
                               shape: BoxShape.circle,
                             ),
 
-                            child: Icon(
-                              widget.icon,
+                            child: widget.carsLogos
+                                ? VehicleBrandLogo(
+                                    brand: item,
+                                    sizePercent: 8,
+                                    showContainer: false,
+                                  )
+                                : Icon(
+                              widget.icon ?? Icons.circle_outlined,
                               color: selected
                                   ? AppColors.textSecondary
                                   : AppColors.secondary,
@@ -327,7 +339,7 @@ class _ListBottomSheetState extends State<_ListBottomSheet> {
 
                           Expanded(
                             child: customText(
-                              text: governorate,
+                              text: item,
                               fontSize: ResponsiveSize.width(
                                 context,
                                 AppSizes.fontMd,
