@@ -46,11 +46,7 @@ class _QuestionsState extends State<Questions> {
     }
 
     if (role == AppUserRole.workshopOwner) {
-      return const [
-        1, 
-        2,
-        5, 
-      ];
+      return const [1, 2, 5];
     }
 
     return null;
@@ -63,9 +59,7 @@ class _QuestionsState extends State<Questions> {
 
     if (role == AppUserRole.towOperator) {
       return const {
-
         1: NumberRange(min: 500, max: 10000),
-
 
         4: NumberRange(min: 20, max: 200),
       };
@@ -94,25 +88,19 @@ class _QuestionsState extends State<Questions> {
     }
 
     if (role == AppUserRole.workshopOwner) {
-      return const [
-        0, 
-      ];
+      return const [0];
     }
 
     return null;
   }
-
 
   List<int>? writeAbleQuestionsForRole(AppUserRole role) {
     if (role == AppUserRole.driver) {
-      return const [
-        0, 
-      ];
+      return const [0];
     }
 
     return null;
   }
-
 
   List<QuestionModel> questionsForRole(AppUserRole role) {
     if (role == AppUserRole.driver) {
@@ -133,10 +121,6 @@ class _QuestionsState extends State<Questions> {
 
     return const [];
   }
-
-  // =========================
-  // Number Icon
-  // =========================
 
   IconData numberIconForRole(AppUserRole role) {
     if (role == AppUserRole.driver) {
@@ -175,6 +159,7 @@ class _QuestionsState extends State<Questions> {
           ? const SizedBox.shrink()
           : Column(
               children: [
+                SizedBox(height: ResponsiveSize.height(context, 2)),
                 Container(
                   key: const ValueKey('questions-visible'),
                   padding: EdgeInsets.all(ResponsiveSize.width(context, 3)),
@@ -223,7 +208,6 @@ class _QuestionsState extends State<Questions> {
                     },
                   ),
                 ),
-
                 SizedBox(height: ResponsiveSize.height(context, 2)),
               ],
             ),
