@@ -262,11 +262,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           )
                         : const SizedBox.shrink(),
 
-                    _gap(context),
-
                     Questions(role: widget.role),
-
-                    _gap(context),
 
                     AuthField(
                       hint: 'أدخل كلمة مرور قوية',

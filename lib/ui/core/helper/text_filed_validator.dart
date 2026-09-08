@@ -131,4 +131,46 @@ class TextFiledValidator {
 
     return errors.first;
   }
+  // Number validation
+  static List<String> numberErrors(
+    String? value, {
+    required int min,
+    required int max,
+  }) {
+    final errors = <String>[];
+
+    if (value == null || value.trim().isEmpty) {
+      errors.add('يجب إدخال الرقم');
+      return errors;
+    }
+
+    final number = int.tryParse(value.trim());
+
+    if (number == null) {
+      errors.add('يجب إدخال رقم صحيح');
+      return errors;
+    }
+
+    if (number < min) {
+      errors.add('أقل قيمة مسموحة هي $min');
+    }
+
+    if (number > max) {
+      errors.add('أقصى قيمة مسموحة هي $max');
+    }
+
+    return errors;
+  }
+
+  static String? numberValidator(
+    String? value, {
+    required int min,
+    required int max,
+  }) {
+    final errors = numberErrors(value, min: min, max: max);
+
+    if (errors.isEmpty) return null;
+
+    return errors.first;
+  }
 }

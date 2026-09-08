@@ -29,10 +29,10 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
         path = '/register';
         break;
       case AppUserRole.workshopOwner:
-        path = '/workshop_owner_home';
+        path = '/register';
         break;
       case AppUserRole.towOperator:
-        path = '/tow_operator_home';
+        path = '/register';
         break;
       default:
         break;

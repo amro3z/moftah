@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import 'package:moftah/data/models/number_range.dart';
 import 'package:moftah/data/models/question_model.dart';
 import 'package:moftah/ui/auth/auth_widgets.dart';
 import 'package:moftah/ui/core/helper/custom_date_picker_field.dart';
+import 'package:moftah/ui/core/helper/number_range_input_formatter.dart';
+import 'package:moftah/ui/core/helper/text_filed_validator.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
 import 'package:moftah/ui/core/ui/custom_text.dart';
+import 'package:moftah/ui/register/widgets/register_widgets.dart';
 import 'package:moftah/utils/responsive.dart';
 
 class QuestionsCard extends StatefulWidget {
@@ -18,15 +23,33 @@ class QuestionsCard extends StatefulWidget {
     this.yearPickerQuestions,
     this.optionsQuestions,
     this.numberQuestions,
+    this.writeAbleQuestions,
+    this.iconForWriteAbleQuestions,
+    this.iconForNumberQuestions,
+    this.numberRanges,
   });
 
   final bool isWriteable;
+
   final List<QuestionModel> questions;
+
   final ValueChanged<List<dynamic>>? onCompleted;
+
   final List<int>? datePickerQuestions;
+
   final List<int>? yearPickerQuestions;
+
   final List<int>? optionsQuestions;
+
   final List<int>? numberQuestions;
+
+  final List<int>? writeAbleQuestions;
+
+  final IconData? iconForWriteAbleQuestions;
+
+  final IconData? iconForNumberQuestions;
+
+  final Map<int, NumberRange>? numberRanges;
 
   @override
   State<QuestionsCard> createState() => _QuestionsCardState();
@@ -34,17 +57,53 @@ class QuestionsCard extends StatefulWidget {
 
 class _QuestionsCardState extends State<QuestionsCard> {
   int currentIndex = 0;
+
   late List<dynamic> answers;
+
+  late List<String?> questionErrors;
+
   bool completed = false;
 
   @override
   void initState() {
     super.initState();
+
     answers = List<dynamic>.filled(widget.questions.length, null);
+
+    questionErrors = List<String?>.filled(widget.questions.length, null);
   }
 
   Future<void> _next() async {
-    if (answers[currentIndex] == null) return;
+    final isNumberQuestion =
+        widget.numberQuestions?.contains(currentIndex) ?? false;
+
+    if (isNumberQuestion) {
+      final numberRange = widget.numberRanges?[currentIndex];
+
+      if (numberRange != null) {
+        final error = TextFiledValidator.numberValidator(
+          answers[currentIndex]?.toString(),
+          min: numberRange.min,
+          max: numberRange.max,
+        );
+
+        if (error != null) {
+          setState(() {
+            questionErrors[currentIndex] = error;
+          });
+
+          return;
+        }
+
+        setState(() {
+          questionErrors[currentIndex] = null;
+        });
+      }
+    }
+
+    if (answers[currentIndex] == null) {
+      return;
+    }
 
     final isLast = currentIndex == widget.questions.length - 1;
 
@@ -65,7 +124,10 @@ class _QuestionsCardState extends State<QuestionsCard> {
 
     await Future<void>.delayed(const Duration(milliseconds: 850));
 
-    if (!mounted) return;
+    if (!mounted) {
+      return;
+    }
+
     widget.onCompleted?.call(answers);
   }
 
@@ -97,7 +159,9 @@ class _QuestionsCardState extends State<QuestionsCard> {
                 size: ResponsiveSize.width(context, 5.5),
               ),
             ),
+
             SizedBox(width: ResponsiveSize.width(context, 3)),
+
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,7 +183,9 @@ class _QuestionsCardState extends State<QuestionsCard> {
             ),
           ],
         ),
+
         SizedBox(height: ResponsiveSize.height(context, 1.2)),
+
         ClipRRect(
           borderRadius: BorderRadius.circular(100),
           child: LinearProgressIndicator(
@@ -132,7 +198,9 @@ class _QuestionsCardState extends State<QuestionsCard> {
             ),
           ),
         ),
+
         SizedBox(height: ResponsiveSize.height(context, 1.8)),
+
         AnimatedSize(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOutCubic,
@@ -155,7 +223,9 @@ class _QuestionsCardState extends State<QuestionsCard> {
             child: _questionContent(context, currentIndex),
           ),
         ),
+
         SizedBox(height: ResponsiveSize.height(context, 1)),
+
         SizedBox(
           width: double.infinity,
           height: ResponsiveSize.height(context, 5.7),
@@ -189,6 +259,15 @@ class _QuestionsCardState extends State<QuestionsCard> {
   Widget _questionContent(BuildContext context, int index) {
     final question = widget.questions[index];
 
+    final isNumberQuestion = widget.numberQuestions?.contains(index) ?? false;
+
+    final isWriteAbleQuestion =
+        widget.writeAbleQuestions?.contains(index) ?? false;
+
+    final numberRange = widget.numberRanges?[index];
+
+    final currentError = questionErrors[index];
+
     return Column(
       key: ValueKey(index),
       mainAxisSize: MainAxisSize.min,
@@ -201,7 +280,9 @@ class _QuestionsCardState extends State<QuestionsCard> {
           textAlign: TextAlign.center,
           maxLines: 3,
         ),
+
         SizedBox(height: ResponsiveSize.height(context, 1.2)),
+
         if (widget.yearPickerQuestions?.contains(index) ?? false)
           CustomDatePickerField(
             theme: 'سنة التصنيع',
@@ -234,31 +315,62 @@ class _QuestionsCardState extends State<QuestionsCard> {
             index: index,
             options: question.options ?? const [],
           )
-        else if (widget.isWriteable)
-          AuthField(
-            icon: widget.numberQuestions?.contains(index) ?? false
-                ? Icons.speed_rounded
-                : Icons.car_repair_rounded,
-            hint: widget.numberQuestions?.contains(index) ?? false
-                ? 'اكتب الرقم هنا'
-                : 'اكتب إجابتك هنا',
-            keyboardType: widget.numberQuestions?.contains(index) ?? false
-                ? TextInputType.number
-                : TextInputType.text,
-            inputFormatters: widget.numberQuestions?.contains(index) ?? false
-                ? [FilteringTextInputFormatter.digitsOnly]
-                : null,
-            onChanged: (value) {
-              setState(() {
-                answers[index] = value.trim().isEmpty ? null : value;
-              });
-            },
+        else if (isWriteAbleQuestion || isNumberQuestion)
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AuthField(
+                icon: isNumberQuestion
+                    ? widget.iconForNumberQuestions ?? Icons.edit_rounded
+                    : widget.iconForWriteAbleQuestions ?? Icons.edit_rounded,
+
+                hint: isNumberQuestion ? 'اكتب الرقم هنا' : 'اكتب إجابتك هنا',
+
+                keyboardType: isNumberQuestion
+                    ? TextInputType.number
+                    : TextInputType.text,
+
+                inputFormatters: isNumberQuestion
+                    ? [
+                        FilteringTextInputFormatter.digitsOnly,
+
+                        if (numberRange != null)
+                          NumberRangeInputFormatter(max: numberRange.max),
+                      ]
+                    : null,
+
+                onChanged: (value) {
+                  setState(() {
+                    answers[index] = value.trim().isEmpty ? null : value;
+
+                    if (isNumberQuestion &&
+                        numberRange != null &&
+                        questionErrors[index] != null) {
+                      questionErrors[index] =
+                          TextFiledValidator.numberValidator(
+                            value,
+                            min: numberRange.min,
+                            max: numberRange.max,
+                          );
+                    }
+                  });
+                },
+              ),
+
+              if (currentError != null) ...[
+                SizedBox(height: ResponsiveSize.height(context, 1)),
+
+                errorText(text: currentError, context: context),
+              ],
+            ],
           )
         else
           RadioGroup<bool>(
             groupValue: answers[index] as bool?,
             onChanged: (value) {
-              if (value == null) return;
+              if (value == null) {
+                return;
+              }
 
               setState(() {
                 answers[index] = value;
@@ -275,7 +387,9 @@ class _QuestionsCardState extends State<QuestionsCard> {
                   color: AppColors.secondary,
                   icon: Icons.check_circle_rounded,
                 ),
+
                 SizedBox(width: ResponsiveSize.width(context, 4)),
+
                 _boolAnswerCard(
                   context,
                   title: question.answerNo!,
@@ -410,7 +524,9 @@ class _QuestionsCardState extends State<QuestionsCard> {
               size: ResponsiveSize.width(context, 5.2),
               color: selected ? color : AppColors.textMuted,
             ),
+
             SizedBox(height: ResponsiveSize.height(context, .25)),
+
             customText(
               text: title,
               fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
@@ -418,7 +534,9 @@ class _QuestionsCardState extends State<QuestionsCard> {
               isBold: true,
               textAlign: TextAlign.center,
             ),
+
             SizedBox(height: ResponsiveSize.height(context, .1)),
+
             SizedBox(
               width: ResponsiveSize.width(context, 6),
               height: ResponsiveSize.width(context, 6),
@@ -459,7 +577,9 @@ class _QuestionsCardState extends State<QuestionsCard> {
                 ),
               ),
             ),
+
             SizedBox(height: ResponsiveSize.height(context, .7)),
+
             customText(
               text: 'تم حفظ الإجابات',
               fontSize: ResponsiveSize.width(context, AppSizes.fontMd),

@@ -34,4 +34,38 @@ class RegistrationQuestions {
     ),
     QuestionModel(question: 'آخر مرة عملت صيانة دورية للعربية كانت إمتى؟'),
   ];
+
+  static const List<QuestionModel> towTruckQuestions = [
+    QuestionModel(
+      question: 'إيه أنواع المركبات اللي تقدر تنقلها؟',
+      options: ['ملاكي', 'SUV', 'ميكروباص', 'نقل خفيف'],
+    ),
+    QuestionModel(question: 'أقصى وزن تقدر تنقله كام؟'),
+    QuestionModel(
+      question: 'هل متاح للعمل 24 ساعة؟',
+      answerYes: 'نعم',
+      answerNo: 'لا',
+    ),
+    QuestionModel(
+      question: 'هل بتقدم خدمة خارج المحافظة؟',
+      answerYes: 'نعم',
+      answerNo: 'لا',
+    ),
+    QuestionModel(question: 'أقصى مسافة تقدر تروحها كام كيلومتر؟'),
+    QuestionModel(
+      question: 'هل تقدر تنقل عربية مش قادرة تتحرك نهائيًا؟',
+      answerYes: 'نعم',
+      answerNo: 'لا',
+    ),
+    QuestionModel(
+      question: 'هل تقدر تسحب عربية من مكان ضيق أو جراج؟',
+      answerYes: 'نعم',
+      answerNo: 'لا',
+    ),
+    QuestionModel(
+      question: 'هل الونش مناسب للعربيات المنخفضة؟',
+      answerYes: 'نعم',
+      answerNo: 'لا',
+    ),
+  ];
 }

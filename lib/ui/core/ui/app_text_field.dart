@@ -78,6 +78,7 @@ class AppTextField extends StatelessWidget {
           decoration: InputDecoration(
             hintText: hint,
             suffixText: suffixText,
+            
             suffixIcon: suffixIcon,
             suffixStyle: TextStyle(
               fontFamily: 'Cairo',
