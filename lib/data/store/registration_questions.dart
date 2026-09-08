@@ -68,4 +68,36 @@ class RegistrationQuestions {
       answerNo: 'لا',
     ),
   ];
+  static const List<QuestionModel> serviceCenterQuestions = [
+    QuestionModel(
+      question: 'المركز متخصص في إيه؟',
+      options: [
+        'ميكانيكا',
+        'كهرباء',
+        'عفشة',
+        'تكييف',
+        'سمكرة ودهان',
+        'فحص أعطال',
+        'صيانة شاملة',
+      ],
+    ),
+
+    QuestionModel(question: 'عدد الفنيين في المركز كام؟'),
+
+    QuestionModel(question: 'أقصى عدد عربيات تقدر تستقبلها في اليوم كام؟'),
+
+    QuestionModel(
+      question: 'هل المركز متاح للحجز المسبق؟',
+      answerYes: 'نعم',
+      answerNo: 'لا',
+    ),
+
+    QuestionModel(
+      question: 'هل بتقدم خدمة طوارئ؟',
+      answerYes: 'نعم',
+      answerNo: 'لا',
+    ),
+
+    QuestionModel(question: 'متوسط سعر الكشف كام؟'),
+  ];
 }
