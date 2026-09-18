@@ -4,7 +4,6 @@ import 'package:moftah/data/store/technician_store.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
 import 'package:moftah/ui/core/ui/custom_text.dart';
-import 'package:moftah/ui/technician/home/technician_home.dart';
 import 'package:moftah/ui/technician/widgets/technician_nav_bar.dart';
 import 'package:moftah/utils/responsive.dart';
 

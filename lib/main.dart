@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       ],
 
       onGenerateRoute: _appRoute.onGenerateRoute,
-      initialRoute: '/role-selection',
+      initialRoute: '/technician_home',
     );
   }
 }

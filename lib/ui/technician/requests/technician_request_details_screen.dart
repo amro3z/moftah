@@ -13,8 +13,9 @@ class TechnicianRequestDetailsScreen extends StatelessWidget {
   Color get riskColor {
     final v = request.riskLabel;
     if (v.contains('منخفض') || v.contains('بسيط')) return AppColors.success;
-    if (v.contains('عالي') || v.contains('مرتفع') || v.contains('خطير'))
+    if (v.contains('عالي') || v.contains('مرتفع') || v.contains('خطير')) {
       return AppColors.danger;
+    }
     return AppColors.warning;
   }
 
@@ -29,6 +30,12 @@ class TechnicianRequestDetailsScreen extends StatelessWidget {
         elevation: 0,
         surfaceTintColor: Colors.transparent,
         backgroundColor: AppColors.background,
+        actions: [
+          IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: const Icon(Icons.arrow_forward_ios_rounded),
+          ),
+        ],
         title: customText(
           text: 'تفاصيل الطلب',
           fontSize: ResponsiveSize.width(context, AppSizes.fontLg),
