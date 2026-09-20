@@ -48,6 +48,7 @@ import 'package:moftah/ui/register/register_screen.dart';
 import 'package:moftah/ui/technician/home/technician_home.dart';
 import 'package:moftah/data/models/technician/technician_models.dart';
 import 'package:moftah/data/store/technician_store.dart';
+import 'package:moftah/ui/technician/obd/obd_II.dart';
 import 'package:moftah/ui/technician/requests/technician_requests_screen.dart';
 import 'package:moftah/ui/technician/requests/technician_request_details_screen.dart';
 import 'package:moftah/ui/technician/requests/send_offer_screen.dart';
@@ -98,6 +99,14 @@ class AppRoute {
         );
       case '/technician_home':
         return _animatedRoute(const TechnicianHome());
+      case '/technician/obd':
+       return _animatedRoute(
+          BlocProvider(
+            create: (_) =>
+                ObdCubit(repository: ObdRepository())..loadPairedDevices(),
+            child: ObdDiagnosticsScreen(),
+          ),
+        );
       case '/technician/requests':
         return _animatedRoute(const TechnicianRequestsScreen());
       case '/technician/request-details':

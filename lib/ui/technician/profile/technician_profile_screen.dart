@@ -3,8 +3,6 @@ import 'package:moftah/data/store/technician_store.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
 import 'package:moftah/ui/core/ui/custom_text.dart';
-import 'package:moftah/ui/technician/home/technician_home.dart';
-import 'package:moftah/ui/technician/widgets/technician_nav_bar.dart';
 import 'package:moftah/utils/responsive.dart';
 
 class TechnicianProfileScreen extends StatelessWidget {
@@ -19,6 +17,38 @@ class TechnicianProfileScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: AppColors.background,
         appBar: AppBar(
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                onTap: () => Navigator.maybePop(context),
+                borderRadius: BorderRadius.circular(100),
+                child: Container(
+                  width: ResponsiveSize.width(context, 11),
+                  height: ResponsiveSize.width(context, 11),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: AppColors.border.withValues(alpha: .15),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.primary.withValues(alpha: .06),
+                        blurRadius: 14,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
+                  ),
+                  child: Icon(
+                    Icons.arrow_forward_rounded,
+                    color: AppColors.primary,
+                    size: ResponsiveSize.width(context, 5.5),
+                  ),
+                ),
+              ),
+            ),
+          ],
           automaticallyImplyLeading: false,
           scrolledUnderElevation: 0,
           elevation: 0,
@@ -162,7 +192,6 @@ class TechnicianProfileScreen extends StatelessWidget {
             ),
           ],
         ),
-        bottomNavigationBar: const TechnicianBottomNav(current: 4),
       ),
     );
   }

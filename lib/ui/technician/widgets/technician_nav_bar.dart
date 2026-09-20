@@ -13,14 +13,14 @@ class TechnicianBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const labels = ['الرئيسية', 'الطلبات', 'الأعمال', 'المحادثات', 'حسابي'];
+    const labels = ['الرئيسية', 'الطلبات', 'الأعمال', 'المحادثات', 'فحص'];
 
     const icons = [
       Icons.home_rounded,
       Icons.notifications_rounded,
       Icons.work_rounded,
       Icons.chat_bubble_rounded,
-      Icons.person_rounded,
+      Icons.troubleshoot_rounded,
     ];
 
     const routes = [
@@ -28,11 +28,12 @@ class TechnicianBottomNav extends StatelessWidget {
       '/technician/requests',
       '/technician/works',
       '/technician/chats',
-      '/technician/profile',
+      '/technician/obd',
     ];
 
     return SafeArea(
       top: false,
+
       minimum: EdgeInsets.fromLTRB(
         ResponsiveSize.width(context, 4),
         0,
@@ -141,7 +142,7 @@ class TechnicianBottomNav extends StatelessWidget {
                                 icons[index],
                                 color: selected
                                     ? AppColors.textSecondary
-                                    : AppColors.textMuted,
+                                    : AppColors.secondary,
                                 size: ResponsiveSize.width(context, 4.8),
                               ),
                             ),
@@ -156,7 +157,7 @@ class TechnicianBottomNav extends StatelessWidget {
                               ),
                               color: selected
                                   ? AppColors.primary
-                                  : AppColors.textMuted,
+                                  : AppColors.secondary,
                               isBold: selected,
                             ),
                           ],
