@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-
-import 'package:moftah/data/models/app_bar.dart';
 import 'package:moftah/data/store/technician_store.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
@@ -26,11 +24,12 @@ class TechnicianHome extends StatelessWidget {
 
           return TechnicianScaffold(
             current: 0,
-
             body: Column(
               children: [
                 TechnicianHomeAppBar(
-                  data: HomeAppBarModel(technician: store.appBar),
+                  p: store.appBar,
+                  isOnline: store.isOnline,
+                  onOnlineStatusChanged: store.setOnline,
                 ),
 
                 Expanded(
@@ -39,9 +38,6 @@ class TechnicianHome extends StatelessWidget {
                       ResponsiveSize.width(context, 4),
                       ResponsiveSize.height(context, 1.6),
                       ResponsiveSize.width(context, 4),
-
-                      // مساحة كفاية علشان آخر محتوى
-                      // ميستخباش تحت الـ Bottom Nav
                       ResponsiveSize.height(context, 13),
                     ),
                     children: [

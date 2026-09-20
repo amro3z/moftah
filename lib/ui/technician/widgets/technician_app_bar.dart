@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:moftah/data/models/app_bar.dart';
+import 'package:moftah/data/models/technician/technician_models.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
 import 'package:moftah/ui/core/ui/custom_text.dart';
 import 'package:moftah/utils/responsive.dart';
 
 class TechnicianHomeAppBar extends StatelessWidget {
-  final HomeAppBarModel data;
-  const TechnicianHomeAppBar({super.key, required this.data});
+  final TechnicianAppBarModel p;
+final ValueChanged<bool>? onOnlineStatusChanged;
+  final bool isOnline;
+  const TechnicianHomeAppBar({super.key, required this.p , this.onOnlineStatusChanged , this.isOnline = true});
 
   @override
   Widget build(BuildContext context) {
-    // المطلوب: لو مودل صاحب العربية null نستخدم مودل الفني.
-    final tech = data.carOwner == null ? data.technician : null;
-    if (tech == null) return const SizedBox.shrink();
-    final p = tech.technician;
     return Container(
       width: double.infinity,
       padding: EdgeInsets.fromLTRB(
@@ -60,7 +58,7 @@ class TechnicianHomeAppBar extends StatelessWidget {
                         color: AppColors.textMuted,
                       ),
                       customText(
-                        text: p.name,
+                        text: p.technician.name,
                         fontSize: ResponsiveSize.width(
                           context,
                           AppSizes.fontXl,
@@ -69,7 +67,7 @@ class TechnicianHomeAppBar extends StatelessWidget {
                         isBold: true,
                       ),
                       customText(
-                        text: '${p.specialties.take(2).join(' • ')}',
+                        text: p.technician.specialties.take(2).join(' • '),
                         fontSize: ResponsiveSize.width(
                           context,
                           AppSizes.fontSm,
@@ -82,7 +80,7 @@ class TechnicianHomeAppBar extends StatelessWidget {
                 Column(
                   children: [
                     customText(
-                      text: p.rating.toStringAsFixed(1),
+                      text: p.technician.rating.toStringAsFixed(1),
                       fontSize: ResponsiveSize.width(context, AppSizes.fontLg),
                       color: AppColors.info,
                       isBold: true,
@@ -97,13 +95,15 @@ class TechnicianHomeAppBar extends StatelessWidget {
               ],
             ),
             SizedBox(height: ResponsiveSize.height(context, 2)),
+            OnlineStatus(isOnline: isOnline    , onChanged: onOnlineStatusChanged ),
+            SizedBox(height: ResponsiveSize.height(context, 2)),
             Row(
               children: [
                 Expanded(
                   child: _Stat(
                     icon: Icons.notifications_active_rounded,
                     label: 'طلبات جديدة',
-                    value: '${tech.newRequests}',
+                    value: '${p.newRequests}',
                     color: AppColors.secondary,
                   ),
                 ),
@@ -112,7 +112,7 @@ class TechnicianHomeAppBar extends StatelessWidget {
                   child: _Stat(
                     icon: Icons.handyman_rounded,
                     label: 'قيد التنفيذ',
-                    value: '${tech.todayJobs}',
+                    value: '${p.todayJobs}',
                     color: AppColors.warning,
                   ),
                 ),
@@ -125,7 +125,7 @@ class TechnicianHomeAppBar extends StatelessWidget {
                   child: _Stat(
                     icon: Icons.receipt_long_rounded,
                     label: 'أعمال اليوم',
-                    value: '${tech.todayJobs}',
+                    value: '${p.todayJobs}',
                     color: AppColors.success,
                   ),
                 ),
@@ -134,7 +134,7 @@ class TechnicianHomeAppBar extends StatelessWidget {
                   child: _Stat(
                     icon: Icons.payments_rounded,
                     label: 'الإيرادات',
-                    value: '${tech.todayEarnings.toStringAsFixed(0)} ج',
+                    value: '${p.todayEarnings.toStringAsFixed(0)} ج',
                     color: AppColors.info,
                   ),
                 ),
@@ -203,4 +203,105 @@ class _Stat extends StatelessWidget {
       ],
     ),
   );
+}
+
+class OnlineStatus extends StatelessWidget {
+  final bool isOnline;
+  final ValueChanged<bool>? onChanged;
+  const OnlineStatus({super.key, required this.isOnline , this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.surfaceDark,
+        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        border: Border.all(color: AppColors.border.withValues(alpha: .7)),
+      ),
+      child: Row(
+        children: [
+          Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: isOnline
+                        ? AppColors.success.withValues(alpha: .25)
+                        : AppColors.danger.withValues(alpha: .25),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.border.withValues(alpha: .7),
+                        blurRadius: 1,
+                        offset: const Offset(0, 0),
+                      ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Icon(
+                      isOnline
+                          ? Icons.online_prediction_rounded
+                          : Icons.offline_bolt_rounded,
+                      color: isOnline
+                          ? AppColors.success
+                          : AppColors.danger,
+                      size: 40,
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                right: 2.5,
+                bottom: 25,
+                child: Container(
+                  width: ResponsiveSize.width(context, 2.5),
+                  height: ResponsiveSize.width(context, 2.5),
+                  decoration: BoxDecoration(
+                    color: isOnline
+                        ? AppColors.success
+                        : AppColors.danger,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: AppColors.surfaceDark, width: 1),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(width: ResponsiveSize.width(context, 2)),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              customText(
+                text: isOnline
+                    ? 'متاح لاستقبال الطلبات'
+                    : 'غير متاح لاستقبال الطلبات',
+                fontSize: ResponsiveSize.width(context, AppSizes.fontMd),
+                isBold: true,
+                color: AppColors.textMuted,
+              ),
+              customText(
+                text: isOnline
+                    ? 'ستظهر لك الطلبات الجديدة فور وصولها'
+                    : 'لن تظهر لك الطلبات الجديدة من العملاء',
+                fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
+                color: AppColors.textMuted,
+              ),
+            ],
+          ),
+
+          Spacer(),
+          Switch(
+            activeThumbColor: AppColors.success,
+            inactiveThumbColor: AppColors.surfaceMedium,
+            activeTrackColor: AppColors.success.withValues(alpha: .25),
+            inactiveTrackColor: AppColors.danger.withValues(alpha: .25),
+            value: isOnline,
+            onChanged:onChanged,
+          ),
+        ],
+      ),
+    );
+  }
 }

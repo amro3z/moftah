@@ -15,6 +15,17 @@ class TechnicianStore extends ChangeNotifier {
     rating: 4.9,
     completedJobs: 128,
   );
+bool _isOnline = true;
+
+  bool get isOnline => _isOnline;
+
+  void setOnline(bool value) {
+    if (_isOnline == value) return;
+
+    _isOnline = value;
+    
+    notifyListeners();
+  }
 
  final List<TechnicianRequestModel> _requests = [
     const TechnicianRequestModel(

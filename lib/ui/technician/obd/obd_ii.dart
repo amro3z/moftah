@@ -17,14 +17,12 @@ class ObdDiagnosticsScreen extends StatelessWidget {
 
       child: TechnicianScaffold(
         current: 4,
-
+        title: 'فحص السيارة',
         body: SafeArea(
           bottom: false,
 
           child: Column(
             children: [
-              _buildAppBar(context),
-
               Expanded(
                 child: SingleChildScrollView(
                   padding: EdgeInsets.fromLTRB(
@@ -57,27 +55,6 @@ class ObdDiagnosticsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAppBar(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: ResponsiveSize.width(context, 5),
-        vertical: ResponsiveSize.height(context, 1.2),
-      ),
-      child: Row(
-        children: [
-          SizedBox(width: ResponsiveSize.width(context, 3)),
-          Expanded(
-            child: customText(
-              text: 'فحص السيارة',
-              fontSize: ResponsiveSize.width(context, AppSizes.fontLg),
-              color: AppColors.primary,
-              isBold: true,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildHeader(BuildContext context) {
     return Container(

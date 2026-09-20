@@ -10,7 +10,7 @@ class CustomSearchBar extends StatelessWidget {
   final String hintText;
   final IconData icon;
   final bool readOnly;
-
+  final Color? color;
   const CustomSearchBar({
     super.key,
     this.controller,
@@ -19,6 +19,7 @@ class CustomSearchBar extends StatelessWidget {
     this.hintText = 'ابحث...',
     this.icon = Icons.search_rounded,
     this.readOnly = false,
+    this.color,
   });
 
   @override
@@ -47,7 +48,7 @@ class CustomSearchBar extends StatelessWidget {
           size: ResponsiveSize.width(context, 5.13),
         ),
         filled: true,
-        fillColor: AppColors.surfaceLight,
+        fillColor: color ?? AppColors.surfaceLight,
         contentPadding: EdgeInsets.symmetric(
           horizontal: ResponsiveSize.width(context, 3.59),
           vertical: ResponsiveSize.height(context, 1.42),

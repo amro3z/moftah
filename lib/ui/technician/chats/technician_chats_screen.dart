@@ -14,12 +14,13 @@ class TechnicianChatsScreen extends StatelessWidget {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: TechnicianScaffold(
+        title: 'المحادثات',
         current: 3,
         body: SafeArea(
           bottom: false,
           child: Column(
             children: [
-              _buildHeader(),
+        
 
               Expanded(
                 child: ListView.separated(
@@ -104,20 +105,4 @@ class TechnicianChatsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      color: Colors.white,
-      child: const Text(
-        'المحادثات',
-        style: TextStyle(
-          fontFamily: 'Cairo',
-          fontWeight: FontWeight.bold,
-          fontSize: 20,
-          color: AppColors.primary,
-        ),
-      ),
-    );
-  }
 }

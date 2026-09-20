@@ -4,7 +4,7 @@ import 'package:moftah/data/store/technician_store.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
 import 'package:moftah/ui/core/ui/custom_text.dart';
-import 'package:moftah/ui/technician/widgets/technician_nav_bar.dart';
+import 'package:moftah/ui/technician/widgets/technician_scaffold.dart';
 import 'package:moftah/utils/responsive.dart';
 
 class TechnicianWorksScreen extends StatelessWidget {
@@ -18,75 +18,68 @@ class TechnicianWorksScreen extends StatelessWidget {
       textDirection: TextDirection.rtl,
       child: DefaultTabController(
         length: 2,
-        child: Scaffold(
-          backgroundColor: AppColors.background,
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            scrolledUnderElevation: 0,
-            elevation: 0,
-            backgroundColor: AppColors.background,
-            surfaceTintColor: Colors.transparent,
-            title: customText(
-              text: 'الأعمال',
-              fontSize: ResponsiveSize.width(context, AppSizes.fontLg),
-              color: AppColors.primary,
-              isBold: true,
-            ),
-            bottom: PreferredSize(
-              preferredSize: Size.fromHeight(
-                ResponsiveSize.height(context, 6.3),
-              ),
-              child: Container(
-                margin: EdgeInsets.fromLTRB(
-                  ResponsiveSize.width(context, 4),
-                  0,
-                  ResponsiveSize.width(context, 4),
-                  ResponsiveSize.height(context, 1),
-                ),
-                padding: EdgeInsets.all(ResponsiveSize.width(context, 1)),
-                decoration: BoxDecoration(
-                  color: AppColors.textSecondary,
-                  borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.primary.withValues(alpha: .06),
-                      blurRadius: 18,
-                      offset: const Offset(0, 6),
-                    ),
-                  ],
-                ),
-                child: TabBar(
-                  dividerColor: Colors.transparent,
-                  indicatorSize: TabBarIndicatorSize.tab,
-                  indicator: BoxDecoration(
-                    color: AppColors.primary,
-                    borderRadius: BorderRadius.circular(AppSizes.radiusSm),
-                  ),
-                  labelColor: AppColors.textSecondary,
-                  unselectedLabelColor: AppColors.textMuted,
-                  labelStyle: const TextStyle(
-                    fontFamily: 'Cairo',
-                    fontWeight: FontWeight.bold,
-                  ),
-                  unselectedLabelStyle: const TextStyle(
-                    fontFamily: 'Cairo',
-                    fontWeight: FontWeight.w600,
-                  ),
-                  tabs: const [
-                    Tab(text: 'جاري تنفيذها'),
-                    Tab(text: 'أعمال سابقة'),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          body: TabBarView(
+        child: TechnicianScaffold(
+          title: 'الأعمال',
+          current: 2,
+          body: Column(
             children: [
-              _WorksList(items: store.currentJobs, isCurrent: true),
-              _WorksList(items: store.previousJobs, isCurrent: false),
+             
+              SizedBox(
+                height: ResponsiveSize.height(context, 6),
+                width: double.infinity,
+                child: Container(
+                  margin: EdgeInsets.fromLTRB(
+                    ResponsiveSize.width(context, 4),
+                    0,
+                    ResponsiveSize.width(context, 4),
+                    ResponsiveSize.height(context, 1),
+                  ),
+                  padding: EdgeInsets.all(ResponsiveSize.width(context, 1)),
+                  decoration: BoxDecoration(
+                    color: AppColors.textSecondary,
+                    borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.primary.withValues(alpha: .06),
+                        blurRadius: 18,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
+                  ),
+                  child: TabBar(
+                    dividerColor: Colors.transparent,
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    indicator: BoxDecoration(
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.circular(AppSizes.radiusSm),
+                    ),
+                    labelColor: AppColors.textSecondary,
+                    unselectedLabelColor: AppColors.textMuted,
+                    labelStyle: const TextStyle(
+                      fontFamily: 'Cairo',
+                      fontWeight: FontWeight.bold,
+                    ),
+                    unselectedLabelStyle: const TextStyle(
+                      fontFamily: 'Cairo',
+                      fontWeight: FontWeight.w600,
+                    ),
+                    tabs: const [
+                      Tab(text: 'جاري تنفيذها'),
+                      Tab(text: 'أعمال سابقة'),
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    _WorksList(items: store.currentJobs, isCurrent: true),
+                    _WorksList(items: store.previousJobs, isCurrent: false),
+                  ],
+                ),
+              ),
             ],
           ),
-          bottomNavigationBar: const TechnicianBottomNav(current: 2),
         ),
       ),
     );
@@ -163,13 +156,6 @@ class _WorkCard extends StatelessWidget {
             color: AppColors.textSecondary,
             borderRadius: BorderRadius.circular(AppSizes.radiusLg),
             border: Border.all(color: AppColors.border.withValues(alpha: .08)),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.primary.withValues(alpha: .06),
-                blurRadius: 18,
-                offset: const Offset(0, 7),
-              ),
-            ],
           ),
           child: Column(
             children: [
@@ -276,23 +262,12 @@ class _WorkCard extends StatelessWidget {
                 ),
               ),
               SizedBox(height: ResponsiveSize.height(context, 1.2)),
-              Row(
-                children: [
-                  Expanded(
-                    child: customText(
-                      text: isCurrent
-                          ? 'اضغط لمتابعة تفاصيل الشغل والمحادثة'
-                          : 'اضغط لمراجعة تفاصيل الطلب والشات القديم',
-                      fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
-                      color: AppColors.textMuted,
-                    ),
-                  ),
-                  Icon(
-                    Icons.arrow_back_rounded,
-                    color: AppColors.secondary,
-                    size: ResponsiveSize.width(context, 4.5),
-                  ),
-                ],
+              customText(
+                text: isCurrent
+                    ? 'اضغط لمتابعة تفاصيل الشغل والمحادثة'
+                    : 'اضغط لمراجعة تفاصيل الطلب والشات القديم',
+                fontSize: ResponsiveSize.width(context, AppSizes.fontXs),
+                color: AppColors.textMuted,
               ),
             ],
           ),

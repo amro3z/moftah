@@ -43,6 +43,16 @@ class _SendOfferScreenState extends State<SendOfferScreen> {
         backgroundColor: AppColors.background,
         appBar: AppBar(
           automaticallyImplyLeading: false,
+          actions: [
+            IconButton(
+              onPressed: () => Navigator.pop(context),
+              icon: Icon(
+                Icons.arrow_forward_rounded,
+                color: AppColors.primary,
+                size: ResponsiveSize.width(context, 5.5),
+              ),
+            ),
+          ],
           scrolledUnderElevation: 0,
           elevation: 0,
           backgroundColor: AppColors.background,
