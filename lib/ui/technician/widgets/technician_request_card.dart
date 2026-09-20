@@ -212,11 +212,12 @@ class TechnicianRequestCard extends StatelessWidget {
 
   _RiskStyle _riskStyle(String value) {
     final v = value.trim();
-    if (v.contains('منخفض') || v.contains('بسيط'))
+    if (v.contains('منخفض') || v.contains('بسيط')) {
       return const _RiskStyle(
         AppColors.success,
         Icons.check_circle_outline_rounded,
       );
+    }
     if (v.contains('عالي') || v.contains('مرتفع') || v.contains('خطير'))
       return const _RiskStyle(AppColors.danger, Icons.error_outline_rounded);
     return const _RiskStyle(AppColors.warning, Icons.warning_amber_rounded);

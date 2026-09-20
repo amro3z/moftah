@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:moftah/data/models/technician/technician_models.dart';
 import 'package:moftah/data/store/technician_store.dart';
+import 'package:moftah/ui/core/helper/location_map_view.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
 import 'package:moftah/ui/core/ui/custom_text.dart';
@@ -131,12 +132,34 @@ class TechnicianRequestDetailsScreen extends StatelessWidget {
               ],
             ),
           ),
+          _title(context, 'موقع السيارة'),
+          _card(
+            context,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                LocationMapView(
+                  latitude: request.latitude,
+                  longitude: request.longitude,
+                  height: ResponsiveSize.height(context, 25),
+                ),
+                SizedBox(height: ResponsiveSize.height(context, 1)),
+                customText(
+                  isBold: true,
+                  text: request.location,
+                  fontSize: ResponsiveSize.width(context, AppSizes.fontMd),
+                  color: AppColors.primary,
+                  maxLines: 2,
+                ),
+              ],
+            ),
+          ),
           if (request.aiAnalysis != null) ...[
             _title(context, 'تحليل مبدئي'),
             _card(
               context,
               Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
                     padding: const EdgeInsets.all(9),
@@ -153,6 +176,7 @@ class TechnicianRequestDetailsScreen extends StatelessWidget {
                   Expanded(
                     child: customText(
                       text: request.aiAnalysis!,
+                      isBold: true,
                       fontSize: ResponsiveSize.width(context, AppSizes.fontSm),
                       color: AppColors.primary,
                       maxLines: 7,

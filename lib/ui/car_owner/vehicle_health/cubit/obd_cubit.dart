@@ -156,8 +156,9 @@ class ObdCubit extends Cubit<ObdState> {
     if (!state.isConnected ||
         !repository.ecuReady ||
         _liveReadRunning ||
-        _dtcReadRunning)
+        _dtcReadRunning) {
       return;
+    }
     _liveReadRunning = true;
     try {
       final oldCodes =
@@ -182,13 +183,13 @@ class ObdCubit extends Cubit<ObdState> {
     }
   }
 
-  /// تحديث الأعطال أثناء نفس السيشن ومقارنة اللي ظهر واللي اختفى.
   Future<void> refreshTroubleCodes() async {
     if (!state.isConnected ||
         !repository.ecuReady ||
         _dtcReadRunning ||
-        _liveReadRunning)
+        _liveReadRunning) {
       return;
+    }
     _dtcReadRunning = true;
     try {
       final before =
@@ -227,7 +228,6 @@ class ObdCubit extends Cubit<ObdState> {
     }
   }
 
-  /// الزر اليدوي بقى تحديث سريع داخل نفس السيشن، مش فحص من البداية.
   Future<void> refreshDiagnostics({bool showConnectionStage = false}) async {
     if (!state.isConnected) return;
     if (repository.ecuReady) {
@@ -245,9 +245,6 @@ class ObdCubit extends Cubit<ObdState> {
   Future<bool> clearTroubleCodes() async {
     if (!state.isConnected || !repository.ecuReady) return false;
     final ok = await repository.clearTroubleCodes(onTrace: _trace);
-
-    // نفس السيشن ونفس البروتوكول: مجرد إعادة قراءة، من غير ATZ
-    // ومن غير Protocol Search.
     await Future<void>.delayed(const Duration(milliseconds: 250));
     await refreshTroubleCodes();
     await refreshLiveData();

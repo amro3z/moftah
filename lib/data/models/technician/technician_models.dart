@@ -46,6 +46,8 @@ class TechnicianRequestModel {
   final String? aiAnalysis;
   final List<String> tags;
   final List<String> imageUrls;
+  final double latitude;
+  final double longitude;
   final TechnicianRequestStatus status;
   final double? inspectionFee;
   final double? minCost;
@@ -64,6 +66,8 @@ class TechnicianRequestModel {
     required this.location,
     required this.distanceKm,
     required this.createdAt,
+    required this.latitude,
+    required this.longitude,
     required this.riskLabel,
     this.aiAnalysis,
     this.tags = const [],
@@ -88,6 +92,8 @@ class TechnicianRequestModel {
   }) => TechnicianRequestModel(
     id: id,
     customerName: customerName,
+    latitude: latitude,
+    longitude: longitude,
     vehicleName: vehicleName,
     vehicleYear: vehicleYear,
     issueTitle: issueTitle,

@@ -16,7 +16,7 @@ class TechnicianStore extends ChangeNotifier {
     completedJobs: 128,
   );
 
-  final List<TechnicianRequestModel> _requests = [
+ final List<TechnicianRequestModel> _requests = [
     const TechnicianRequestModel(
       id: 'req-1',
       customerName: 'عمرو محمد',
@@ -26,6 +26,8 @@ class TechnicianStore extends ChangeNotifier {
       issueDescription:
           'صوت غريب عند تشغيل السيارة + رعشة خفيفة. لمبة المحرك مضاءة.',
       location: 'مدينة نصر',
+      latitude: 30.0566,
+      longitude: 31.3301,
       distanceKm: 2.1,
       createdAt: 'منذ 5 دقائق',
       riskLabel: 'متوسطة',
@@ -33,6 +35,7 @@ class TechnicianStore extends ChangeNotifier {
           'تحليل: نظام الإشعال (78% احتمالية). يُرجح وجود مشكلة في البوجيهات أو كويل الإشعال.',
       tags: ['صوت غريب', 'رعشة', 'لمبة المحرك'],
     ),
+
     const TechnicianRequestModel(
       id: 'req-2',
       customerName: 'أحمد علي',
@@ -42,6 +45,8 @@ class TechnicianStore extends ChangeNotifier {
       issueDescription:
           'مؤشر الحرارة يرتفع مع الزحام ويعود لطبيعته على الطريق.',
       location: 'مصر الجديدة',
+      latitude: 30.0910,
+      longitude: 31.3220,
       distanceKm: 3.8,
       createdAt: 'منذ 12 دقيقة',
       riskLabel: 'منخفضة',
@@ -49,6 +54,7 @@ class TechnicianStore extends ChangeNotifier {
           'قد تكون المشكلة مرتبطة بدائرة التبريد أو المروحة وتحتاج فحصًا مباشرًا.',
       tags: ['حرارة', 'تبريد'],
     ),
+
     const TechnicianRequestModel(
       id: 'req-3',
       customerName: 'محمود حسن',
@@ -58,11 +64,14 @@ class TechnicianStore extends ChangeNotifier {
       issueDescription:
           'اهتزاز في الدركسيون عند الفرملة من سرعة أعلى من 80 كم/س.',
       location: 'التجمع الخامس',
+      latitude: 30.0074,
+      longitude: 31.4913,
       distanceKm: 6.4,
       createdAt: 'منذ 20 دقيقة',
       riskLabel: 'متوسطة',
       tags: ['فرامل', 'اهتزاز'],
     ),
+
     const TechnicianRequestModel(
       id: 'req-4',
       customerName: 'يوسف سامي',
@@ -71,11 +80,14 @@ class TechnicianStore extends ChangeNotifier {
       issueTitle: 'تكييف ضعيف',
       issueDescription: 'التبريد ضعيف خصوصًا وقت الظهر.',
       location: 'العباسية',
+      latitude: 30.0723,
+      longitude: 31.2830,
       distanceKm: 4.7,
       createdAt: 'منذ 31 دقيقة',
       riskLabel: 'منخفضة',
       tags: ['تكييف'],
     ),
+
     const TechnicianRequestModel(
       id: 'job-1',
       customerName: 'كريم خالد',
@@ -84,6 +96,8 @@ class TechnicianStore extends ChangeNotifier {
       issueTitle: 'تغيير طقم بوجيهات',
       issueDescription: 'صيانة دورية وتغيير بوجيهات.',
       location: 'مدينة نصر',
+      latitude: 30.0626,
+      longitude: 31.3448,
       distanceKm: 1.5,
       createdAt: 'اليوم 10:30 ص',
       riskLabel: 'منخفضة',
@@ -93,6 +107,7 @@ class TechnicianStore extends ChangeNotifier {
       estimatedDuration: '1-2 ساعة',
       warranty: 'شهر واحد',
     ),
+
     const TechnicianRequestModel(
       id: 'job-2',
       customerName: 'سيف عماد',
@@ -101,6 +116,8 @@ class TechnicianStore extends ChangeNotifier {
       issueTitle: 'إصلاح دائرة التبريد',
       issueDescription: 'تم تغيير خرطوم وتنظيف دورة التبريد.',
       location: 'المعادي',
+      latitude: 29.9602,
+      longitude: 31.2569,
       distanceKm: 8.2,
       createdAt: '12 أغسطس',
       riskLabel: 'متوسطة',
@@ -111,7 +128,6 @@ class TechnicianStore extends ChangeNotifier {
       warranty: '3 أشهر',
     ),
   ];
-
   final conversations = const [
     TechnicianConversationModel(
       id: 'c1',

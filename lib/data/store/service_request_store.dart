@@ -24,8 +24,6 @@ class ServiceRequestStore extends ChangeNotifier {
   bool get shouldShowOffersBanner =>
       _offers.isNotEmpty && _acceptedOffer == null;
 
-  /// Demo store until the backend/socket is connected.
-  /// Returns immediately so the user can go back Home while offers arrive later.
   Future<void> submitRequest(ProblemReportModel report) async {
     _requestVersion++;
     final version = _requestVersion;
