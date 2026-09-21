@@ -306,6 +306,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
 
                         CurrentRepairCard(
                           data: CurrentRepairModel(
+                            id: '1',
                             title: 'تغيير زيت المحرك + فلتر',
                             workshopName: 'Auto Pro Center',
                             location: 'مدينة نصر',
@@ -322,6 +323,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
                               context,
                               '/repair-details',
                               arguments: CurrentRepairModel(
+                                id: '1',
                                 title: 'تغيير زيت المحرك + فلتر',
                                 workshopName: 'Auto Pro Center',
                                 location: 'مدينة نصر',
@@ -488,10 +490,6 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
       },
     );
   }
-
-  // =========================================================
-  // NEARBY PLACES
-  // =========================================================
 
   Widget _buildNearbyPlacesSection(BuildContext context) {
     return BlocBuilder<NearbyPlacesCubit, NearbyPlacesState>(

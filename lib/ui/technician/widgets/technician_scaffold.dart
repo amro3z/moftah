@@ -7,6 +7,7 @@ class TechnicianScaffold extends StatelessWidget {
   final Widget body;
   final int current;
   final String? title;
+
   const TechnicianScaffold({
     super.key,
     required this.body,
@@ -16,28 +17,62 @@ class TechnicianScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBody: true,
+    if (current == 0) {
+      return Directionality(
+        textDirection: TextDirection.rtl,
+        child: Scaffold(
+          extendBody: true,
+          backgroundColor: AppColors.background,
+          body: body,
+          bottomNavigationBar: TechnicianBottomNav(current: current),
+        ),
+      );
+    }
 
-      appBar: title != null
-          ? AppBar(
-              backgroundColor: Colors.transparent,
-              scrolledUnderElevation: 0,
-              elevation: 0,
-              title: customText(
-                text: title ?? '',
-                fontSize: 20,
-                isBold: true,
-                color: AppColors.primary,
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        extendBody: true,
+        backgroundColor: AppColors.primary,
+        body: Column(
+          children: [
+            Container(
+              height: 60,
+              width: double.infinity,
+              color: AppColors.primary,
+              child: SafeArea(
+                bottom: false,
+                child: Center(
+                  child: customText(
+                    text: title ?? '',
+                    fontSize: 20,
+                    isBold: true,
+                    color: Colors.white,
+                  ),
+                ),
               ),
-              automaticallyImplyLeading: false,
-            )
-          : null,
-      backgroundColor: AppColors.background,
-
-      body: body,
-
-      bottomNavigationBar: TechnicianBottomNav(current: current),
+            ),
+            Expanded(
+              child: Transform.translate(
+                offset: const Offset(0, 5),
+                child: Container(
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    color: AppColors.background,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(22),
+                      topRight: Radius.circular(22),
+                    ),
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: body,
+                ),
+              ),
+            ),
+          ],
+        ),
+        bottomNavigationBar: TechnicianBottomNav(current: current),
+      ),
     );
   }
 }

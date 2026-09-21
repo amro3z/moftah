@@ -17,19 +17,13 @@ class TechnicianChatsScreen extends StatelessWidget {
         title: 'المحادثات',
         current: 3,
         body: SafeArea(
+          top: false,
           bottom: false,
           child: Column(
             children: [
-        
-
               Expanded(
                 child: ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(
-                    16,
-                    16,
-                    16,
-                    120,
-                  ),
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
                   itemCount: store.conversations.length,
                   separatorBuilder: (_, __) => const SizedBox(height: 10),
                   itemBuilder: (context, index) {
@@ -104,5 +98,4 @@ class TechnicianChatsScreen extends StatelessWidget {
       ),
     );
   }
-
 }

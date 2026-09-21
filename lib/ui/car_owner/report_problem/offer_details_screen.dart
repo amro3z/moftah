@@ -341,6 +341,7 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
   CurrentRepairModel _repairFromOffer() {
     final report = ServiceRequestStore.instance.activeReport;
     return CurrentRepairModel(
+      id: '1',
       title: report?.problemSummary ?? widget.offer.specialty,
       workshopName: widget.offer.providerName,
       location: '${widget.offer.distanceKm.toStringAsFixed(1)} كم',

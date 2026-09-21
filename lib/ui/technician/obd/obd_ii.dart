@@ -20,7 +20,7 @@ class ObdDiagnosticsScreen extends StatelessWidget {
         title: 'فحص السيارة',
         body: SafeArea(
           bottom: false,
-
+          top: false,
           child: Column(
             children: [
               Expanded(
@@ -54,7 +54,6 @@ class ObdDiagnosticsScreen extends StatelessWidget {
       ),
     );
   }
-
 
   Widget _buildHeader(BuildContext context) {
     return Container(

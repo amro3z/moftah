@@ -328,6 +328,7 @@ class AppRoute {
         final repair = arguments is CurrentRepairModel
             ? arguments
             : const CurrentRepairModel(
+              id: '1',
                 title: 'تغيير زيت المحرك + فلتر',
                 workshopName: 'Auto Pro Center',
                 location: 'مدينة نصر',
