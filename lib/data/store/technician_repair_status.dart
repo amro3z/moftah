@@ -2,7 +2,7 @@ import 'package:moftah/data/models/technician/repair_status.dart';
 
 class TechnicianRepairStatus {
   TechnicianRepairStatus._();
-  static   List<RepairStageItem> stages = [
+  static List<RepairStageItem> stages = [
     RepairStageItem(
       title: 'تم استلام السيارة',
       description: 'تم استلام السيارة وبدء العمل',
@@ -16,7 +16,7 @@ class TechnicianRepairStatus {
       time: '2:00 م',
       status: RepairStageStatus.current,
       actionText: 'إنهاء الفحص وإضافة النتيجة',
-      onActionPath: '/finish_inspection',
+      // onActionPath: '/technician/finish_inspection',
     ),
     const RepairStageItem(
       title: 'بانتظار موافقة العميل',

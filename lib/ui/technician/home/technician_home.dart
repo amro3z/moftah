@@ -4,7 +4,7 @@ import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
 import 'package:moftah/ui/core/ui/custom_text.dart';
 import 'package:moftah/ui/technician/widgets/technician_app_bar.dart';
-import 'package:moftah/ui/technician/widgets/technician_request_card.dart';
+import 'package:moftah/ui/technician/widgets/requsets/technician_request_card.dart';
 import 'package:moftah/ui/technician/widgets/technician_scaffold.dart';
 import 'package:moftah/utils/responsive.dart';
 

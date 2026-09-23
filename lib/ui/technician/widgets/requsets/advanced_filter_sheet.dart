@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
 import 'package:moftah/ui/core/ui/custom_text.dart';
-import 'package:moftah/ui/technician/widgets/dangerous_level_filter.dart';
-import 'package:moftah/ui/technician/widgets/distance_slider.dart';
+import 'package:moftah/ui/technician/widgets/requsets/dangerous_level_filter.dart';
+import 'package:moftah/ui/technician/widgets/requsets/distance_slider.dart';
 import 'package:moftah/utils/responsive.dart';
 
 class AdvancedFilterSheet extends StatefulWidget {

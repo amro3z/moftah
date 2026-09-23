@@ -35,3 +35,6 @@ class RepairStageItem {
     );
   }
 }
+
+
+enum CustomerApprovalStatus { none, waiting, approved, rejected }

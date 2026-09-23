@@ -1,10 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide DatePickerMode;
 import 'package:flutter/services.dart';
-
 import 'package:moftah/data/models/number_range.dart';
 import 'package:moftah/data/models/question_model.dart';
 import 'package:moftah/ui/auth/auth_widgets.dart';
-import 'package:moftah/ui/core/helper/custom_date_picker_field.dart';
+import 'package:moftah/ui/core/helper/date/date_picker_field.dart';
 import 'package:moftah/ui/core/helper/number_range_input_formatter.dart';
 import 'package:moftah/ui/core/helper/text_filed_validator.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
@@ -283,24 +282,25 @@ class _QuestionsCardState extends State<QuestionsCard> {
 
         SizedBox(height: ResponsiveSize.height(context, 1.2)),
 
-        if (widget.yearPickerQuestions?.contains(index) ?? false)
-          CustomDatePickerField(
-            theme: 'سنة التصنيع',
+       if (widget.yearPickerQuestions?.contains(index) ?? false)
+DatePickerField(
+            title: 'سنة تصنيع العربية',
+            subtitle: 'اختر سنة التصنيع',
             value: answers[index] as DateTime?,
-            mode: CustomDatePickerMode.yearOnly,
+            mode: DatePickerMode.year,
             firstDate: DateTime(1980),
             lastDate: DateTime.now(),
-            onChanged: (value) {
+            onChanged: (date) {
               setState(() {
-                answers[index] = value;
+                answers[index] = date;
               });
             },
           )
-        else if (widget.datePickerQuestions?.contains(index) ?? false)
-          CustomDatePickerField(
-            theme: 'التاريخ',
+       else if (widget.datePickerQuestions?.contains(index) ?? false)
+          DatePickerField(
+            title: 'التاريخ',
+            subtitle: 'اضغط لاختيار التاريخ',
             value: answers[index] as DateTime?,
-            mode: CustomDatePickerMode.fullDate,
             firstDate: DateTime(2000),
             lastDate: DateTime.now(),
             onChanged: (value) {
