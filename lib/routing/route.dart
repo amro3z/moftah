@@ -49,6 +49,7 @@ import 'package:moftah/ui/technician/home/technician_home.dart';
 import 'package:moftah/data/models/technician/technician_models.dart';
 import 'package:moftah/data/store/technician_store.dart';
 import 'package:moftah/ui/technician/obd/obd_II.dart';
+import 'package:moftah/ui/technician/requests/technician_repair_stages.dart';
 import 'package:moftah/ui/technician/requests/technician_requests_screen.dart';
 import 'package:moftah/ui/technician/requests/technician_request_details_screen.dart';
 import 'package:moftah/ui/technician/requests/send_offer_screen.dart';
@@ -322,7 +323,14 @@ class AppRoute {
             child: VehicleHealthScreen(data: arguments),
           ),
         );
-
+      case '/technician/repair-steps':
+        final arguments = settings.arguments;
+        if (arguments is! TechnicianRequestModel) {
+          return _animatedRoute(
+            TechnicianRepairStages(),
+          );
+        }
+        return _animatedRoute(TechnicianRepairStages());
       case '/repair-details':
         final arguments = settings.arguments;
         final repair = arguments is CurrentRepairModel

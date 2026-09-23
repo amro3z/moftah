@@ -5,6 +5,7 @@ import 'package:moftah/ui/core/helper/location_map_view.dart';
 import 'package:moftah/ui/core/themes/colors.dart';
 import 'package:moftah/ui/core/themes/sizes.dart';
 import 'package:moftah/ui/core/ui/custom_text.dart';
+import 'package:moftah/ui/technician/widgets/technician_scaffold.dart';
 import 'package:moftah/utils/responsive.dart';
 
 class TechnicianRequestDetailsScreen extends StatelessWidget {
@@ -23,27 +24,9 @@ class TechnicianRequestDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Directionality(
     textDirection: TextDirection.rtl,
-    child: Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        scrolledUnderElevation: 0,
-        elevation: 0,
-        surfaceTintColor: Colors.transparent,
-        backgroundColor: AppColors.background,
-        actions: [
-          IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_forward_ios_rounded),
-          ),
-        ],
-        title: customText(
-          text: 'تفاصيل الطلب',
-          fontSize: ResponsiveSize.width(context, AppSizes.fontLg),
-          color: AppColors.primary,
-          isBold: true,
-        ),
-      ),
+    child: TechnicianScaffold(
+      withBackArrow: true,
+      title: 'تفاصيل الطلب',
       body: ListView(
         padding: EdgeInsets.fromLTRB(
           ResponsiveSize.width(context, 4),
@@ -320,23 +303,32 @@ class TechnicianRequestDetailsScreen extends StatelessWidget {
                 ),
               ],
             ),
-          if (request.status != TechnicianRequestStatus.newRequest)
-            FilledButton.icon(
-              onPressed: () => _openChat(context),
-              style: FilledButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                padding: EdgeInsets.symmetric(
-                  vertical: ResponsiveSize.height(context, 1.4),
+          if (request.status != TechnicianRequestStatus.newRequest) ...[
+            Row(
+              children: [
+                TechnicianActionCard(
+                  title: 'فتح المحادثة القديمة',
+                  subtitle: 'متابعة المحادثات السابقة',
+                  icon: Icons.chat_bubble_outline_rounded,
+                  primary: true,
+                  onTap: () => _openChat(context),
                 ),
-              ),
-              icon: const Icon(Icons.chat_bubble_outline_rounded),
-              label: customText(
-                text: 'فتح المحادثة القديمة',
-                fontSize: ResponsiveSize.width(context, AppSizes.fontMd),
-                color: Colors.white,
-                isBold: true,
-              ),
+                SizedBox(width: ResponsiveSize.width(context, 2)),
+                TechnicianActionCard(
+                  title: 'مراحل الإصلاح',
+                  subtitle: 'متابعة جميع المراحل',
+                  icon: Icons.car_repair_rounded,
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      '/technician/repair-steps',
+                      arguments: request,
+                    );
+                  },
+                ),
+              ],
             ),
+          ],
         ],
       ),
     ),
@@ -514,7 +506,97 @@ class TechnicianRequestDetailsScreen extends StatelessWidget {
     final x = TechnicianStore.instance.conversations.where(
       (e) => e.requestId == request.id,
     );
-    if (x.isNotEmpty)
+    if (x.isNotEmpty) {
       Navigator.pushNamed(c, '/chat', arguments: x.first.toChat(request));
+    }
+  }
+}
+
+class TechnicianActionCard extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final VoidCallback onTap;
+  final bool primary;
+
+  const TechnicianActionCard({
+    super.key,
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.onTap,
+    this.primary = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final foregroundColor = primary ? Colors.white : AppColors.secondary;
+
+    return Expanded(
+      child: Material(
+        color: primary ? AppColors.primary : Colors.white,
+        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+          child: Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: ResponsiveSize.width(context, 3),
+              vertical: ResponsiveSize.height(context, 1.4),
+            ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+              border: primary
+                  ? null
+                  : Border.all(color: AppColors.secondary, width: 1.2),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  size: 14,
+                  color: foregroundColor,
+                ),
+
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      customText(
+                        text: title,
+                        fontSize: ResponsiveSize.width(
+                          context,
+                          AppSizes.fontSm,
+                        ),
+                        color: primary ? Colors.white : AppColors.primary,
+                        isBold: true,
+                      ),
+                      SizedBox(height: ResponsiveSize.height(context, .3)),
+                      customText(
+                        text: subtitle,
+                        fontSize: ResponsiveSize.width(
+                          context,
+                          AppSizes.fontXs,
+                        ),
+                        color: primary
+                            ? Colors.white.withValues(alpha: .65)
+                            : AppColors.textMuted,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(width: ResponsiveSize.width(context, 2)),
+                Icon(
+                  icon,
+                  color: foregroundColor,
+                  size: ResponsiveSize.width(context, 6),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
